@@ -101,11 +101,14 @@
 <meta property="og:site_name" content="hzlg&#39;s blog">
 <meta property="og:description" content="Crypto好难。。。">
 <meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/15/Crypto/image-20211014181152249.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/15/Crypto/image-20211014181304277.png">
 <meta property="article:published_time" content="2021-10-15T09:33:06.967Z">
-<meta property="article:modified_time" content="2021-10-15T09:33:37.788Z">
+<meta property="article:modified_time" content="2021-10-21T05:40:55.824Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="Crypto">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/10/15/Crypto/image-20211014181152249.png">
 
 
 
@@ -341,6 +344,34 @@
 <p>最简单的RSA</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.Util.number import*</span><br><span class="line">import gmpy2</span><br><span class="line">p = 7049120988661090136959367990211624032671088374397430253722914704672269343351268486642692858477617370573493581346846411168539408811542592351582581576539221</span><br><span class="line">q = 11595461299251293002401295606096202123601375776115430944343338141843770078346355504245510150744085418550473572002573306023521368183889972175846278163010889</span><br><span class="line">e = 65537</span><br><span class="line">c = 48425576447741107904942007362859939933300480519833273210397511573241220126734053813936424490872852942885069257318462762079636783871415500644717758273774268724488497979368196170897933989184449432995120246590652553995031347596620505647525475638040859263109628716173897321613612254357251120398449111747305089380</span><br><span class="line"></span><br><span class="line">n = p * q</span><br><span class="line"></span><br><span class="line">phi_n = (p-1)*(q-1)</span><br><span class="line">d = gmpy2.invert(e, phi_n)</span><br><span class="line"># de = 1(mod n)</span><br><span class="line">print(&#x27;d=\n&#x27;, d)</span><br><span class="line"></span><br><span class="line">m = pow(c, d, n)</span><br><span class="line">print(&quot;m=\n%s&quot; % m)</span><br><span class="line"># m = 15319173828209670603511084362717457446180558033047865450787617910297730468660421355428779459730920915325</span><br><span class="line">flag = long_to_bytes(m)</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
 
+<p><strong>buu-rsa</strong></p>
+<p><img src="/2021/10/15/Crypto/image-20211014181152249.png" alt="image-20211014181152249"> </p>
+<p>解压出来这两个,key文件用记事本打开,是公钥</p>
+<p><img src="/2021/10/15/Crypto/image-20211014181304277.png" alt="image-20211014181304277"> </p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrsakeyparse">http://tool.chacuo.net/cryptrsakeyparse</a></p>
+<p>在这个网站分解</p>
+<p>公钥指数及模数信息</p>
+<table>
+<thead>
+<tr>
+<th>key长度：</th>
+<th align="left">256</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>模数：</td>
+<td align="left">C0332C5C64AE47182F6C1C876D42336910545A58F7EEFEFC0BCAAF5AF341CCDD</td>
+</tr>
+<tr>
+<td>指数：</td>
+<td align="left">65537 (0x10001)</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">import rsa</span><br><span class="line">num = &quot;C0332C5C64AE47182F6C1C876D42336910545A58F7EEFEFC0BCAAF5AF341CCDD&quot;</span><br><span class="line">N = int(num,16)</span><br><span class="line">E = 65537</span><br><span class="line">p = 285960468890451637935629440372639283459</span><br><span class="line">q = 304008741604601924494328155975272418463</span><br><span class="line">D = int(gmpy2.invert(e,(p-1)*(q-1)))</span><br><span class="line">privkey = rsa.PrivateKey(N, E, D, p, q)</span><br><span class="line">with open(&quot;E:\\ts\\buuCTF\\rsa\\flag.enc&quot;, &quot;rb+&quot;) as file:</span><br><span class="line"> text = file.read()</span><br><span class="line">message = rsa.decrypt(text,privkey)</span><br><span class="line">print(message)</span><br></pre></td></tr></table></figure>
+
+<p>flag{decrypt_256}</p>
+</blockquote>
 
       
     </div>
@@ -451,7 +482,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -464,7 +495,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
