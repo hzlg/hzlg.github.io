@@ -96,11 +96,16 @@
 
 <meta name="description" content="C++笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++难点">
+<meta property="og:title" content="C++笔记">
 <meta property="og:url" content="https://hzlg.github.ioz/2021/10/26/C++/index.html">
 <meta property="og:site_name" content="hzlg&#39;s blog">
 <meta property="og:description" content="C++笔记">
 <meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211116140932694.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211116141513869.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211116143541758.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211116143704921.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211116143824688.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211026140249685.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211026140341738.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211026140948113.png">
@@ -126,11 +131,11 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211026151708033.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211026152122833.png">
 <meta property="article:published_time" content="2021-10-26T06:02:30.080Z">
-<meta property="article:modified_time" content="2021-10-28T13:33:07.370Z">
+<meta property="article:modified_time" content="2021-11-16T06:40:36.186Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211026140249685.png">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211116140932694.png">
 
 
 
@@ -165,7 +170,7 @@
 
 
 
-  <title>C++难点 | hzlg's blog</title>
+  <title>C++笔记 | hzlg's blog</title>
   
 
 
@@ -305,7 +310,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">C++难点</h1>
+          <h1 class="post-title" itemprop="name headline">C++笔记</h1>
         
 
         <div class="post-meta">
@@ -358,6 +363,56 @@
         <p>C++笔记</p>
 <span id="more"></span>
 
+<h2 id="C-初探"><a href="#C-初探" class="headerlink" title="C++初探"></a>C++初探</h2><h3 id="简单的程序"><a href="#简单的程序" class="headerlink" title="简单的程序"></a>简单的程序</h3><p><img src="/2021/10/26/C++/image-20211116140932694.png" alt="image-20211116140932694"> </p>
+<blockquote>
+<p>使用标准命名空间，即导入其中声明的所有命令、函数等 </p>
+<p>• C++ 源程序由一个或多个源文件组成； </p>
+<p>• 每个源文件可由一个或多个函数组成； </p>
+<p>• 一个源程序有且只能有一个 main 函数，即主函数；</p>
+</blockquote>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><h4 id="限定符。。。"><a href="#限定符。。。" class="headerlink" title="限定符。。。"></a>限定符。。。</h4><p><img src="/2021/10/26/C++/image-20211116141513869.png" alt="image-20211116141513869">  </p>
+<h4 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h4><h5 id="1-自动转换-隐式转换：-­"><a href="#1-自动转换-隐式转换：-­" class="headerlink" title="(1) 自动转换/隐式转换： ­"></a>(1) 自动转换/隐式转换： ­</h5><ul>
+<li><p>相同类型的数据进行运算时，其结果仍然是同一数据类型，如 <strong>3/2 的结果是 1</strong>；</p>
+</li>
+<li><p>不同类型的数据进行运算时，需要先转换成同一数据类型，然后再进行相应的运算；</p>
+</li>
+<li><p>转换按数据长度增加的方向进行，以尽可能地保证精度不会降低； ­ 所有的浮点运算都是以双精度进行的；</p>
+</li>
+<li><p>char 型数据和 short 型数据进行运算时，需转换成 int 型； ­ 赋值号两边的数据类型不同时，需先将<strong>右边表达式的值转换为左边数据的类型</strong>，然后再 赋值；</p>
+</li>
+<li><p>字符变量直接参与算术运算时，先转化为相应的 ASCII 码，然后进行运算。 </p>
+<p>char ‐‐&gt; short ‐‐&gt; int ‐‐&gt; unsigned ‐‐&gt; long ‐‐&gt; unsigned long ‐‐&gt; double &lt;‐‐ float </p>
+</li>
+</ul>
+<h5 id="2-强制转换-显式转换"><a href="#2-强制转换-显式转换" class="headerlink" title="(2)强制转换/显式转换"></a>(2)强制转换/显式转换</h5><p>类型标识符(表达式) // C++风格，将表达式的值转化为指定的数据类型</p>
+<p>(类型标识符)表达式 // C 语言风格，作用同上</p>
+<h4 id="eg"><a href="#eg" class="headerlink" title="eg!"></a>eg!</h4><p><img src="/2021/10/26/C++/image-20211116143541758.png" alt="image-20211116143541758">  </p>
+<h4 id="转换规则"><a href="#转换规则" class="headerlink" title="转换规则"></a>转换规则</h4><p><img src="/2021/10/26/C++/image-20211116143704921.png" alt="image-20211116143704921"> </p>
+<h4 id="初始化与赋值"><a href="#初始化与赋值" class="headerlink" title="初始化与赋值"></a>初始化与赋值</h4><p><img src="/2021/10/26/C++/image-20211116143824688.png" alt="image-20211116143824688"> </p>
+<h2 id="C-内存管理"><a href="#C-内存管理" class="headerlink" title="C++内存管理"></a>C++内存管理</h2><p>面向对象的基本特点：</p>
+<p>抽象、封装、继承和多态</p>
+<p>多态：同一段程序作用在不同类型的对象上的能力。在 C++ 中，多态性是通过强制多态（如 类型转换）、重载多态（如函数重载、运算符重载）、类型参数化和虚函数、模板等。</p>
+<ul>
+<li><p>类和对象的基本操作 </p>
+<ul>
+<li>类的声明 </li>
+<li>类的成员：数据成员与函数成员 </li>
+<li>对象的创建</li>
+<li>对象成员的访问</li>
+<li>成员函数的定义，内联成员函数 </li>
+</ul>
+</li>
+<li><p>构造函数和析构函数</p>
+<ul>
+<li>构造函数：数据初始化 </li>
+<li>构造函数的重载 </li>
+<li>复制构造函数</li>
+<li>对象作为函数参数 </li>
+<li>匿名对象</li>
+<li>析构函数</li>
+</ul>
+</li>
+</ul>
 <p> <img src="/2021/10/26/C++/image-20211026140249685.png" alt="image-20211026140249685"></p>
 <h2 id="I-O流总览"><a href="#I-O流总览" class="headerlink" title="I/O流总览"></a>I/O流总览</h2><p><img src="/2021/10/26/C++/image-20211026140341738.png" alt="image-20211026140341738"> </p>
 <blockquote>
@@ -526,7 +581,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -539,7 +594,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -574,7 +629,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#I-O%E6%B5%81%E6%80%BB%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text">I&#x2F;O流总览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%A1%A8%E4%B8%80%E5%9B%BE-%E5%9B%9B%E5%A4%B4%E4%B9%9D%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">一表一图,四头九类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E6%B5%81"><span class="nav-number">2.</span> <span class="nav-text">普通流</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E5%88%9D%E6%8E%A2"><span class="nav-number">1.</span> <span class="nav-text">C++初探</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.1.</span> <span class="nav-text">简单的程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%99%90%E5%AE%9A%E7%AC%A6%E3%80%82%E3%80%82%E3%80%82"><span class="nav-number">1.2.1.</span> <span class="nav-text">限定符。。。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.2.2.</span> <span class="nav-text">类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E8%87%AA%E5%8A%A8%E8%BD%AC%E6%8D%A2-%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%9A-%C2%AD"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">(1) 自动转换&#x2F;隐式转换： ­</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2-%E6%98%BE%E5%BC%8F%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">(2)强制转换&#x2F;显式转换</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#eg"><span class="nav-number">1.2.3.</span> <span class="nav-text">eg!</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E8%A7%84%E5%88%99"><span class="nav-number">1.2.4.</span> <span class="nav-text">转换规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8E%E8%B5%8B%E5%80%BC"><span class="nav-number">1.2.5.</span> <span class="nav-text">初始化与赋值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">C++内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#I-O%E6%B5%81%E6%80%BB%E8%A7%88"><span class="nav-number">3.</span> <span class="nav-text">I&#x2F;O流总览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%A1%A8%E4%B8%80%E5%9B%BE-%E5%9B%9B%E5%A4%B4%E4%B9%9D%E7%B1%BB"><span class="nav-number">3.1.</span> <span class="nav-text">一表一图,四头九类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E6%B5%81"><span class="nav-number">4.</span> <span class="nav-text">普通流</span></a></li></ol></div>
             
 
           </div>
