@@ -104,17 +104,12 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20211008165004153.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20211103190329370.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20211103193600774.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210929153219848.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210929150905343.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210929151054863.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210929152514369.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210929152639999.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210929180130325.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20211121101150865.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210930150236796.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20210930151404384.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/09/29/re/image-20211016182336146.png">
 <meta property="article:published_time" content="2021-09-29T04:59:46.239Z">
-<meta property="article:modified_time" content="2021-11-17T01:36:38.577Z">
+<meta property="article:modified_time" content="2021-11-21T10:27:22.483Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="re">
 <meta name="twitter:card" content="summary">
@@ -347,7 +342,6 @@
 <p>希望能坚持更新下去</p>
 <span id="more"></span>
 
-<p>树师傅的ida使用小技巧</p>
 <p><img src="/2021/09/29/re/image-20211008165004153.png" alt="image-20211008165004153"> </p>
 <p><img src="/2021/09/29/re/image-20211103190329370.png" alt="image-20211103190329370"> </p>
 <p><img src="/2021/09/29/re/image-20211103193600774.png" alt="image-20211103193600774"> </p>
@@ -358,35 +352,15 @@
 </li>
 </ul>
 <h3 id="汇编-调试"><a href="#汇编-调试" class="headerlink" title="汇编/调试"></a>汇编/调试</h3><ul>
-<li><p>ad-Simple-check-100</p>
-</li>
-<li><p>ad-re1</p>
-</li>
-</ul>
-<blockquote>
-<p> 追踪v5</p>
-<p><img src="/2021/09/29/re/image-20210929153219848.png" alt="image-20210929153219848"> </p>
-<p><img src="/2021/09/29/re/image-20210929150905343.png" alt="image-20210929150905343"></p>
-<p>进入ds:xmmword_413E34</p>
-<p><img src="/2021/09/29/re/image-20210929151054863.png" alt="image-20210929151054863"> </p>
-<p>按a转换为字符串</p>
-</blockquote>
-<blockquote>
-<p>DUTCTF{We1c0met0DUTCTF}</p>
-</blockquote>
-<blockquote>
-<p>非预期:vim打开,按/进入查找模式</p>
-<img src="/2021/09/29/re/image-20210929152514369.png" alt="image-20210929152514369" style="zoom:50%;"> 
-
-<p>查阅资料了解到，反编译的结果不是一定正确的，IDA采用递归下降法进行反编译，它的优点在于很少会在反编译时把数据当作代码来处理，不过这次IDA很明显把flag当成代码，进行了反编译，因此在string界面无法找到flag</p>
-<p>解决方法是在IDA打开文件时选择binary file,在此模式下IDA不会进行反编译，此时再打开strings界面就可发现flag</p>
-<p><img src="/2021/09/29/re/image-20210929152639999.png" alt="image-20210929152639999"> </p>
-<p><img src="/2021/09/29/re/image-20210929180130325.png" alt="image-20210929180130325"> </p>
-</blockquote>
-<ul>
+<li>10.25-Geek2021-调试(jz-&gt;jmp)</li>
+<li>ad-Simple-check-100（jz-&gt;jnz）</li>
+<li>ad-re1 ad-re1（union共用体）</li>
 <li>buu-justre(使用OD跳过判断)</li>
+<li>week3 - FlareOn6 Overlang(动调改参数 )</li>
+<li>week3 -  BJDCTF2020 easy(动调改函数地址)</li>
 </ul>
-<h3 id="加密函数"><a href="#加密函数" class="headerlink" title="加密函数"></a>加密函数</h3><h4 id="XOR"><a href="#XOR" class="headerlink" title="XOR"></a>XOR</h4><ul>
+<h3 id="加密函数"><a href="#加密函数" class="headerlink" title="加密函数"></a>加密函数</h3><p><img src="/2021/09/29/re/image-20211121101150865.png" alt="image-20211121101150865"> </p>
+<h4 id="XOR"><a href="#XOR" class="headerlink" title="XOR"></a>XOR</h4><ul>
 <li>buu-xor</li>
 </ul>
 <h4 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h4><ul>
@@ -398,20 +372,19 @@
 <h4 id="TEA"><a href="#TEA" class="headerlink" title="TEA"></a>TEA</h4><ul>
 <li>week1-GWCTF 2019 xxor</li>
 </ul>
-<h4 id="RC4"><a href="#RC4" class="headerlink" title="RC4"></a>RC4</h4><ul>
-<li>Geek2021-easypyc</li>
-</ul>
-<h4 id="取余"><a href="#取余" class="headerlink" title="%取余"></a>%取余</h4><ul>
-<li><p>buu-SimpleRev(%运算的逆运算)</p>
-</li>
-<li><p>buu-actf2020-rome</p>
-</li>
+<h4 id="取余-凯撒"><a href="#取余-凯撒" class="headerlink" title="%取余/凯撒"></a>%取余/凯撒</h4><ul>
+<li>buu-SimpleRev(%运算的逆运算)</li>
+<li>buu-actf2020-rome</li>
+<li>week1-DMCTF 2020 re1 凯撒</li>
 </ul>
 <h4 id="HASH"><a href="#HASH" class="headerlink" title="HASH"></a>HASH</h4><ul>
-<li><p>buu-CrackRTF</p>
-</li>
-<li><p>10.20-Geek2021-easypyc</p>
-</li>
+<li>buu-CrackRTF</li>
+</ul>
+<h4 id="RC4"><a href="#RC4" class="headerlink" title="RC4"></a>RC4</h4><ul>
+<li>10.20-Geek2021-easypyc</li>
+</ul>
+<h4 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h4><ul>
+<li>week3-SUCTF2019 Signin</li>
 </ul>
 <h4 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h4><ul>
 <li>buu-刮开有奖</li>
@@ -419,7 +392,26 @@
 <h4 id="码表"><a href="#码表" class="headerlink" title="码表"></a>码表</h4><ul>
 <li>buu-ACTF2020-easyre</li>
 </ul>
-<h3 id="动态"><a href="#动态" class="headerlink" title="动态"></a>动态</h3><ul>
+<h3 id="z3"><a href="#z3" class="headerlink" title="z3"></a>z3</h3><ul>
+<li><p>10.22-z3</p>
+</li>
+<li><p>Geek2021-珍惜生命</p>
+</li>
+<li><p>11.21</p>
+</li>
+</ul>
+<h3 id="SMC"><a href="#SMC" class="headerlink" title="SMC"></a>SMC</h3><ul>
+<li>10.31-SMC</li>
+<li>n1ctf2020-oflo</li>
+</ul>
+<h3 id="花指令"><a href="#花指令" class="headerlink" title="花指令"></a>花指令</h3><ul>
+<li>11.03</li>
+<li>week2-ByteCTF 2020 AWD TikTokAdmin</li>
+</ul>
+<h3 id="net-amp-unity"><a href="#net-amp-unity" class="headerlink" title=".net&amp;unity"></a>.net&amp;unity</h3><ul>
+<li>11.16</li>
+</ul>
+<h3 id="动态-混淆"><a href="#动态-混淆" class="headerlink" title="动态/混淆"></a>动态/混淆</h3><ul>
 <li>buu-luckguy</li>
 </ul>
 <p>随机执行switch中的语句，猜测是case4-&gt;case5-&gt;case1</p>
@@ -429,6 +421,9 @@
 <blockquote>
 <p>GXY{do_not_hate_me}</p>
 </blockquote>
+<h3 id="文件结构"><a href="#文件结构" class="headerlink" title="文件结构"></a>文件结构</h3><ul>
+<li>buu-红帽杯2019-easyre（fini）</li>
+</ul>
 <h3 id="安卓"><a href="#安卓" class="headerlink" title="安卓"></a>安卓</h3><ul>
 <li><p>buu-helloword</p>
 </li>
@@ -437,16 +432,21 @@
 <li><p>buu-简单注册器</p>
 </li>
 </ul>
-<h3 id="迷宫"><a href="#迷宫" class="headerlink" title="迷宫"></a>迷宫</h3><p>buu-不一样的flag</p>
+<h3 id="迷宫"><a href="#迷宫" class="headerlink" title="迷宫"></a>迷宫</h3><ul>
+<li>buu-不一样的flag</li>
+</ul>
 <blockquote>
- <img src="/2021/09/29/re/image-20210930150236796.png" alt="image-20210930150236796" style="zoom:50%;">
+  <img src="/2021/09/29/re/image-20210930150236796.png" alt="image-20210930150236796" style="zoom:50%;">
 
 <img src="/2021/09/29/re/image-20210930151404384.png" alt="image-20210930151404384" style="zoom:50%;"> 
 </blockquote>
 <blockquote>
 <p>222441144222</p>
 </blockquote>
-<p>week1-DMCTF 2020 re4</p>
+<ul>
+<li>week1-DMCTF 2020 re4</li>
+<li>week4 - ACTF2020 Oruga</li>
+</ul>
 <h3 id="java"><a href="#java" class="headerlink" title="java"></a>java</h3><p>拖进idea，直接反编译</p>
 <h3 id="python"><a href="#python" class="headerlink" title="python"></a>python</h3><p>uncompyle6</p>
 <ul>
@@ -578,7 +578,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -591,7 +591,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -626,7 +626,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%B1%E5%A3%B3-UPX"><span class="nav-number">1.</span> <span class="nav-text">脱壳(UPX)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%87%E7%BC%96-%E8%B0%83%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">汇编&#x2F;调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">加密函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#XOR"><span class="nav-number">3.1.</span> <span class="nav-text">XOR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.2.</span> <span class="nav-text">进制转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#base64"><span class="nav-number">3.3.</span> <span class="nav-text">base64</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TEA"><span class="nav-number">3.4.</span> <span class="nav-text">TEA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC4"><span class="nav-number">3.5.</span> <span class="nav-text">RC4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E4%BD%99"><span class="nav-number">3.6.</span> <span class="nav-text">%取余</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HASH"><span class="nav-number">3.7.</span> <span class="nav-text">HASH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="nav-number">3.8.</span> <span class="nav-text">排序算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A0%81%E8%A1%A8"><span class="nav-number">3.9.</span> <span class="nav-text">码表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81"><span class="nav-number">4.</span> <span class="nav-text">动态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%8D%93"><span class="nav-number">5.</span> <span class="nav-text">安卓</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%B7%E5%AE%AB"><span class="nav-number">6.</span> <span class="nav-text">迷宫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java"><span class="nav-number">7.</span> <span class="nav-text">java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python"><span class="nav-number">8.</span> <span class="nav-text">python</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%B1%E5%A3%B3-UPX"><span class="nav-number">1.</span> <span class="nav-text">脱壳(UPX)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%87%E7%BC%96-%E8%B0%83%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">汇编&#x2F;调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">加密函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#XOR"><span class="nav-number">3.1.</span> <span class="nav-text">XOR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.2.</span> <span class="nav-text">进制转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#base64"><span class="nav-number">3.3.</span> <span class="nav-text">base64</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TEA"><span class="nav-number">3.4.</span> <span class="nav-text">TEA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E4%BD%99-%E5%87%AF%E6%92%92"><span class="nav-number">3.5.</span> <span class="nav-text">%取余&#x2F;凯撒</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HASH"><span class="nav-number">3.6.</span> <span class="nav-text">HASH</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC4"><span class="nav-number">3.7.</span> <span class="nav-text">RC4</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RSA"><span class="nav-number">3.8.</span> <span class="nav-text">RSA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95"><span class="nav-number">3.9.</span> <span class="nav-text">排序算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A0%81%E8%A1%A8"><span class="nav-number">3.10.</span> <span class="nav-text">码表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#z3"><span class="nav-number">4.</span> <span class="nav-text">z3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMC"><span class="nav-number">5.</span> <span class="nav-text">SMC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%B1%E6%8C%87%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">花指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-amp-unity"><span class="nav-number">7.</span> <span class="nav-text">.net&amp;unity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81-%E6%B7%B7%E6%B7%86"><span class="nav-number">8.</span> <span class="nav-text">动态&#x2F;混淆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-number">9.</span> <span class="nav-text">文件结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%8D%93"><span class="nav-number">10.</span> <span class="nav-text">安卓</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%B7%E5%AE%AB"><span class="nav-number">11.</span> <span class="nav-text">迷宫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java"><span class="nav-number">12.</span> <span class="nav-text">java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python"><span class="nav-number">13.</span> <span class="nav-text">python</span></a></li></ol></div>
             
 
           </div>
