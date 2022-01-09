@@ -104,7 +104,6 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712111226961-292959726.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712111242193-482397476.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/image-20211027223915376.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/34e8b0cd-0d29-41d4-bd0d-c16634f23b1d-9354133.jpg">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358556-348697860.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358569-1269706408.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358713-1545313667.png">
@@ -124,7 +123,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/image-20211029162006182.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/image-20211029170737439.png">
 <meta property="article:published_time" content="2021-10-27T13:17:02.266Z">
-<meta property="article:modified_time" content="2021-10-30T01:36:16.865Z">
+<meta property="article:modified_time" content="2022-01-07T13:52:29.381Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -368,36 +367,37 @@
 <h2 id="栈中的内存分布与工作原理"><a href="#栈中的内存分布与工作原理" class="headerlink" title="栈中的内存分布与工作原理"></a>栈中的内存分布与工作原理</h2><p>今天这道题只需要用的栈的相关知识。现在我们来看，当函数调用时，栈的内存空间是如何分布的。</p>
 <p>首先我们需要了解一下栈中常用的3个寄存器,64位cpu对应rsp,rbp,rip三个寄存器。而32位cpu则对应esp，ebp，eip三个寄存器。</p>
 <p>然后我们了解一下<strong>栈帧的概念，一个栈帧就是保存一个函数的状态，简单来说就是一个函数所需要的栈空间</strong>，rsp/esp永远指向栈帧的栈顶，rbp/ebp则永远指向栈帧的栈底,rip/eip指向当前栈栈帧执行的命令。</p>
-<h4 id="内存分布"><a href="#内存分布" class="headerlink" title="内存分布"></a>内存分布</h4><p>如图，栈从高地址向低地址开辟内存空间，所以<strong>低地址的是栈顶</strong>，而栈底的第一个栈帧在这里存放着我们的主函数的父函数，所以<strong>main函数并不是最栈顶的函数</strong>，main上面还会在编译过程中有一些库函数，但是他们并不会产生栈帧，因为栈先进后出的特性，所以当在main函数中需要调用其他函数时，就<strong>开辟一个新的函数栈帧，并存储上一个栈的栈底</strong>，当调用结束时，将现在的栈帧弹出，恢复到原来的main函数继续执行完main函数，比如，当上面的代码main函数调用到sum函数时，便会开辟一个新的栈帧，而sum函数所需要的参数，会被逆向存储在父函数（在这里也就是main函数）的栈帧中</p>
+<h4 id="内存分布"><a href="#内存分布" class="headerlink" title="内存分布"></a>内存分布</h4><p>如图，栈从高地址向低地址开辟内存空间，所以<strong>低地址的是栈顶</strong>，而栈底的第一个栈帧在这里存放着我们的主函数的父函数（libc_start_main?），所以<strong>main函数并不是最栈顶的函数</strong>，main上面还会在编译过程中有一些库函数，但是他们并不会产生栈帧，因为栈先进后出的特性，所以当在main函数中需要调用其他函数时，就<strong>开辟一个新的函数栈帧，并存储上一个栈的栈底</strong>，当调用结束时，将现在的栈帧弹出，恢复到原来的main函数继续执行完main函数，比如，当上面的代码main函数调用到sum函数时，便会开辟一个新的栈帧，而sum函数所需要的参数，会被逆向存储在父函数（在这里也就是main函数）的栈帧中</p>
 <p> <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712111242193-482397476.png" alt="img"></p>
 <blockquote>
 <p>补张图,感觉这个更好理解</p>
 <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/image-20211027223915376.png" alt="image-20211027223915376" style="zoom:67%;"> 
 </blockquote>
 <blockquote>
-<p>   <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/34e8b0cd-0d29-41d4-bd0d-c16634f23b1d-9354133.jpg" alt="img"></p>
+<pre><code>![img](10.27-栈溢出/34e8b0cd-0d29-41d4-bd0d-c16634f23b1d-9354133.jpg)
+</code></pre>
 </blockquote>
 <h4 id="栈帧的具体结构"><a href="#栈帧的具体结构" class="headerlink" title="栈帧的具体结构"></a>栈帧的具体结构</h4> <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358556-348697860.png" alt="img" style="zoom:80%;">
 
 <blockquote>
 <p>任务是保存caller的状态,创建callee的状态</p>
-<p>将callee的参数逆序压入栈中,参数被保存在caller的状态内</p>
+<p>将callee的<strong>参数</strong>逆序压入栈中,参数被保存在caller的状态内</p>
 <p>其他数据就保存在callee的状态中了</p>
 </blockquote>
  <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358569-1269706408.png" alt="img" style="zoom:80%;">
 
 <blockquote>
-<p>压入 caller的下一条指令作为返回地址,封存了caller的状态</p>
+<p>压入 caller的下一条指令作为<strong>返回地址</strong>,封存了caller的状态</p>
 </blockquote>
  <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358713-1545313667.png" alt="img" style="zoom:80%;">
 
 <blockquote>
-<p>压入 caller的栈底,保存caller的栈底,再将ebp放到现在的栈顶(caller的),更新成了callee的栈底</p>
+<p>压入 caller的<strong>栈底</strong>,保存caller的栈底,再将ebp放到现在的栈顶(caller的),更新成了callee的栈底</p>
 </blockquote>
  <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358710-1892895445.png" alt="img" style="zoom:80%;">
 
 <blockquote>
-<p>压入callee的数据(局部变量等,参入的参数不在这,在caller的状态里)</p>
+<p>压入callee的<strong>数据</strong>(局部变量等,参入的参数不在这,在caller的状态里)</p>
 </blockquote>
 <p>上面的几张图，就是创建新栈帧的过程，当然，图中所演示的是在32位cpu中的情况，也是就是寄存器与存储字长有着细微的变化，但是差别并不是很大，并且，图中的对于寄存器的各种操作都是在汇编代码中具体实现的，这里我们并不赘述太多，相信大家都对简单的汇编或多或少有些了解，图中我们可以看到两个相邻的栈帧，子函数(callee’s function state)栈帧的Return Address紧挨着父函数(caller’s…state)，而我们需要注意的是，Return Address是什么呢？在第二张图中，很明确的告诉我们，在调用子函数时，我们将汇编中父函数的下一个汇编指令的地址，放入Return Address，这样我们在子函数完成时，便可以将Return Address中的值弹入rip/eip中，这样程序便会从上次调用的地方继续完成父函数，而这一点，也就是我们实行栈溢出的关键，我们不妨想一想，如果我们能够通过某种方式，<strong>操控Return Address的返回地址</strong>，那么是不是意味着，我们可以任意操控远程的机器指向任何指令，也就是说我们只要可以篡改Return Address指向一个危险函数的地址，理论上，我们就可以通过危险函数干任何我们想干的事情。那么我们再来看看当子函数调用结束后，是如何删除子函数的栈帧返回父函数的。</p>
  <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.27-%E6%A0%88%E6%BA%A2%E5%87%BA/2459605-20210712112358754-2034170252.png" alt="img" style="zoom:80%;">
@@ -649,7 +649,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -662,7 +662,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -720,7 +720,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

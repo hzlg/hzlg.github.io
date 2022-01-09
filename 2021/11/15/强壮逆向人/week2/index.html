@@ -119,7 +119,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116115539802.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120157160.png">
 <meta property="article:published_time" content="2021-11-15T12:43:57.584Z">
-<meta property="article:modified_time" content="2021-11-21T04:41:09.382Z">
+<meta property="article:modified_time" content="2021-11-25T04:14:34.723Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="re">
 <meta property="article:tag" content="强壮逆向人">
@@ -401,7 +401,7 @@
 <p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116115539802.png" alt="image-20211116115539802"> </p>
 <p>sha1解出来是1001</p>
 <p>MD5之后是 b8c37e33defde51cf91e1e03e51657da </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line">flag = hashlib.md5()  # 实例化</span><br><span class="line">m = &#x27;1001&#x27;</span><br><span class="line">flag.update(m.encode(&quot;utf8&quot;))  # 加密</span><br><span class="line">md5 = flag.hexdigest() # hash.digest()返回摘要，作为二进制数据字符串值   # hash.hexdigest()返回摘要，作为十六进制数据字符串值</span><br><span class="line">print(m)</span><br><span class="line">print(md5)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line">flag = hashlib.md5()  # 实例化</span><br><span class="line">m = &#x27;1001&#x27;</span><br><span class="line">flag.update(m.encode(&quot;utf8&quot;))  # 加密</span><br><span class="line">md5 = flag.hexdigest() # hash.digest()返回摘要，作为二进制数据字符串值   # hash.hexdigest()返回摘要，作为十六进制数据字符串值</span><br><span class="line">print(m)</span><br><span class="line">print(md5[0:20])</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120157160.png" alt="image-20211116120157160"> </p>
 <p>取了前20位</p>
@@ -529,7 +529,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -542,7 +542,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -600,7 +600,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -260,7 +260,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/21/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.21-excel%E9%80%86%E5%90%91/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -279,7 +279,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/21/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.21-excel%E9%80%86%E5%90%91/" itemprop="url">11.21-excel型逆向(z3)</a></h1>
+                <a class="post-title-link" href="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-21T13:21:39+08:00">
-                2021-11-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-07T19:41:57+08:00">
+                2022-01-07
               </time>
             
 
@@ -330,10 +330,196 @@
 
       
         
-          <p>如题</p>
+          
+            <p>遇到了tmux和gdb_attach的问题,放个解决链接</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43483799/article/details/118885208">https://blog.csdn.net/weixin_43483799/article/details/118885208</a></p>
+<p>这样之后普通终端会不行，在gdb.attach后加一个pause（）就行</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">#include&lt;unistd.h&gt;</span><br><span class="line">#include&lt;sys/mman.h&gt;</span><br><span class="line"></span><br><span class="line">#define START_ADDRESS (void*)0x80000000</span><br><span class="line">#define MAP_LEN 0x10000</span><br><span class="line">#define MACHINE_CODE_OF_NOP 0x90</span><br><span class="line">#define MACHINE_CODE_OF_RET 0xc3</span><br><span class="line"></span><br><span class="line">int global_A = 4;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">        int on_stack_B = 6;</span><br><span class="line">        void (*pf)(void);</span><br><span class="line">        void *playground = mmap(START_ADDRESS, MAP_LEN, PROT_EXEC|PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);</span><br><span class="line"></span><br><span class="line">        memset(playground, MACHINE_CODE_OF_NOP, MAP_LEN);</span><br><span class="line">        memset(playground+MAP_LEN-1, MACHINE_CODE_OF_RET, 1);</span><br><span class="line"></span><br><span class="line">        read(0, playground, MAP_LEN);</span><br><span class="line">        pf = playground;</span><br><span class="line">        pf();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>mmap函数以START_ADDRESS为起始地址,MAP_LEN是长度,其他参数看文档吧</p>
+<p>创造了一个rwx段</p>
+<p>memset1将MACHINE_CODE_OF_NOP 填满整个段</p>
+<p>memset2在段的结束位置给一个返回指令</p>
+<p>read playground的内容</p>
+<p>让函数指针pf指向playground</p>
+<p>会先push参数，再根据调用规则判断谁负责平衡栈</p>
+<p>python脚本输入到read里,先指定汇编是什么架构的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.arch = &#x27;i386&#x27;</span><br><span class="line">context.terminal = [&#x27;tmux&#x27;,&#x27;splitw&#x27;,&#x27;-h&#x27;]</span><br><span class="line"></span><br><span class="line">p = process(&quot;./ex1&quot;)</span><br><span class="line"></span><br><span class="line">p.recvuntil(&quot;global_A : &quot;)</span><br><span class="line">recv = p.recvuntil(&quot;\n&quot;)</span><br><span class="line">addr_global_A = int(recv,16)</span><br><span class="line">log.success(&quot;addr_global_A :0x%x&quot; % addr_global_A)</span><br><span class="line"></span><br><span class="line">p.recvuntil(&quot;B : &quot;)</span><br><span class="line">recv = p.recvuntil(&quot;\n&quot;)</span><br><span class="line">addr_stack_B = int(recv,16)</span><br><span class="line">log.success(&quot;addr_stack_B :0x%x&quot; % addr_stack_B)</span><br><span class="line"></span><br><span class="line">asmcode_fmt = &#x27;&#x27;&#x27;</span><br><span class="line">mov eax,-1</span><br><span class="line">mov [ebp-0x18],eax</span><br><span class="line"></span><br><span class="line">mov eax,666</span><br><span class="line">mov [0x%x],eax</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">asmcode = asmcode_fmt % (addr_global_A)</span><br><span class="line">machine_code = asm(asmcode)</span><br><span class="line"></span><br><span class="line">#gdb.attach(p, &quot;fin\nb *(0x80000000)\nc&quot;)</span><br><span class="line"></span><br><span class="line">p.send(machine_code)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108230656956.png" alt="image-20220108230656956"> </p>
+<blockquote>
+<p>eax返回对了</p>
+<p>但是ebx被篡改了，把ebx-0x18赋值给eax还原状态时就出错了</p>
+</blockquote>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108230958208.png" alt="image-20220108230958208"> </p>
+<blockquote>
+<p>把ebx和ecx等要用的保存起来就可以了</p>
+<p>还有覆盖问题,等会解决</p>
+</blockquote>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108231323653.png" alt="image-20220108231323653"> </p>
+<blockquote>
+<p>改成循环也行</p>
+</blockquote>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108231554383.png" alt="image-20220108231554383"> </p>
+<blockquote>
+<p>寄存器很少,局部变量放栈里比较好,减少寄存器使用数量</p>
+<p>用了很多CPU与内存交互,慢,最好是寄存器之间交互</p>
+<p>并且,如果函数嵌套的话,会被覆盖,所以把esp先移动,然后放一个ebp作为基址,用基址+偏移来访问,esp随便动</p>
+<p>也要先保存上一个函数的ebp</p>
+</blockquote>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108232936825.png" alt="image-20220108232936825">  </p>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108231924315.png" alt="image-20220108231924315"> </p>
+<blockquote>
+<p>这样可以看栈</p>
+</blockquote>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108233053163.png" alt="image-20220108233053163"> </p>
+<blockquote>
+<p>也可以看栈</p>
+</blockquote>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220108232340047.png" alt="image-20220108232340047"> </p>
+<blockquote>
+<p>这样可以vim替换</p>
+</blockquote>
+<p>ex1可以做了</p>
+<p>ex2就是栈传递参数，ex3也行了</p>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220109110626075.png" alt="image-20220109110626075"> </p>
+<blockquote>
+<p>这是ex2的随机数,上至下是para1-8</p>
+</blockquote>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220109110527885.png" alt="image-20220109110527885"> </p>
+<p><img src="/2022/01/07/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.7-pwn4/image-20220109110533148.png" alt="image-20220109110533148"> </p>
+<blockquote>
+<p>看起来x64是先用完寄存器，还有多的参数就入栈（i386是全入栈）</p>
+<p>顺序是参数6,5,4,3,2,1入寄存器,然后8,7入栈</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">context.arch = &#x27;amd64&#x27;</span><br><span class="line">#context.arch = &#x27;i386&#x27;</span><br><span class="line"></span><br><span class="line">context.terminal = [&#x27;tmux&#x27;,&#x27;splitw&#x27;,&#x27;-h&#x27;]</span><br><span class="line"></span><br><span class="line">p = process(&quot;./ex3&quot;)</span><br><span class="line"></span><br><span class="line">p.recvuntil(&quot;para2: 0x&quot;)</span><br><span class="line">recv = p.recvuntil(&quot;\n&quot;)</span><br><span class="line">para2 = int(recv,16)</span><br><span class="line">log.success(&quot;para2 :0x%x&quot; % para2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.recvuntil(&quot;para5: 0x&quot;)</span><br><span class="line">recv = p.recvuntil(&quot;\n&quot;)</span><br><span class="line">para5 = int(recv,16)</span><br><span class="line">log.success(&quot;para5 :0x%x&quot; % para5)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">asmcode_fmt = &#x27;&#x27;&#x27;</span><br><span class="line">mov eax,edx</span><br><span class="line">add eax,[rbp-0x50]</span><br><span class="line">ret</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">asmcode = asmcode_fmt</span><br><span class="line">machine_code = asm(asmcode)</span><br><span class="line"></span><br><span class="line">#gdb.attach(p)</span><br><span class="line">#gdb.attach(p, &quot;fin\nb *(0x600000000000)\nc&quot;)</span><br><span class="line"></span><br><span class="line">p.send(machine_code)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/01/06/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn%E7%AC%AC%E4%B8%89%E6%AC%A1%E7%BB%84%E4%BC%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/01/06/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn%E7%AC%AC%E4%B8%89%E6%AC%A1%E7%BB%84%E4%BC%9A/" itemprop="url">1.6-pwn第三次组会</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-06T19:49:54+08:00">
+                2022-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>pwn组会，继续昨天的ex0</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/21/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.21-excel%E9%80%86%E5%90%91/#more" rel="contents">
+            <a class="btn" href="/2022/01/06/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn%E7%AC%AC%E4%B8%89%E6%AC%A1%E7%BB%84%E4%BC%9A/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -384,7 +570,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/21/game/moe2019/wp/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/01/06/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn%E7%AC%AC%E4%BA%8C%E6%AC%A1%E7%BB%84%E4%BC%9A/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -403,7 +589,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/21/game/moe2019/wp/" itemprop="url">moe2019</a></h1>
+                <a class="post-title-link" href="/2022/01/06/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn%E7%AC%AC%E4%BA%8C%E6%AC%A1%E7%BB%84%E4%BC%9A/" itemprop="url">1.6-pwn第二次组会</a></h1>
         
 
         <div class="post-meta">
@@ -415,8 +601,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-21T10:39:39+08:00">
-                2021-11-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-06T19:49:54+08:00">
+                2022-01-06
               </time>
             
 
@@ -454,10 +640,10 @@
 
       
         
-          <p>做了下2019的题，之前的题难度真的( Ĭ ^ Ĭ )，时代变了</p>
+          <p>pwn组会，包括找变量</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/21/game/moe2019/wp/#more" rel="contents">
+            <a class="btn" href="/2022/01/06/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn%E7%AC%AC%E4%BA%8C%E6%AC%A1%E7%BB%84%E4%BC%9A/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -508,7 +694,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/20/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week4/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/01/05/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.5-pwn%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BB%84%E4%BC%9A/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -527,7 +713,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/20/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week4/" itemprop="url">强壮逆向人week4</a></h1>
+                <a class="post-title-link" href="/2022/01/05/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.5-pwn%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BB%84%E4%BC%9A/" itemprop="url">1.5-pwn第一次组会</a></h1>
         
 
         <div class="post-meta">
@@ -539,8 +725,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-20T22:33:31+08:00">
-                2021-11-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-05T09:47:20+08:00">
+                2022-01-05
               </time>
             
 
@@ -578,10 +764,10 @@
 
       
         
-          <p>FindCrypt(MD5)&amp; maze &amp; 动调地址</p>
+          <p>pwn组会，包括环境安装，整数溢出,pwntools交互</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/20/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week4/#more" rel="contents">
+            <a class="btn" href="/2022/01/05/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.5-pwn%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BB%84%E4%BC%9A/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -632,7 +818,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/20/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/01/03/%E9%98%85%E8%AF%BB/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -651,7 +837,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/20/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/" itemprop="url">强壮逆向人week3</a></h1>
+                <a class="post-title-link" href="/2022/01/03/%E9%98%85%E8%AF%BB/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/" itemprop="url">逆向工程核心原理笔记</a></h1>
         
 
         <div class="post-meta">
@@ -663,8 +849,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-20T11:26:16+08:00">
-                2021-11-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-03T21:53:41+08:00">
+                2022-01-03
               </time>
             
 
@@ -702,10 +888,10 @@
 
       
         
-          <p>RSA&amp; 动调参数 &amp; 动调地址</p>
+          <p>笔记</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/20/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/#more" rel="contents">
+            <a class="btn" href="/2022/01/03/%E9%98%85%E8%AF%BB/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -756,7 +942,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.16-.net&unity/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/01/01/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.1-ReMake/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -775,7 +961,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.16-.net&unity/" itemprop="url">11.16-.net&unity</a></h1>
+                <a class="post-title-link" href="/2022/01/01/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.1-ReMake/" itemprop="url">1.1-ReMake</a></h1>
         
 
         <div class="post-meta">
@@ -787,8 +973,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-16T11:28:34+08:00">
-                2021-11-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-01T14:25:14+08:00">
+                2022-01-01
               </time>
             
 
@@ -826,11 +1012,11 @@
 
       
         
-          <p>第一周re任务的困难难度</p>
-<p>如题</p>
+          <p>不知不觉就已经新的一年了，因为考试反复横跳的借口，整整一个月没有re了</p>
+<p>从今天开始继续学习吧</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.16-.net&unity/#more" rel="contents">
+            <a class="btn" href="/2022/01/01/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.1-ReMake/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -881,7 +1067,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.28-pwnAAA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -900,7 +1086,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/" itemprop="url">强壮逆向人week2</a></h1>
+                <a class="post-title-link" href="/2021/11/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.28-pwnAAA/" itemprop="url">11.28-pwnAAA</a></h1>
         
 
         <div class="post-meta">
@@ -912,8 +1098,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-15T20:43:57+08:00">
-                2021-11-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-28T19:17:06+08:00">
+                2021-11-28
               </time>
             
 
@@ -951,10 +1137,10 @@
 
       
         
-          <p>SMC &amp; 花指令 &amp; .net</p>
+          <p>学一下pwn</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/#more" rel="contents">
+            <a class="btn" href="/2021/11/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.28-pwnAAA/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1005,7 +1191,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/14/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.14-ddl/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.28-py_Trad3_1s_fuNny!/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -1024,7 +1210,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/14/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.14-ddl/" itemprop="url">11.14-我是傻逼，我是臭鸽子，我是懒狗，对自己无语了</a></h1>
+                <a class="post-title-link" href="/2021/11/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.28-py_Trad3_1s_fuNny!/" itemprop="url">11.28-py字节码</a></h1>
         
 
         <div class="post-meta">
@@ -1036,8 +1222,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-14T21:29:19+08:00">
-                2021-11-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-28T12:34:54+08:00">
+                2021-11-28
               </time>
             
 
@@ -1075,13 +1261,10 @@
 
       
         
-          <p>已经14号了，11月基本没干什么东西，以论文、期中考、装双系统当借口一直拖延，每天都觉得自己很累，但是其实根本没有干什么，报复性玩乐浪费掉时间，对学习一直提不起劲来。</p>
-<p>不搞re的话就好好学课内啊！课内也不学，彻底摆烂，我在干嘛？？现在把论文，作业，期中考都处理的差不多了，但是还是有股惰性，只能说有点懒成习惯了，每日博客必须重新开张，把状态调整回来。</p>
-<p>21级的学弟和7ylAsk00都已经超过我了，我再不努力只能像大一一样错过各种机会，明明找到了要走的路还不好好走，脑子多少出了点问题</p>
-<p>给自己定下目标：把weekly re&amp;pwn跟上，早起体育打卡加看书，晚上锻炼加看会哲学，减少b站、知乎和游戏</p>
+          <p>py_Trad3_1s_fuNny!</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/14/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.14-ddl/#more" rel="contents">
+            <a class="btn" href="/2021/11/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.28-py_Trad3_1s_fuNny!/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1132,7 +1315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/10/%E9%85%8D%E7%BD%AE/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/27/game/nctf2021/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -1151,7 +1334,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/10/%E9%85%8D%E7%BD%AE/" itemprop="url">linux美化指南(Ubuntu)</a></h1>
+                <a class="post-title-link" href="/2021/11/27/game/nctf2021/" itemprop="url">nctf2021</a></h1>
         
 
         <div class="post-meta">
@@ -1163,8 +1346,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-10T22:17:31+08:00">
-                2021-11-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-27T08:58:31+08:00">
+                2021-11-27
               </time>
             
 
@@ -1202,12 +1385,10 @@
 
       
         
-          <p>装了双系统,美化了一下桌面,装了一些方便的工具,把踩的坑记录一下</p>
-<p>我好傻，微信qq没整明白，重装了一遍 ubuntu分区，花了大概（20-30min）</p>
-<p>我好傻，上面那个不是deepin wine的问题，配置啥的没错，是qq更新了，舍友的也打不开了，我大概是不用重装的，不过第一遍没有计时，就当做熟练流程了吧（恨</p>
+          <p>nctf2021,做出了一道C++ base64变表</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/10/%E9%85%8D%E7%BD%AE/#more" rel="contents">
+            <a class="btn" href="/2021/11/27/game/nctf2021/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1258,7 +1439,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/03/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.03-%E5%8F%8C%E5%88%9B%E5%91%A8%E5%B0%BE%E5%B7%B4/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/26/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.26-AES/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -1277,7 +1458,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/11/03/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.03-%E5%8F%8C%E5%88%9B%E5%91%A8%E5%B0%BE%E5%B7%B4/" itemprop="url">11.03-双创周尾巴</a></h1>
+                <a class="post-title-link" href="/2021/11/26/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.26-AES/" itemprop="url">11.26-AES</a></h1>
         
 
         <div class="post-meta">
@@ -1289,8 +1470,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-03T19:10:59+08:00">
-                2021-11-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-26T09:38:46+08:00">
+                2021-11-26
               </time>
             
 
@@ -1328,134 +1509,13 @@
 
       
         
-          <p>第二周re任务的中等难度</p>
+          <p>暨南大学的crazy_enc包括了AES,RC4,TEA</p>
+<p>RC4和TEA之前都碰见过了,重点看一下AES</p>
+<p>AES的列混淆应该是不可逆向的,吧?</p>
+<p>看见AES特征的直接用标准py脚本应该就行</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/11/03/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.03-%E5%8F%8C%E5%88%9B%E5%91%A8%E5%B0%BE%E5%B7%B4/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/10/31/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.31-fuzz%E8%AE%BA%E6%96%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="hzlg's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/10/31/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.31-fuzz%E8%AE%BA%E6%96%87/" itemprop="url">10.31-fuzz论文</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T20:43:45+08:00">
-                2021-10-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>之前那个要学机器学习，以为是测试来着，结果是开发一个自动化检测工具，emmm，换了一篇</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/10/31/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/10.31-fuzz%E8%AE%BA%E6%96%87/#more" rel="contents">
+            <a class="btn" href="/2021/11/26/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/11.26-AES/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1497,7 +1557,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
   </nav>
 
 
@@ -1543,7 +1603,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1556,7 +1616,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1598,7 +1658,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
