@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="re,强壮逆向人," />
+  <meta name="keywords" content="re,rx强壮逆向人," />
 
 
 
@@ -112,17 +112,17 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608372658-458014-image.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608372812-762428-image.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608373001-471852-image.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608373001-471852-image.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608373001-471852-image-16423878060505.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608373849-914242-image.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608374017-641481-image.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120837126.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116115539802.png">
-<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120157160.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120837126-16423878137396.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116115539802-16423878156427.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120157160-16423878183958.png">
 <meta property="article:published_time" content="2021-11-15T12:43:57.584Z">
-<meta property="article:modified_time" content="2021-11-25T04:14:34.723Z">
+<meta property="article:modified_time" content="2022-01-17T02:50:20.013Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="re">
-<meta property="article:tag" content="强壮逆向人">
+<meta property="article:tag" content="rx强壮逆向人">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://hzlg.github.ioz/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211031124930886.png">
 
@@ -378,7 +378,7 @@
 <h2 id="例子1-点击跳转到题目0×00"><a href="#例子1-点击跳转到题目0×00" class="headerlink" title="例子1(点击跳转到题目0×00)"></a><a target="_blank" rel="noopener" href="https://bbs.xdsec.org/d/678/21">例子1(点击跳转到题目0×00)</a></h2><p>这道题目是一个很简单的算法加密, 首先我们通过<code>Strings</code>窗口尝试定位到有效函数:<br><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608372602-329047-image.png" alt="img"><br>往下翻一点可以看见函数分析失败了, 这一部分实际上是无效数据.<br><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608372658-458014-image.png" alt="img"><br>那我们就凑合着看看上半部分还能看的汇编代码, 并看看从这里调用的函数都长什么样. 比如这个:<br><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608372812-762428-image.png" alt="img"><br>看一下参数列表, 长这样的函数除了<code>printf</code>和<code>scanf</code>之外也没几个了. 结合上面的传参可以判断出这个函数就是<code>printf</code>. 重命名一下(按N):<br><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608373001-471852-image.png" alt="img"><br>嫌疑函数就只剩<code>sub_4022AC</code>这一个了.<br>跟进去看看. 从<code>sub_4022AC</code>跳转到<code>sub_4088D0</code>, 代码长这样:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">sub_4088D0</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">int</span> a2, <span class="keyword">int</span> a3)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [esp+D0h] [ebp-8h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; ; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    result = i;</span><br><span class="line">    <span class="keyword">if</span> ( i &gt;= a2 )</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    *(_BYTE *)(i + a3) = byte_4DF000 ^ *(_BYTE *)(i + a1);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>拐回去看<code>main</code>函数调用的时候都传了哪三个参数:<br><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608373001-471852-image.png" alt="img"><br>上面三个push很明显就是传参.<br>这个函数的作用就是将a1所指向的a2字节大小的数据和<code>byte_4DF000</code>进行异或, 然后再覆盖掉a1(传参的时候a1与a3相同).<br>而传参的时候传进去的是<code>0x408b06</code>, 这正好就是你在main里看到的那坨乱七八糟的数据的位置.</p>
+<p>拐回去看<code>main</code>函数调用的时候都传了哪三个参数:<br><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/1608373001-471852-image-16423878060505.png" alt="img"><br>上面三个push很明显就是传参.<br>这个函数的作用就是将a1所指向的a2字节大小的数据和<code>byte_4DF000</code>进行异或, 然后再覆盖掉a1(传参的时候a1与a3相同).<br>而传参的时候传进去的是<code>0x408b06</code>, 这正好就是你在main里看到的那坨乱七八糟的数据的位置.</p>
 <p>a2传进去是0×138, <code>byte_4DF000</code>存放的是数字74, 用来还原数据的IDA Python代码可以很简单的写出来:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### IDA 7.0, Python2</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x138</span>):</span><br><span class="line">    PatchByte(<span class="number">0x408b06</span>+i, Byte(<span class="number">0x408b06</span>+i)^<span class="number">74</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">### IDA 7.5, Python3</span></span><br><span class="line"><span class="keyword">from</span> ida_bytes <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x138</span>):</span><br><span class="line">    patch_byte(<span class="number">0x408b06</span>+i, get_byte(<span class="number">0x408b06</span>+i)^<span class="number">74</span>)</span><br></pre></td></tr></table></figure>
 
@@ -394,16 +394,16 @@
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html">https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html</a></p>
 </blockquote>
-<p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120837126.png" alt="image-20211116120837126"> </p>
+<p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120837126-16423878137396.png" alt="image-20211116120837126"> </p>
 <p>安卓unity游戏的核心逻辑一般位于<code>assets\bin\Data\Managed\Assembly-CSharp.dll</code></p>
 <p>这题不是安卓,在_Data/Managed目录下的Assembly-CSharp.dll</p>
 <p>这么多的dll找哪一个呢,ctrl shift k搜索关键词,比如美汁汁(DX3906的方法,赞哦)</p>
-<p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116115539802.png" alt="image-20211116115539802"> </p>
+<p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116115539802-16423878156427.png" alt="image-20211116115539802"> </p>
 <p>sha1解出来是1001</p>
 <p>MD5之后是 b8c37e33defde51cf91e1e03e51657da </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line">flag = hashlib.md5()  # 实例化</span><br><span class="line">m = &#x27;1001&#x27;</span><br><span class="line">flag.update(m.encode(&quot;utf8&quot;))  # 加密</span><br><span class="line">md5 = flag.hexdigest() # hash.digest()返回摘要，作为二进制数据字符串值   # hash.hexdigest()返回摘要，作为十六进制数据字符串值</span><br><span class="line">print(m)</span><br><span class="line">print(md5[0:20])</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120157160.png" alt="image-20211116120157160"> </p>
+<p><img src="/2021/11/15/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week2/image-20211116120157160-16423878183958.png" alt="image-20211116120157160"> </p>
 <p>取了前20位</p>
 <blockquote>
 <p>BJDCTF{b8c37e33defde51cf91e}</p>
@@ -427,7 +427,7 @@
           
             <a href="/tags/re/" rel="tag"># re</a>
           
-            <a href="/tags/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/" rel="tag"># 强壮逆向人</a>
+            <a href="/tags/rx%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/" rel="tag"># rx强壮逆向人</a>
           
         </div>
       
@@ -529,7 +529,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
