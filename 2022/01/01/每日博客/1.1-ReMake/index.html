@@ -102,7 +102,7 @@
 <meta property="og:description" content="不知不觉就已经新的一年了，因为考试反复横跳的借口，整整一个月没有re了 从今天开始继续学习吧">
 <meta property="og:locale">
 <meta property="article:published_time" content="2022-01-01T06:25:14.209Z">
-<meta property="article:modified_time" content="2022-01-17T03:11:28.199Z">
+<meta property="article:modified_time" content="2022-02-08T10:20:44.579Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="re">
 <meta property="article:tag" content="buu">
@@ -336,7 +336,7 @@
 <span id="more"></span>
 
 <p>之前堆了好多比赛的wp没看，今天想写点buu，熟悉一下操作</p>
-<h2 id="FlareOn4-login-javascript"><a href="#FlareOn4-login-javascript" class="headerlink" title="FlareOn4_login(javascript)"></a>FlareOn4_login(javascript)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">document.getElementById(&quot;prompt&quot;).onclick = function()</span><br><span class="line">&#123;</span><br><span class="line">    var flag = document.getElementById(&quot;flag&quot;).value;</span><br><span class="line">    var rotFlag = flag.replace(/ [a - zA - Z] / g, function(c) </span><br><span class="line">    &#123; return String.fromCharCode(   (c &lt;= &quot;Z&quot; ? 90 : 122) &gt;= (c = c.charCodeAt(0) + 13)    ?    c   :     c - 26); &#125;      );</span><br><span class="line">    if (&quot;PyvragFvqrYbtvafNerRnfl@syner-ba.pbz&quot; == rotFlag)</span><br><span class="line">    &#123;</span><br><span class="line">        alert(&quot;Correct flag!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        alert(&quot;Incorrect flag, rot again&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="buu-FlareOn4-login-javascript"><a href="#buu-FlareOn4-login-javascript" class="headerlink" title="buu-FlareOn4_login(javascript)"></a>buu-FlareOn4_login(javascript)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">document.getElementById(&quot;prompt&quot;).onclick = function()</span><br><span class="line">&#123;</span><br><span class="line">    var flag = document.getElementById(&quot;flag&quot;).value;</span><br><span class="line">    var rotFlag = flag.replace(/ [a - zA - Z] / g, function(c) </span><br><span class="line">    &#123; return String.fromCharCode(   (c &lt;= &quot;Z&quot; ? 90 : 122) &gt;= (c = c.charCodeAt(0) + 13)    ?    c   :     c - 26); &#125;      );</span><br><span class="line">    if (&quot;PyvragFvqrYbtvafNerRnfl@syner-ba.pbz&quot; == rotFlag)</span><br><span class="line">    &#123;</span><br><span class="line">        alert(&quot;Correct flag!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        alert(&quot;Incorrect flag, rot again&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>字符是大写字母就变成Z,是小写字母就变成z</p>
@@ -346,14 +346,22 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">enc = &#x27;PyvragFvqrYbtvafNerRnfl@syner-ba.pbz&#x27;</span><br><span class="line">flag = &#x27;&#x27;</span><br><span class="line">for i in enc:</span><br><span class="line">    if ord(i) &gt;= 65 and ord(i) &lt;= 90:  # 大写字母</span><br><span class="line">        if ord(i) - 13 &lt; 65:</span><br><span class="line">            flag += chr(ord(i) + 13)</span><br><span class="line">        else:</span><br><span class="line">            flag += chr(ord(i) - 13)</span><br><span class="line">    elif ord(i) &gt;= 97 and ord(i) &lt;= 122:  # 小写字母</span><br><span class="line">        if ord(i) - 13 &lt; 97:</span><br><span class="line">            flag += chr(ord(i) + 13)</span><br><span class="line">        else:</span><br><span class="line">            flag += chr(ord(i) - 13)</span><br><span class="line">    else:</span><br><span class="line">        flag += i</span><br><span class="line"></span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>flag{<a href="mailto:&#x43;&#108;&#105;&#x65;&#110;&#116;&#83;&#105;&#100;&#101;&#76;&#111;&#103;&#105;&#x6e;&#115;&#65;&#x72;&#101;&#x45;&#97;&#115;&#121;&#64;&#x66;&#x6c;&#x61;&#114;&#101;&#45;&#111;&#x6e;&#46;&#x63;&#111;&#x6d;">&#x43;&#108;&#105;&#x65;&#110;&#116;&#83;&#105;&#100;&#101;&#76;&#111;&#103;&#105;&#x6e;&#115;&#65;&#x72;&#101;&#x45;&#97;&#115;&#121;&#64;&#x66;&#x6c;&#x61;&#114;&#101;&#45;&#111;&#x6e;&#46;&#x63;&#111;&#x6d;</a>}</p>
+<p>flag{<a href="mailto:&#67;&#x6c;&#x69;&#x65;&#110;&#x74;&#83;&#105;&#100;&#x65;&#x4c;&#111;&#x67;&#105;&#x6e;&#115;&#x41;&#x72;&#101;&#69;&#x61;&#115;&#x79;&#x40;&#102;&#x6c;&#x61;&#114;&#101;&#45;&#x6f;&#110;&#x2e;&#x63;&#x6f;&#x6d;">&#67;&#x6c;&#x69;&#x65;&#110;&#x74;&#83;&#105;&#100;&#x65;&#x4c;&#111;&#x67;&#105;&#x6e;&#115;&#x41;&#x72;&#101;&#69;&#x61;&#115;&#x79;&#x40;&#102;&#x6c;&#x61;&#114;&#101;&#45;&#x6f;&#110;&#x2e;&#x63;&#x6f;&#x6d;</a>}</p>
 </blockquote>
-<h2 id="GUET-CTF2019-re"><a href="#GUET-CTF2019-re" class="headerlink" title="GUET-CTF2019 re"></a>GUET-CTF2019 re</h2><p>打开看到upx，kali脱壳</p>
+<h2 id="buu-GUET-CTF2019-re"><a href="#buu-GUET-CTF2019-re" class="headerlink" title="buu-GUET-CTF2019 re"></a>buu-GUET-CTF2019 re</h2><p>打开看到upx，kali脱壳</p>
 <p>之后看到校验函数是一堆除法，除就完事了，flag[6]是爆破出来的，1</p>
 <blockquote>
 <p>flag{e165421110ba03099a1c039337}</p>
 </blockquote>
-<h2 id="SUCTF2019login"><a href="#SUCTF2019login" class="headerlink" title="SUCTF2019login"></a>SUCTF2019login</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = [198, 232, 816, 200, 1536, 300, 6144, 984, 51200, 570, 92160, 1200, 565248,</span><br><span class="line">     756, 1474560, 800, 6291456, 1782, 65536000</span><br><span class="line">     ]</span><br><span class="line">flag = &quot;&quot;</span><br><span class="line">for i in range(19, 0, -1):</span><br><span class="line">    # print(i)</span><br><span class="line">    if i % 2 == 1:</span><br><span class="line">        flag += chr(a[i-1] &gt;&gt; i)</span><br><span class="line">    else:</span><br><span class="line">        flag += chr(a[i-1] // i)</span><br><span class="line">print(flag[::-1])</span><br></pre></td></tr></table></figure>
+<h2 id="buu-SUCTF2019login"><a href="#buu-SUCTF2019login" class="headerlink" title="buu-SUCTF2019login"></a>buu-SUCTF2019login</h2><p>RSA</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">from Crypto.Util.number import long_to_bytes</span><br><span class="line"></span><br><span class="line">p = 366669102002966856876605669837014229419</span><br><span class="line">q = 282164587459512124844245113950593348271</span><br><span class="line">N = 103461035900816914121390101299049044413950405173712170434161686539878160984549</span><br><span class="line">c = 0xad939ff59f6e70bcbfad406f2494993757eee98b91bc244184a377520d06fc35</span><br><span class="line">e = 65537</span><br><span class="line"></span><br><span class="line">d = gmpy2.invert(e, (p-1)*(q-1))</span><br><span class="line">m = gmpy2.powmod(c, d, p*q)</span><br><span class="line">print(long_to_bytes(m), end=&#x27;&#x27;)</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>suctf{Pwn_@_hundred_years}</p>
+</blockquote>
+<h2 id="buu-WUSTCTF2020-level1"><a href="#buu-WUSTCTF2020-level1" class="headerlink" title="buu-[WUSTCTF2020]level1"></a>buu-[WUSTCTF2020]level1</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = [198, 232, 816, 200, 1536, 300, 6144, 984, 51200, 570, 92160, 1200, 565248,</span><br><span class="line">     756, 1474560, 800, 6291456, 1782, 65536000</span><br><span class="line">     ]</span><br><span class="line">flag = &quot;&quot;</span><br><span class="line">for i in range(19, 0, -1):</span><br><span class="line">    # print(i)</span><br><span class="line">    if i % 2 == 1:</span><br><span class="line">        flag += chr(a[i-1] &gt;&gt; i)</span><br><span class="line">    else:</span><br><span class="line">        flag += chr(a[i-1] // i)</span><br><span class="line">print(flag[::-1])</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>ctf2020{d9-dE6-20c}</p>
@@ -479,7 +487,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -492,7 +500,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -527,7 +535,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FlareOn4-login-javascript"><span class="nav-number">1.</span> <span class="nav-text">FlareOn4_login(javascript)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GUET-CTF2019-re"><span class="nav-number">2.</span> <span class="nav-text">GUET-CTF2019 re</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SUCTF2019login"><span class="nav-number">3.</span> <span class="nav-text">SUCTF2019login</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#buu-FlareOn4-login-javascript"><span class="nav-number">1.</span> <span class="nav-text">buu-FlareOn4_login(javascript)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buu-GUET-CTF2019-re"><span class="nav-number">2.</span> <span class="nav-text">buu-GUET-CTF2019 re</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buu-SUCTF2019login"><span class="nav-number">3.</span> <span class="nav-text">buu-SUCTF2019login</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#buu-WUSTCTF2020-level1"><span class="nav-number">4.</span> <span class="nav-text">buu-[WUSTCTF2020]level1</span></a></li></ol></div>
             
 
           </div>

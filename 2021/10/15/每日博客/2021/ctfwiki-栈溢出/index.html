@@ -110,7 +110,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/15/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/ctfwiki-%E6%A0%88%E6%BA%A2%E5%87%BA/image-20220113150124964.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/15/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/ctfwiki-%E6%A0%88%E6%BA%A2%E5%87%BA/image-20220113154904742.png">
 <meta property="article:published_time" content="2021-10-15T09:30:06.358Z">
-<meta property="article:modified_time" content="2022-01-17T03:04:05.254Z">
+<meta property="article:modified_time" content="2022-01-17T13:44:08.850Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -350,7 +350,7 @@
 
 <p>编译一下：</p>
 <blockquote>
-<p>stack-example gcc -m32 -fno-stack-protector stack_example.c -o stack_example</p>
+<p>stack-example gcc -m32 -fno-stack-protector -no-pie stack_example.c -o stack_example</p>
 </blockquote>
 <blockquote>
 <p>gcc 编译指令中，<code>-m32</code> 指的是生成 32 位程序； <code>-fno-stack-protector</code> 指的是不开启<strong>堆栈溢出保护</strong>，即<strong>不生成 canary</strong>。 此外，为了更加方便地介绍栈溢出的基本利用方式，这里还需要<strong>关闭 PIE</strong>（Position Independent Executable），避免加载基址被打乱。不同 gcc 版本对于 PIE 的默认配置不同，我们可以使用命令<code>gcc -v</code>查看 gcc 默认的开关情况。如果含有<code>--enable-default-pie</code>参数则代表 PIE 默认已开启，需要在编译指令中添加参数<code>-no-pie</code>。</p>
@@ -498,7 +498,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -511,7 +511,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

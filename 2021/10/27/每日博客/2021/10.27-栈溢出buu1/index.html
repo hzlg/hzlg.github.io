@@ -123,7 +123,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211029162006182.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211029170737439.png">
 <meta property="article:published_time" content="2021-10-27T13:17:02.266Z">
-<meta property="article:modified_time" content="2022-01-17T03:07:32.171Z">
+<meta property="article:modified_time" content="2022-01-18T14:50:53.376Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="buu">
 <meta property="article:tag" content="pwn">
@@ -368,14 +368,16 @@
 <h2 id="栈中的内存分布与工作原理"><a href="#栈中的内存分布与工作原理" class="headerlink" title="栈中的内存分布与工作原理"></a>栈中的内存分布与工作原理</h2><p>今天这道题只需要用的栈的相关知识。现在我们来看，当函数调用时，栈的内存空间是如何分布的。</p>
 <p>首先我们需要了解一下栈中常用的3个寄存器,64位cpu对应rsp,rbp,rip三个寄存器。而32位cpu则对应esp，ebp，eip三个寄存器。</p>
 <p>然后我们了解一下<strong>栈帧的概念，一个栈帧就是保存一个函数的状态，简单来说就是一个函数所需要的栈空间</strong>，rsp/esp永远指向栈帧的栈顶，rbp/ebp则永远指向栈帧的栈底,rip/eip指向当前栈栈帧执行的命令。</p>
-<h4 id="内存分布"><a href="#内存分布" class="headerlink" title="内存分布"></a>内存分布</h4><p>如图，栈从高地址向低地址开辟内存空间，所以<strong>低地址的是栈顶</strong>，而栈底的第一个栈帧在这里存放着我们的主函数的父函数（libc_start_main?），所以<strong>main函数并不是最栈顶的函数</strong>，main上面还会在编译过程中有一些库函数，但是他们并不会产生栈帧，因为栈先进后出的特性，所以当在main函数中需要调用其他函数时，就<strong>开辟一个新的函数栈帧，并存储上一个栈的栈底</strong>，当调用结束时，将现在的栈帧弹出，恢复到原来的main函数继续执行完main函数，比如，当上面的代码main函数调用到sum函数时，便会开辟一个新的栈帧，而sum函数所需要的参数，会被逆向存储在父函数（在这里也就是main函数）的栈帧中</p>
+<h4 id="内存分布"><a href="#内存分布" class="headerlink" title="内存分布"></a>内存分布</h4><p>如图，栈从高地址向低地址开辟内存空间，所以<strong>低地址的是栈顶</strong>，而栈底的第一个栈帧在这里存放着我们的主函数的父函数（_start?），所以<strong>main函数并不是最栈顶的函数</strong>，main上面还会在编译过程中有一些库函数，但是他们并不会产生栈帧，因为栈先进后出的特性，所以当在main函数中需要调用其他函数时，就<strong>开辟一个新的函数栈帧，并存储上一个栈的栈底</strong>，当调用结束时，将现在的栈帧弹出，恢复到原来的main函数继续执行完main函数，比如，当上面的代码main函数调用到sum函数时，便会开辟一个新的栈帧，而sum函数所需要的参数，会被逆向存储在父函数（在这里也就是main函数）的栈帧中</p>
 <p> <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/2459605-20210712111242193-482397476.png" alt="img"></p>
 <blockquote>
 <p>补张图,感觉这个更好理解</p>
 <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211027223915376.png" alt="image-20211027223915376" style="zoom:67%;"> 
 </blockquote>
 <blockquote>
-<pre><code>![img](10.27-栈溢出buu1/34e8b0cd-0d29-41d4-bd0d-c16634f23b1d-9354133.jpg)
+<pre><code> ![img](10.27-栈溢出buu1/34e8b0cd-0d29-41d4-bd0d-c16634f23b1d-9354133.jpg)
+
+64位前六个参数会传入 rdi、rsi、rdx、rcx、r8、r9
 </code></pre>
 </blockquote>
 <h4 id="栈帧的具体结构"><a href="#栈帧的具体结构" class="headerlink" title="栈帧的具体结构"></a>栈帧的具体结构</h4> <img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/2459605-20210712112358556-348697860.png" alt="img" style="zoom:80%;">
@@ -500,7 +502,7 @@
 <h3 id="堆栈平衡的方法"><a href="#堆栈平衡的方法" class="headerlink" title="堆栈平衡的方法"></a>堆栈平衡的方法</h3><p><img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211029162006182.png" alt="image-20211029162006182"> </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload=b&#x27;A&#x27;*23+p64(0x401186+1)  #局部变量15+ebp8+危险函数地址,跳过了fun的第一句push,使得堆栈平衡</span><br><span class="line"># payload=b&#x27;A&#x27;*23+p64(0x401198) + p64(0x401186) #也可以,局部变量15 + ebp8 + 这部分任意找ret语句,都可以 + 危险函数起始地址</span><br><span class="line"># payload=b&#x27;A&#x27;*15+p64(0x401186) #这样仍然可以</span><br></pre></td></tr></table></figure>
 
-<p>gets执行完后是栈对齐的,若不对payload做修改,则会执行401186的push rbp,rsp-=8,此时栈不对齐,再执行完mov和lea,二者都不改变栈指针,就要执行system的调用了,此时仍是不对齐的状态，所以报错。</p>
+<p>gets执行完后是栈对齐的,若不对payload做修    改,则会执行401186的push rbp,rsp-=8,此时栈不对齐,再执行完mov和lea,二者都不改变栈指针,就要执行system的调用了,此时仍是不对齐的状态，所以报错。</p>
 <p>第一种方法: 在payload里+1（+2其实也行，只要跳过push，不跳过call system就行），则此时跳转到了401187,把push rbp这一句跳过了，此时栈是对齐的，就能执行call system</p>
 <p>第二种方法：在payload里加上某个ret命令的地址，ret会将栈顶的指令弹到rip中，gets执行完后栈对齐，此时跳转到了某个ret命令，就把栈顶的p64(0x401186)pop到了rip，此时栈不对齐，rip下一步执行401186，push rbp，此时对齐了，在call之前就平衡了</p>
 <p>第三种方法：没能理解</p>
@@ -652,7 +654,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -665,7 +667,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

