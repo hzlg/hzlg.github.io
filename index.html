@@ -260,7 +260,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-C++%E4%BF%AE%E9%A5%B0%E5%90%8D%E7%A7%B0,%E4%BA%8C%E5%8F%89%E6%A0%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -279,7 +279,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/" itemprop="url">未命名</a></h1>
+                <a class="post-title-link" href="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-C++%E4%BF%AE%E9%A5%B0%E5%90%8D%E7%A7%B0,%E4%BA%8C%E5%8F%89%E6%A0%91/" itemprop="url">3.28-C++修饰名称,二叉树</a></h1>
         
 
         <div class="post-meta">
@@ -330,45 +330,14 @@
 
       
         
-          
-            <p>总流程 : </p>
-<ul>
-<li>输入长度为31的字符串</li>
-<li>进行置换运算</li>
-<li>取消修饰函数名</li>
-<li>将未修饰函数名的商和余数与指定字符串比较</li>
-</ul>
-<p>最后的校验是outputString为index,可以解出来</p>
-<p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328221326926.png" alt="image-20220328221326926"> </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">s1 = <span class="string">&quot;(_@4620!08!6_0*0442!@186%%0@3=66!!974*3234=&amp;0^3&amp;1@=&amp;0908!6_0*&amp;&quot;</span></span><br><span class="line">s2 = <span class="string">&quot;1234567890-=!@#$%^&amp;*()_+qwertyuiop[]QWERTYUIOP&#123;&#125;asdfghjkl;&#x27;ASDFGHJKL:\&quot;ZXCVBNM&lt;&gt;?zxcvbnm,./&quot;</span></span><br><span class="line">s3 = <span class="string">&quot;55565653255552225565565555243466334653663544426565555525555222&quot;</span></span><br><span class="line"></span><br><span class="line">i = <span class="number">0</span></span><br><span class="line">a = [<span class="number">0</span>]*<span class="number">62</span></span><br><span class="line"><span class="keyword">for</span> ch <span class="keyword">in</span> s1:</span><br><span class="line">    a[i] = s2.index(ch)</span><br><span class="line">    i = i+<span class="number">1</span></span><br><span class="line">    <span class="comment"># print(s2.index(ch), &quot; &quot;, end=&quot;&quot;)</span></span><br><span class="line">i = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> ch <span class="keyword">in</span> s3:</span><br><span class="line">    a[i] = a[i]+s2.index(ch)*<span class="number">23</span></span><br><span class="line">    i = i+<span class="number">1</span></span><br><span class="line">    <span class="comment"># print(s2.index(ch), &quot; &quot;, end=&quot;&quot;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># print(a)</span></span><br><span class="line"><span class="keyword">for</span> ch <span class="keyword">in</span> a:</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(ch), end=<span class="string">&quot;&quot;</span>)</span><br><span class="line">private: char * __thiscall R0Pxx::My_Aut0_PWN(unsigned char *)</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line">简洁一点的</span><br><span class="line">str1 = <span class="string">&quot;(_@4620!08!6_0*0442!@186%%0@3=66!!974*3234=&amp;0^3&amp;1@=&amp;0908!6_0*&amp;&quot;</span></span><br><span class="line">str2 = <span class="string">&quot;55565653255552225565565555243466334653663544426565555525555222&quot;</span></span><br><span class="line">str3 = <span class="string">&#x27;1234567890-=!@#$%^&amp;*()_+qwertyuiop[]QWERTYUIOP&#123;&#125;asdfghjkl;,ASDFGHJKL:&quot;ZXCVBNM&lt;&gt;?zxcvbnm,./&#x27;</span></span><br><span class="line"> </span><br><span class="line">name = <span class="string">&#x27;&#x27;</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">62</span>):</span><br><span class="line">    name += <span class="built_in">chr</span>(str3.index(str1[i]) + str3.index(str2[i])*<span class="number">23</span> )</span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span> (name)</span><br></pre></td></tr></table></figure>
-
-<h2 id="UnDecorateSymbolName"><a href="#UnDecorateSymbolName" class="headerlink" title="UnDecorateSymbolName"></a>UnDecorateSymbolName</h2><p>outputString是v5经过UnDecorateSymbolName得来的</p>
-<p>取消修饰指定的修饰C++符号名称</p>
-<p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328223029058.png" alt="image-20220328223029058"> </p>
-<p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328222955981.png" alt="image-20220328222955981"> </p>
-<p>v5是已修饰的,outputString是未修饰的,缓冲区大小为256字节,flags为0(启用完全的反修饰)</p>
-<blockquote>
-<p>?My_AutO_PWN@ROPxx@@AAEPADPAE@Z -&gt; private: char * __thiscall R0Pxx::My_Aut0_PWN(unsigned char *)</p>
-</blockquote>
-<p>或者↓</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">class R0Pxx</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    R0Pxx()//构造函数,创建对象时调用My_auto_pwn方法</span><br><span class="line">    &#123;</span><br><span class="line">        My_Aut0_PWN((unsigned char*)&quot;hello&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    char* __thiscall My_Aut0_PWN(unsigned char*);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">char* __thiscall R0Pxx::My_Aut0_PWN(unsigned char*)</span><br><span class="line">&#123;</span><br><span class="line">    std::cout &lt;&lt; __FUNCDNAME__ &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    R0Pxx A;</span><br><span class="line"></span><br><span class="line">    system(&quot;PAUSE&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="C-编译器的函数名修饰规则"><a href="#C-编译器的函数名修饰规则" class="headerlink" title="C++编译器的函数名修饰规则"></a>C++编译器的函数名修饰规则</h2><p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328230509945.png" alt="image-20220328230509945"> </p>
-<p><strong>类成员函数</strong></p>
-<p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328231645198.png" alt="image-20220328231645198"> </p>
-<p><strong>eg</strong></p>
-<p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328231641074.png" alt="image-20220328231641074"> </p>
-<p><strong>常见错误</strong></p>
-<p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328232934727.png" alt="image-20220328232934727"> </p>
-<p><img src="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-%E7%BA%A2%E5%B8%BD%E6%9D%AFchildRE/image-20220328232952983.png" alt="image-20220328232952983"> </p>
-<blockquote>
-<p>很多人不明确，为什么我使用的编译器都是VC的编译器还会产生“error LNK2001”错误？</p>
-<p>事实上，VC的编译器会依据源文件的扩展名选择编译方式</p>
-<p>假设文件的扩展名是“.C”，编译器会採用C的语法编译，假设扩展名是 “.cpp”。编译器会使用C++的语法编译程序</p>
-<p>所以。最好的方法就是使用extern “C”。</p>
-</blockquote>
-
-          
+          <p>红帽杯childRE</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/03/28/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.28-C++%E4%BF%AE%E9%A5%B0%E5%90%8D%E7%A7%B0,%E4%BA%8C%E5%8F%89%E6%A0%91/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
