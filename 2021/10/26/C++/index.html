@@ -175,6 +175,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211229182721160.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211230133910441.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211230140004446.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20220331230212075.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211230143947362.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211225225525502.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20211225225758491.png">
@@ -228,7 +229,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20220310224542678.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/26/C++/image-20220310224612369.png">
 <meta property="article:published_time" content="2021-10-26T06:02:30.080Z">
-<meta property="article:modified_time" content="2022-03-11T03:26:55.066Z">
+<meta property="article:modified_time" content="2022-03-31T15:02:12.782Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -958,12 +959,13 @@
 <li>在声明类型中查找mem,找不到就在父类中一直查找,还找不到则编译器报错</li>
 <li>找到了就进行类型检查,确认调用是否合法</li>
 <li>合法的话,则<ul>
-<li>mem是虚函数,且通过引用或指针调用,则编译器在运行时根据对象的动态类型确定到底运行虚函数的哪个版本</li>
-<li>不是虚函数或者通过对象直接调用(非指针及引用),则编译器产生正常函数调用</li>
+<li>mem是<strong>虚函数</strong>,且通过<strong>引用或指针调用</strong>,则编译器在运行时根据对象的动态类型确定到底运行虚函数的哪个版本</li>
+<li>不是虚函数或者<strong>通过对象直接调用</strong>(非指针及引用),则编译器产生正常函数调用</li>
+<li><img src="/2021/10/26/C++/image-20220331230212075.png" alt="image-20220331230212075"> </li>
 </ul>
 </li>
 </ol>
-<p>父类和子类同名函数,父类不加virtual是同名隐藏,加了virtual是覆盖(override/overwrite</p>
+<p>父类和子类同名函数,父类不加virtual是同名隐藏,加了virtual是覆盖(override/overwrite)</p>
 <p>在想用父类指针删除子类对象时,析构函数也要搞成虚析构函数,直接删除无所谓</p>
 <h3 id="抽象类"><a href="#抽象类" class="headerlink" title="抽象类"></a>抽象类</h3><img src="/2021/10/26/C++/image-20211230143947362.png" alt="image-20211230143947362" style="zoom: 67%;"> 
 
@@ -1231,7 +1233,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">61</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
