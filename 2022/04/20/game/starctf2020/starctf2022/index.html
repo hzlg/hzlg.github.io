@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re,game," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="文件系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件操作-starctf2022">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="文件系统">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420203922895.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420200309775.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420200825823.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420195913339.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420201118921.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420201122168.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420201206012.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420203209030.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420204502648.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420205235187.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420223117015.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420223154054.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420223220557.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420223201937.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420223501391.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420231209891.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420231223565.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420231358725.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420231402932.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420231407342.png">
+<meta property="article:published_time" content="2022-04-20T08:00:13.069Z">
+<meta property="article:modified_time" content="2022-04-21T03:11:16.186Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta property="article:tag" content="game">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/image-20220420203922895.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/"/>
+
+
+
+
+
+  <title>文件操作-starctf2022 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/04/20/game/starctf2020/starctf2022/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">文件操作-starctf2022</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-20T16:00:13+08:00">
+                2022-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>文件系统</p>
+<span id="more"></span>
+
+<blockquote>
+<p>官方wp : <a target="_blank" rel="noopener" href="https://github.com/sixstars/starctf2022">https://github.com/sixstars/starctf2022</a></p>
+<p>参考wp ：<a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1623713-1-1.html#42357189_**simple-file-system**">*CTF2022部分RE_WP - 『脱壳破解区』 - 吾爱破解 - LCG - LSG |安卓破解|病毒分析|www.52pojie.cn</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45603443/article/details/124244582">(2条消息) 2022 star*CTF-Writeup_EDI安全的博客-CSDN博客</a> </p>
+<p><a target="_blank" rel="noopener" href="http://1.12.239.117:8090/archives/ctf2022-wp">*ctf2022-wp(更新中)</a> </p>
+</blockquote>
+<p>给了四个文件</p>
+<p>flag里是<code>*ctf&#123;XXXXXXXXXXXXXXXX&#125;</code></p>
+<p>image.flag不知道是啥</p>
+<p>instruction.txt : </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># instructions</span><br><span class="line"></span><br><span class="line">I implemented a very simple file system and buried my flag in it.</span><br><span class="line"></span><br><span class="line">The image file are initiated as follows: </span><br><span class="line">./simplefs image.flag 500</span><br><span class="line"> simplefs&gt; format</span><br><span class="line"> simplefs&gt; mount</span><br><span class="line"> simplefs&gt; plantflag</span><br><span class="line"> simplefs&gt; exit</span><br><span class="line"></span><br><span class="line">And you cold run &quot;help&quot; to explore other commands.</span><br></pre></td></tr></table></figure>
+
+<p>simplefs是ELF文件</p>
+<hr>
+<h2 id="文件操作学习"><a href="#文件操作学习" class="headerlink" title="文件操作学习"></a>文件操作学习</h2><p><strong>先复习一下文件操作:</strong></p>
+<h3 id="fseek"><a href="#fseek" class="headerlink" title="fseek"></a>fseek</h3><p><strong>描述</strong></p>
+<p>C 库函数 <code>int fseek(FILE *stream, long int offset, int whence) </code></p>
+<p>设置流 <strong>stream</strong> 的文件位置为给定的偏移 <strong>offset</strong>，参数 offset 意味着从给定的 <strong>whence</strong> 位置查找的字节数。</p>
+<p><strong>声明</strong></p>
+<p>下面是 fseek() 函数的声明。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int fseek(FILE *stream, long int offset, int whence)</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数</strong></p>
+<ul>
+<li><strong>stream</strong> – 这是指向 FILE 对象的指针，该 FILE 对象标识了流。</li>
+<li><strong>offset</strong> – 这是相对 whence 的偏移量，以字节为单位。</li>
+<li><strong>whence</strong> – 这是表示开始添加偏移 offset 的位置。它一般指定为下列常量之一：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">常量</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SEEK_SET</td>
+<td align="left">文件的开头</td>
+</tr>
+<tr>
+<td align="left">SEEK_CUR</td>
+<td align="left">文件指针的当前位置</td>
+</tr>
+<tr>
+<td align="left">SEEK_END</td>
+<td align="left">文件的末尾</td>
+</tr>
+</tbody></table>
+<p><strong>返回值</strong></p>
+<p>如果成功，则该函数返回零，否则返回非零值。</p>
+<p><strong>实例</strong></p>
+<p>下面的实例演示了 fseek() 函数的用法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   FILE *fp;</span><br><span class="line"></span><br><span class="line">   fp = fopen(<span class="string">&quot;file.txt&quot;</span>,<span class="string">&quot;w+&quot;</span>);</span><br><span class="line">   <span class="built_in">fputs</span>(<span class="string">&quot;This is runoob.com&quot;</span>, fp);</span><br><span class="line">  </span><br><span class="line">   fseek( fp, <span class="number">7</span>, SEEK_SET );</span><br><span class="line">   <span class="built_in">fputs</span>(<span class="string">&quot; C Programming Langauge&quot;</span>, fp);</span><br><span class="line">   fclose(fp);</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让我们编译并运行上面的程序，这将创建文件 <strong>file.txt</strong>，它的内容如下。最初程序创建文件和写入 <em>This is runoob.com</em>，但是之后我们在第七个位置重置了写指针，并使用 puts() 语句来重写文件，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is C Programming Langauge</span><br></pre></td></tr></table></figure>
+
+<p>现在让我们使用下面的程序查看上面文件的内容：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   FILE *fp;</span><br><span class="line">   <span class="keyword">int</span> c;</span><br><span class="line"></span><br><span class="line">   fp = fopen(<span class="string">&quot;file.txt&quot;</span>,<span class="string">&quot;r&quot;</span>);</span><br><span class="line">   <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">   &#123;</span><br><span class="line">      c = fgetc(fp);</span><br><span class="line">      <span class="keyword">if</span>( feof(fp) )</span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">break</span> ;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%c&quot;</span>, c);</span><br><span class="line">   &#125;</span><br><span class="line">   fclose(fp);</span><br><span class="line">   <span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="fread"><a href="#fread" class="headerlink" title="fread:"></a>fread:</h3><p><strong>声明</strong></p>
+<p>下面是 fread() 函数的声明。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">size_t</span> <span class="title">fread</span><span class="params">(<span class="keyword">void</span> *ptr, <span class="keyword">size_t</span> size, <span class="keyword">size_t</span> nmemb, FILE *stream)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>参数</strong></p>
+<ul>
+<li><strong>ptr</strong> – 指向带有最小尺寸 size*nmemb 字节的内存块(指向缓冲区保存或读取的数据)的指针。</li>
+<li><strong>size</strong> – 要读取的每个元素的字节数。</li>
+<li><strong>nmemb</strong> – 元素的个数，每个元素的大小为 size 字节。</li>
+<li><strong>stream</strong> – 指向 FILE 对象的指针，该 FILE 对象指定了一个输入流。</li>
+</ul>
+<p><strong>返回值</strong></p>
+<p>成功读取的元素总数会以 size_t 对象返回，size_t 对象是一个整型数据类型。如果总数与 nmemb 参数不同，则可能发生了一个错误或者到达了文件末尾。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_25457161/article/details/48594113">(2条消息) C中fread()函数返回值特别说明_洋羽翔_hisen的博客-CSDN博客_fread返回值</a> </p>
+<p><strong>实例</strong></p>
+<p>下面的实例演示了 fread() 函数的用法。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  FILE *fp;</span><br><span class="line">  <span class="keyword">char</span> c[] = <span class="string">&quot;This is runoob&quot;</span>;</span><br><span class="line">  <span class="keyword">char</span> buffer[<span class="number">20</span>];</span><br><span class="line"> </span><br><span class="line">  <span class="comment">/* 打开文件用于读写 */</span></span><br><span class="line">  fp = fopen(<span class="string">&quot;file.txt&quot;</span>, <span class="string">&quot;w+&quot;</span>);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">/* 写入数据到文件 */</span></span><br><span class="line">  fwrite(c, <span class="built_in">strlen</span>(c) + <span class="number">1</span>, <span class="number">1</span>, fp);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">/* 查找文件的开头 */</span></span><br><span class="line">  fseek(fp, <span class="number">0</span>, SEEK_SET);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">/* 读取并显示数据 */</span></span><br><span class="line">  fread(buffer, <span class="built_in">strlen</span>(c)+<span class="number">1</span>, <span class="number">1</span>, fp);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%s**\n**&quot;</span>, buffer);</span><br><span class="line">  fclose(fp);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让我们编译并运行上面的程序，这将创建一个文件 <strong>file.txt</strong>，然后写入内容 <em>This is runoob</em>。接下来我们使用 <strong>fseek()</strong> 函数来重置写指针到文件的开头，文件内容如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is runoob</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h3 id="fwrite"><a href="#fwrite" class="headerlink" title="fwrite"></a>fwrite</h3><p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420203922895.png" alt="image-20220420203922895"> </p>
+<hr>
+<h3 id="strerror"><a href="#strerror" class="headerlink" title="strerror:"></a>strerror:</h3><p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420200309775.png" alt="image-20220420200309775"> </p>
+<h2 id="main"><a href="#main" class="headerlink" title="main"></a>main</h2><p>根据instruction.txt,程序将image.flag 500传入,创建一个磁盘，格式化并挂载，然后将flag文件的内容加密后存储进去，只需要找到对应的加密函数写解密脚本即可</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420200825823.png" alt="image-20220420200825823"> </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420195913339.png" alt="image-20220420195913339"> </p>
+<p>源码 :</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420201118921.png" alt="image-20220420201118921"> </p>
+<p>函数 : </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420201122168.png" alt="image-20220420201122168"> </p>
+<p>之后就是根据输入调用函数,虽然函数有很多,不过只需要看用到的就行了</p>
+<h2 id="format-文件前部清零-结构体赋值"><a href="#format-文件前部清零-结构体赋值" class="headerlink" title="format:文件前部清零,结构体赋值"></a>format:文件前部清零,结构体赋值</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(str_to_be_cmp, <span class="string">&quot;format&quot;</span>) ) </span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_2357() )</span><br><span class="line">              <span class="built_in">puts</span>(<span class="string">&quot;disk formatted.&quot;</span>);          <span class="comment">// 磁盘格式化</span></span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">              <span class="built_in">puts</span>(<span class="string">&quot;format failed!&quot;</span>);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 <span class="title">sub_2357</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+4h] [rbp-101Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v2; <span class="comment">// [rsp+8h] [rbp-1018h]</span></span><br><span class="line">  <span class="keyword">char</span> s[<span class="number">4</span>]; <span class="comment">// [rsp+10h] [rbp-1010h] BYREF</span></span><br><span class="line">  <span class="keyword">int</span> v4; <span class="comment">// [rsp+14h] [rbp-100Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v5; <span class="comment">// [rsp+18h] [rbp-1008h]</span></span><br><span class="line">  <span class="keyword">int</span> v6; <span class="comment">// [rsp+1Ch] [rbp-1004h]</span></span><br><span class="line">  __int64 v7; <span class="comment">// [rsp+20h] [rbp-1000h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int64 v8; <span class="comment">// [rsp+1018h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v8 = __readfsqword(<span class="number">0x28</span>u);                    <span class="comment">// 从相对于 FS 段开头的偏移量指定的位置读取内存。</span></span><br><span class="line">  var_4 = <span class="number">0</span>;                                    <span class="comment">// 源码里是fs.info.mounted = 0,mounted标志位置零</span></span><br><span class="line">  disk_read(<span class="number">0</span>, s);                              <span class="comment">// 没明白</span></span><br><span class="line">  v2 = sub_556756F73C9E();                      <span class="comment">// v2是500</span></span><br><span class="line">  <span class="keyword">if</span> ( v2 &lt;= <span class="number">1</span> )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0LL</span>;</span><br><span class="line">  v4 = v2;</span><br><span class="line">  LODWORD(v7) = <span class="number">-554844433</span>;</span><br><span class="line">  v5 = (v2 + <span class="number">9</span>) / <span class="number">10</span>;</span><br><span class="line">  v6 = v5 &lt;&lt; <span class="number">7</span>;</span><br><span class="line">  disk_write(<span class="number">0LL</span>, s);                           <span class="comment">// 写东西进文件</span></span><br><span class="line">  var_5 = v2;</span><br><span class="line">  var_6 = (v2 + <span class="number">9</span>) / <span class="number">10</span>;</span><br><span class="line">  var_7 = v6;</span><br><span class="line">  <span class="built_in">memset</span>(s, <span class="number">0</span>, <span class="number">0x1000</span>uLL);</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">1</span>; i &lt;= (v2 + <span class="number">9</span>) / <span class="number">10</span>; ++i )</span><br><span class="line">    disk_write((<span class="keyword">unsigned</span> <span class="keyword">int</span>)i, s);             <span class="comment">// 把0写进去</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">1LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>先进入3D23(disk_read)看看,根据3CAE的输出可以知道参数是blocknum和data_pointer</p>
+<p>fseek函数将文件指针放到blocknum&lt;&lt;12处</p>
+<p>fread函数从blocknum&lt;&lt;12处拿出0x1000个字符</p>
+<p>取出的元素个数不为1则报错(?看源码也没看懂)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 __fastcall <span class="title">sub_3D23</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> blocknum, <span class="keyword">void</span> *data_pointer)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> *v3; <span class="comment">// rax</span></span><br><span class="line">  <span class="keyword">char</span> *v4; <span class="comment">// rax</span></span><br><span class="line"></span><br><span class="line">  sub_3CAE(blocknum, (__int64)data_pointer);</span><br><span class="line">  fseek(stream, (<span class="keyword">int</span>)(blocknum &lt;&lt; <span class="number">12</span>), <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">if</span> ( fread(data_pointer, <span class="number">0x1000</span>uLL, <span class="number">1uLL</span>, stream) != <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v3 = __errno_location();</span><br><span class="line">    v4 = strerror(*v3);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ERROR: couldn&#x27;t access simulated disk: %s\n&quot;</span>, v4);<span class="comment">// 错误：无法访问模拟磁盘</span></span><br><span class="line">    <span class="built_in">abort</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span>)++dword_6074;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其他的就是给结构体和联合体的数据赋值,还有把文件清零</p>
+<p>源码 :</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420201206012.png" alt="image-20220420201206012"> </p>
+<p>函数 : </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420203209030.png" alt="image-20220420203209030"> </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420204502648.png" alt="image-20220420204502648"> </p>
+<h2 id="mount"><a href="#mount" class="headerlink" title="mount:"></a>mount:</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(str_to_be_cmp, <span class="string">&quot;mount&quot;</span>) )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_27C2() )</span><br><span class="line">              <span class="built_in">puts</span>(<span class="string">&quot;disk mounted.&quot;</span>);            <span class="comment">// 磁盘挂载</span></span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">              <span class="built_in">puts</span>(<span class="string">&quot;mount failed!&quot;</span>);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>源码 :</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420205235187.png" alt="image-20220420205235187"> </p>
+<h2 id="plantflag-生成enc-flag-写回文件"><a href="#plantflag-生成enc-flag-写回文件" class="headerlink" title="plantflag:生成enc_flag,写回文件"></a>plantflag:生成enc_flag,写回文件</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ( !<span class="built_in">strcmp</span>(str_to_be_cmp, <span class="string">&quot;plantflag&quot;</span>) )</span><br><span class="line">        &#123;</span><br><span class="line">          v8 = time(&amp;v23);</span><br><span class="line">          srand(v8);</span><br><span class="line">          v21 = rand() % <span class="number">100</span>;</span><br><span class="line">          v22 = rand() % <span class="number">100</span>;</span><br><span class="line">          <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; v21; ++i )</span><br><span class="line">          &#123;</span><br><span class="line">            v16 = sub_216A();</span><br><span class="line">            <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_1E16(<span class="string">&quot;flag&quot;</span>, v16, <span class="number">2LL</span>) )</span><br><span class="line">              <span class="built_in">printf</span>(<span class="string">&quot;copied file %s to inode %d\n&quot;</span>, v26, v16);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">              <span class="built_in">puts</span>(<span class="string">&quot;copy failed!&quot;</span>);</span><br><span class="line">          &#125;</span><br><span class="line">          v17 = sub_216A();</span><br><span class="line">          <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_1E16(<span class="string">&quot;flag&quot;</span>, v17, <span class="number">1LL</span>) )</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;plant flag to inode %d!\n&quot;</span>, v17);</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">puts</span>(<span class="string">&quot;copy failed!&quot;</span>);</span><br><span class="line">          <span class="keyword">for</span> ( j = <span class="number">0</span>; j &lt; v22; ++j )</span><br><span class="line">          &#123;</span><br><span class="line">            v18 = sub_216A();</span><br><span class="line">            <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)sub_1E16(<span class="string">&quot;flag&quot;</span>, v18, <span class="number">2LL</span>) )</span><br><span class="line">              <span class="built_in">printf</span>(<span class="string">&quot;copied file %s to inode %d\n&quot;</span>, v26, v18);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">              <span class="built_in">puts</span>(<span class="string">&quot;copy failed!&quot;</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>sub_216A</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 <span class="title">creat_inode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// [rsp+Ch] [rbp-4h]</span></span><br><span class="line"></span><br><span class="line">  v1 = fs_create();</span><br><span class="line">  <span class="keyword">if</span> ( v1 &lt; <span class="number">0</span> )</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;create failed!&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;created inode %d\n&quot;</span>, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v1);</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420223117015.png" alt="image-20220420223117015"> </p>
+<p><strong>sub_1E16</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 __fastcall <span class="title">crypt_E16</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *flag_str, <span class="keyword">unsigned</span> <span class="keyword">int</span> inode, <span class="keyword">int</span> key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> *v3; <span class="comment">// rax</span></span><br><span class="line">  <span class="keyword">char</span> *v4; <span class="comment">// rax</span></span><br><span class="line">  __int64 result; <span class="comment">// rax</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> v7; <span class="comment">// [rsp+1Ch] [rbp-4024h]</span></span><br><span class="line">  <span class="keyword">int</span> strlen_flag; <span class="comment">// [rsp+20h] [rbp-4020h]</span></span><br><span class="line">  <span class="keyword">int</span> v9; <span class="comment">// [rsp+24h] [rbp-401Ch]</span></span><br><span class="line">  FILE *stream; <span class="comment">// [rsp+28h] [rbp-4018h]</span></span><br><span class="line">  <span class="keyword">char</span> ptr[<span class="number">16</span>]; <span class="comment">// [rsp+30h] [rbp-4010h] BYREF</span></span><br><span class="line">  <span class="keyword">char</span> v12; <span class="comment">// [rsp+40h] [rbp-4000h] BYREF</span></span><br><span class="line">  __int64 v13[<span class="number">512</span>]; <span class="comment">// [rsp+3040h] [rbp-1000h] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> ( v13 != (__int64 *)&amp;v12 )</span><br><span class="line">    ;</span><br><span class="line">  v13[<span class="number">511</span>] = __readfsqword(<span class="number">0x28</span>u);</span><br><span class="line">  v7 = <span class="number">0</span>;</span><br><span class="line">  stream = fopen(flag_str, <span class="string">&quot;r&quot;</span>);                <span class="comment">// 打开flag</span></span><br><span class="line">  <span class="keyword">if</span> ( stream )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      strlen_flag = fread(ptr, <span class="number">1uLL</span>, <span class="number">0x4000</span>uLL, stream);<span class="comment">// 从flag读取0x4000个一字节的数据到ptr</span></span><br><span class="line">      <span class="keyword">if</span> ( strlen_flag &lt;= <span class="number">0</span> )</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">if</span> ( key == <span class="number">1</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        crypt1B2((__int64)ptr, strlen_flag);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> ( key == <span class="number">2</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        crypt_305((__int64)ptr, strlen_flag);</span><br><span class="line">      &#125;</span><br><span class="line">      v9 = sub_55FFB0ACC585(inode, ptr, strlen_flag, v7);</span><br><span class="line">      <span class="keyword">if</span> ( v9 &lt; <span class="number">0</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;ERROR: fs_write return invalid result %d\n&quot;</span>, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v9);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      v7 += v9;</span><br><span class="line">      <span class="keyword">if</span> ( v9 != strlen_flag )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;WARNING: fs_write only wrote %d bytes, not %d bytes\n&quot;</span>, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v9, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)strlen_flag);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d bytes copied\n&quot;</span>, v7);</span><br><span class="line">    fclose(stream);</span><br><span class="line">    result = <span class="number">1LL</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    v3 = __errno_location();</span><br><span class="line">    v4 = strerror(*v3);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;couldn&#x27;t open %s: %s\n&quot;</span>, flag_str, v4);</span><br><span class="line">    result = <span class="number">0LL</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>sub_1B2是对的:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 __fastcall <span class="title">crypt1B2</span><span class="params">(__int64 a1, <span class="keyword">int</span> strlen_flag)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line">  <span class="keyword">int</span> v4; <span class="comment">// [rsp+14h] [rbp-Ch]</span></span><br><span class="line">  _BYTE *v5; <span class="comment">// [rsp+18h] [rbp-8h]</span></span><br><span class="line"></span><br><span class="line">  v4 = sub_55DF7F19F0A3();                      <span class="comment">// v4是0xDEEDBEEF</span></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; strlen_flag; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    v5 = (_BYTE *)(i + a1);                     <span class="comment">// v5是ptr的值</span></span><br><span class="line">    *v5 = (*v5 &gt;&gt; <span class="number">1</span>) | (*v5 &lt;&lt; <span class="number">7</span>);</span><br><span class="line">    *v5 ^= v4;</span><br><span class="line">    *v5 = ((<span class="keyword">unsigned</span> __int8)*v5 &gt;&gt; <span class="number">2</span>) | (*v5 &lt;&lt; <span class="number">6</span>);</span><br><span class="line">    *v5 ^= BYTE1(v4);</span><br><span class="line">    *v5 = ((<span class="keyword">unsigned</span> __int8)*v5 &gt;&gt; <span class="number">3</span>) | (<span class="number">32</span> * *v5);</span><br><span class="line">    *v5 ^= BYTE2(v4);</span><br><span class="line">    *v5 = ((<span class="keyword">unsigned</span> __int8)*v5 &gt;&gt; <span class="number">4</span>) | (<span class="number">16</span> * *v5);</span><br><span class="line">    *v5 ^= HIBYTE(v4);</span><br><span class="line">    *v5 = (*v5 &gt;&gt; <span class="number">5</span>) | (<span class="number">8</span> * *v5);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>sub_305没用:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 __fastcall <span class="title">crypt_305</span><span class="params">(__int64 a1, <span class="keyword">int</span> a2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+1Ch] [rbp-4h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt; a2; ++i )</span><br><span class="line">    *(_BYTE *)(i + a1) = rand() % <span class="number">256</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0LL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>源码 :</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420223154054.png" alt="image-20220420223154054"> </p>
+<p>函数 : </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420223220557.png" alt="image-20220420223220557"> </p>
+<hr>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420223201937.png" alt="image-20220420223201937"> </p>
+<hr>
+<p>sub_1E16:</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420223501391.png" alt="image-20220420223501391"> </p>
+<p>sub_1B2:</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420231209891.png" alt="image-20220420231209891"> </p>
+<p>sub_305:</p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420231223565.png" alt="image-20220420231223565"> </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420231358725.png" alt="image-20220420231358725"> </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420231402932.png" alt="image-20220420231402932"> </p>
+<p><img src="/2022/04/20/game/starctf2020/starctf2022/image-20220420231407342.png" alt="image-20220420231407342"> </p>
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ROR</span>(<span class="params">_num, _n</span>):</span></span><br><span class="line">    <span class="keyword">return</span> (((_num &gt;&gt; _n) &amp; <span class="number">0XFF</span>) | ((_num &lt;&lt; (<span class="number">8</span> - _n)) &amp; <span class="number">0XFF</span>)) &amp; <span class="number">0XFF</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dec</span>(<span class="params">a</span>):</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(a)):</span><br><span class="line">        a[i] = ROR(a[i], <span class="number">3</span>)</span><br><span class="line">        a[i] ^= <span class="number">0xDE</span></span><br><span class="line">        a[i] = ROR(a[i], <span class="number">4</span>)</span><br><span class="line">        a[i] ^= <span class="number">0xED</span></span><br><span class="line">        a[i] = ROR(a[i], <span class="number">5</span>)</span><br><span class="line">        a[i] ^= <span class="number">0xBE</span></span><br><span class="line">        a[i] = ROR(a[i], <span class="number">6</span>)</span><br><span class="line">        a[i] ^= <span class="number">0xEF</span></span><br><span class="line">        a[i] = ROR(a[i], <span class="number">7</span>)</span><br><span class="line">    <span class="keyword">return</span> a</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;D:\\ctf\\re\\game\\starctf2022-main\\re\\reverse-simple_fs\\problem\\SImple_FS_Out\\image.flag&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    data = f.read()</span><br><span class="line">data_splitted = [</span><br><span class="line">    <span class="built_in">list</span>(data[<span class="number">0x33000</span> + i * <span class="number">0x1000</span>: <span class="number">0x33000</span> + i * <span class="number">0x1000</span> + <span class="number">32</span>]) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">200</span>)]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> data_splitted:</span><br><span class="line">    flag = <span class="string">&quot;&quot;</span></span><br><span class="line">    dec_data = dec(data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> dec_data:</span><br><span class="line">        flag += <span class="built_in">chr</span>(i)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;*ctf&#x27;</span> <span class="keyword">in</span> flag:</span><br><span class="line">        <span class="built_in">print</span>(flag)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="comment"># for i in dec_data:</span></span><br><span class="line">    <span class="comment">#     if (i &gt; 128 or i &lt; 32):</span></span><br><span class="line">    <span class="comment">#         break</span></span><br><span class="line">    <span class="comment">#     flag += chr(i)</span></span><br><span class="line">    <span class="comment"># if(len(flag) &gt; 10):</span></span><br><span class="line">    <span class="comment">#     print(flag)</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+            <a href="/tags/game/" rel="tag"># game</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/04/10/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.10-%E5%AF%92%E5%81%87%E9%80%86%E5%90%91%E7%BB%84%E4%BC%9A/" rel="next" title="4.10-SMC+脱壳+JEB">
+                <i class="fa fa-chevron-left"></i> 4.10-SMC+脱壳+JEB
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">文件操作学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fseek"><span class="nav-number">1.1.</span> <span class="nav-text">fseek</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fread"><span class="nav-number">1.2.</span> <span class="nav-text">fread:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fwrite"><span class="nav-number">1.3.</span> <span class="nav-text">fwrite</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#strerror"><span class="nav-number">1.4.</span> <span class="nav-text">strerror:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main"><span class="nav-number">2.</span> <span class="nav-text">main</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#format-%E6%96%87%E4%BB%B6%E5%89%8D%E9%83%A8%E6%B8%85%E9%9B%B6-%E7%BB%93%E6%9E%84%E4%BD%93%E8%B5%8B%E5%80%BC"><span class="nav-number">3.</span> <span class="nav-text">format:文件前部清零,结构体赋值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mount"><span class="nav-number">4.</span> <span class="nav-text">mount:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#plantflag-%E7%94%9F%E6%88%90enc-flag-%E5%86%99%E5%9B%9E%E6%96%87%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">plantflag:生成enc_flag,写回文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC"><span class="nav-number">6.</span> <span class="nav-text">脚本</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
