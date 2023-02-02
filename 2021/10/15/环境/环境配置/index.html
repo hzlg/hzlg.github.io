@@ -111,7 +111,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/15/%E7%8E%AF%E5%A2%83/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20211017133952624.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/15/%E7%8E%AF%E5%A2%83/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20211017134209487.png">
 <meta property="article:published_time" content="2021-10-15T13:57:39.584Z">
-<meta property="article:modified_time" content="2021-11-25T00:51:31.979Z">
+<meta property="article:modified_time" content="2022-08-30T09:55:59.304Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="tools">
 <meta name="twitter:card" content="summary">
@@ -429,7 +429,12 @@
 <p>报错的话就</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove vim-common </span><br><span class="line">卸载掉vim-common</span><br><span class="line">然后再次执行sudo apt-get install vim</span><br></pre></td></tr></table></figure>
 </blockquote>
-<h5 id="Pwntools"><a href="#Pwntools" class="headerlink" title="Pwntools"></a><strong>Pwntools</strong></h5><blockquote>
+<h5 id="Pwntools"><a href="#Pwntools" class="headerlink" title="Pwntools"></a><strong>Pwntools</strong></h5><p>update:</p>
+<p>moe2022 pwn的指南推荐博客:<a target="_blank" rel="noopener" href="https://www.cnblogs.com/luoleqi/p/14165817.html">pwn 环境搭建（wsl/vmware） - PwnKi - 博客园 (cnblogs.com)</a> </p>
+<p>22.04装pwntools的指令:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install python3 python3-pip python3-dev git libssl-dev libffi-dev build-essential</span><br><span class="line">sudo python3 -m pip install --upgrade pip</span><br><span class="line">sudo python3 -m pip install --upgrade pwntools</span><br></pre></td></tr></table></figure>
+
+<blockquote>
 <p>  极其重要！！！ </p>
 <blockquote>
 <p>插曲 1 ： 未安装setuptools</p>
@@ -451,17 +456,17 @@
 <blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install lib32ncurses5-dev</span><br><span class="line">sudo apt-get install lib32z1</span><br></pre></td></tr></table></figure>
 </blockquote>
-<h5 id="Pwndbg-Peda-Gef"><a href="#Pwndbg-Peda-Gef" class="headerlink" title="Pwndbg/Peda/Gef"></a><strong>Pwndbg/Peda/Gef</strong></h5><blockquote>
+<h5 id="Pwndbg-Peda-Gef"><a href="#Pwndbg-Peda-Gef" class="headerlink" title="Pwndbg/Peda/Gef"></a><strong>Pwndbg/Peda/Gef</strong></h5><p>update:moe2022 pwn的指南推荐博客:<a target="_blank" rel="noopener" href="https://www.cnblogs.com/luoleqi/p/14165817.html">pwn 环境搭建（wsl/vmware） - PwnKi - 博客园 (cnblogs.com)</a> </p>
+<blockquote>
 <p>动态调试工具</p>
 <p>git 失败的话首先换下网试试 , 我用了手机热点多试了几次就好了</p>
-<blockquote>
 <p>还不行的话就：</p>
 <p>把命令</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> https:<span class="comment">//github.com/**.git</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/**.git</span><br></pre></td></tr></table></figure>
 
 <p>换成</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> git:<span class="comment">//github.com/**.git</span></span><br></pre></td></tr></table></figure>
-</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git://github.com/**.git  </span><br></pre></td></tr></table></figure>
+
 <ul>
 <li> pwngdb</li>
 </ul>
@@ -547,8 +552,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/10/15/Crypto/" rel="next" title="Crypto">
-                <i class="fa fa-chevron-left"></i> Crypto
+              <a href="/2021/10/15/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.15-ctfwiki-%E6%A0%88%E6%BA%A2%E5%87%BA/" rel="next" title="10.15-ctfwiki-栈溢出">
+                <i class="fa fa-chevron-left"></i> 10.15-ctfwiki-栈溢出
               </a>
             
           </div>
@@ -636,7 +641,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">74</span>
+                <span class="site-state-item-count">82</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -649,7 +654,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -707,7 +712,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

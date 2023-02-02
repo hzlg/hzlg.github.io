@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="DSP-FWA伪造检测">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DSP-FWA伪造检测">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="DSP-FWA伪造检测">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314585.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314571.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314582.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314583.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314584.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237311.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237412.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237413.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237414.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237415.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237416.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237417.png">
+<meta property="article:published_time" content="2022-11-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-02-02T02:59:53.757Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314585.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/11/11/机器学习/DSP-SWA伪造检测/"/>
+
+
+
+
+
+  <title>DSP-FWA伪造检测 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DSP-FWA伪造检测</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-11-11T00:00:00+08:00">
+                2022-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>DSP-FWA伪造检测</p>
+<span id="more"></span>
+
+<h2 id="DSP-FWA伪造检测"><a href="#DSP-FWA伪造检测" class="headerlink" title="DSP-FWA伪造检测"></a>DSP-FWA伪造检测</h2><p>在九个算法里选一个做实验</p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314585.png" alt="img"></p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314571.png" alt="img"></p>
+<p>根据在Celeb-DF上的表现来选的话<code>DSP-FWA</code>和<code>Xception-c40</code>表现比较好,<code>DSP-FWA</code>综合表现最好</p>
+<p><code>DSP-FWA</code>用的是模型是<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1441559">SPPNet</a> , SPPNet 改变了卷积的顺序，减少了冗余的计算量，大大提高了对图片处理的速度。</p>
+<h2 id="Installtion"><a href="#Installtion" class="headerlink" title="Installtion"></a>Installtion</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/yuezunli/DSP-FWA">https://github.com/yuezunli/DSP-FWA</a></p>
+</blockquote>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314582.png" alt="img"> </p>
+<ul>
+<li>CUDA/cuDNN:ubuntu drivers啥的自带</li>
+<li>Anaconda</li>
+</ul>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/KRISNAT/article/details/124041869">超详细Ubuntu安装Anaconda步骤+Anconda常用命令</a></p>
+</blockquote>
+<ul>
+<li>Pytorch</li>
+<li>OpenCV</li>
+</ul>
+<blockquote>
+<p>之前windows上是直接pip install安装的，好像这样是不正规的，虽然很简单就是了<a target="_blank" rel="noopener" href="https://blog.csdn.net/cxwwyc/article/details/103667940">在Ubuntu上安装opencv-python_「已注销」的博客-CSDN博客</a> </p>
+<p>不正规就不正规吧,还没出现过问题</p>
+<p>update:用pip 装的是opencv4,这个玩意只能opencv3</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install opencv-python==<span class="number">3.4</span><span class="number">.18</span><span class="number">.65</span> -i https:<span class="comment">//pypi.tuna.tsinghua.edu.cn/simple </span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="视频检测"><a href="#视频检测" class="headerlink" title="视频检测"></a>视频检测</h2><p>代码疯狂报错,心力交瘁555</p>
+<p>pip install dlib(pip install cmake pip install boost)</p>
+<p>有个啥libstdc++.so.6不在目录里,找到移进去（update：移完dpkg出问题了）</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41566366/article/details/121244177">The following packages have unmet dependencies_Rocket MAN的博客-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_51404664/article/details/122137531">blog.csdn.net</a></p>
+<p>路径有问题就加路径</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.<span class="built_in">append</span>(<span class="string">&quot;/home/hzlg/Desktop/ML/DSP-FWA-master&quot;</span>) #相对路径或绝对路径</span><br></pre></td></tr></table></figure>
+
+<p>记得把input换了,下载SPP-res50.pth</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python demo.py \</span><br><span class="line">--arch=sppnet \</span><br><span class="line">--layers=<span class="number">50</span> \</span><br><span class="line">--save_dir=../ckpt/ \</span><br><span class="line">--input=/home/hzlg/Desktop/ML/id0_0000.mp4 \</span><br><span class="line">--ckpt_name=SPP-res50.pth</span><br></pre></td></tr></table></figure>
+
+<p>这代码好多错误</p>
+<blockquote>
+<p>修改1:未定义就使用</p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314583.png" alt="img"> </p>
+<p>修改2 : </p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/tiao_god/article/details/108189879">RuntimeError: view size is not compatible with input tensor‘s size and stride_Dezeming的博客-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_52347246/article/details/120176728">python运行报错RuntimeError: view size is not compatible with input tensor‘s size and stride (at least..)</a></p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-16753062314584.png" alt="img"></p>
+</blockquote>
+<h2 id="原理学习"><a href="#原理学习" class="headerlink" title="原理学习"></a>原理学习</h2><p>前置论文，重点是样本生成，不是训练，重点写了如何<strong>仿造伪影，制作负样本</strong>，训练了4个网络，残差网络ResNet50表现最好，ResNet50可以自己实现。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_47702386/article/details/124504861">论文阅读 - 《Exposing DeepFake Videos By Detecting Face Warping Artifacts》_shimmer_ghq的博客-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/kaidikake/article/details/105224241">DeepFake学习记录(不更新了，该方向直接劝退)_kaidikake的博客-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42474594/article/details/105551717">论文阅读:Exposing DeepFake Videos By Detecting FaceWarping Artifacts_bottle想暴富的博客-CSDN博客_uadfv数据集</a></p>
+</blockquote>
+<ul>
+<li>思路：由于计算资源和生产时间的限制，DeepFake算法只能合成固定大小的人脸图像，它们必须经过仿射扭曲来匹配源人脸的位置。而扭曲的面部区域和周围的环境之间的分辨率不一致，因此会留下明显的伪影。该论文就是利用这些伪影来检测DeepFake视频。</li>
+</ul>
+<blockquote>
+<p>Deepfake算法会进行仿射变换，导致分辨率不一致，出现伪影</p>
+</blockquote>
+<ul>
+<li>检测：我们的方法通过将生成的人脸区域及其周围区域与编码的卷积神经网络（CNN）模型进行比较来检测此类伪影。</li>
+</ul>
+<blockquote>
+<p>对人脸裁剪后和CNN模型进行比较</p>
+</blockquote>
+<ul>
+<li>训练：首先检测人脸并提取人脸地标，然后计算将人脸对齐到一个标准配置的变换矩阵，将人脸对齐到该配置，然后对已经对齐的人脸使用高斯模糊，然后利用变换矩阵的逆矩阵将其仿射扭曲回原始图像。通过这些操作，就得到了面部区域和周围的环境之间的分辨率不一致的人脸图像，以此来替代DeepFake图像。最后将人脸对齐到多个尺度以增加数据多样性。</li>
+</ul>
+<blockquote>
+<p>CNN的训练：人脸检测，关键点提取，人脸对齐（关键点仿射变换，即缩放、旋转和剪切），高斯模糊，人脸还原（模糊后把关键点映射回去），裁剪涵盖所有面部部分的兴趣矩形区域，并且将其规整为224*224的格式作为输入，生成负例进行训练</p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237311.png" alt="img"></p>
+</blockquote>
+<blockquote>
+<p>负数据生成概述。(a)为原始图像。(b)dlib裁剪出的以不同比例排列的面。我们在(b)中随机选择一个人脸的尺度，并将核大小为5 × 5的高斯模糊应用于(c)，创建仿射中的多种分辨率情况，然后将其仿射扭曲回(d)。</p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237412.png" alt="img"> </p>
+<p>图2</p>
+</blockquote>
+<p>基于我们从互联网收集的真实面部图像和相关的创建负面数据，我们训练了四个CNN模型：VGG16、ResNet50、ResNet101和ResNet152。（<strong>ResNet50</strong>表现最好）</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/42706477">残差网络ResNet</a>：</p>
+<p>在深度学习中，网络层数增多一般会伴着下面几个问题，都能通过一定方式解决</p>
+<ol>
+<li>计算资源的消耗（可以用过GPU集群来解决）</li>
+<li>模型容易过拟合（可以采集海量数据配合DropOut正则化方法避免）</li>
+<li><strong>梯度消失</strong>/梯度爆炸问题的产生（可以通过Batch Normalization避免）</li>
+</ol>
+<p>但通过增加网络层数的方法来增强网络的学习能力的方法并不总是可行的，网络出现随机<strong>梯度消失</strong>的问题，会导致网络的<strong>准确率下降</strong>。为了解决这一问题，传统的方法是采用数据初始化和正则化的方法，这<strong>解决了梯度消失</strong>的问题，但是<strong>网络准确率</strong>的问题并没有改善，随着网络层数的增多，训练集loss逐渐下降，然后趋于饱和，当你再增加网络深度的话，训练集loss反而会增大。注意这并不是过拟合，因为在过拟合中训练loss是一直减小的。</p>
+<p>提出残差网络,一个残差块可以表示为：$$$$xl+1=xl+F(xl,Wl)$$$$ </p>
+<p>残差块分成两部分直接映射部分和残差部分。 $$$$h(xl) $$$$ 是直接映射，反应在图1中是左边的曲线； $$$$F(xl,Wl)$$$$ 是残差部分，一般由两个或者三个卷积操作构成，即图1中右侧包含卷积Weight的部分。在卷积网络中， xl 可能和 xl+1 的Feature Map的数量不一样，这时候就需要使用 1×1 卷积进行升维或者降维。这时，残差块表示为$$$$xl+1=h(xl)+F(xl,Wl)$$$$,其中$$$$h(xl)=Wl′x$$$$。其中 Wl′ 是 1×1 卷积操作，但是实验结果 1×1 卷积对模型性能提升有限，所以一般是在升维或者降维时才会使用。</p>
+<p>残差是统计学中的一个概念,指预测值和观测值之间的差距(误差是衡量观测值和真实值之间的差距)网络的一层通常可以看做 y=H(x) , 而残差网络的一个残差块可以表示为 H(x)=F(x)+x ，也就是 F(x)=H(x)−x ，在单位映射中， y=x 便是观测值(样本)，而 H(x) 是预测值(预测)，所以 F(x) 便对应着残差，因此叫做残差网络。</p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237413.png" alt="img"><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237414.png" alt="img"></p>
+<p>而<strong>残差网络</strong>的出现可以解决梯度问题(原理如下)，而网络层数的增加也使其表达的特征也更好，相应的检测或分类的性能更强，再加上残差中使用了 1×1 的卷积，这样可以<strong>减少参数量</strong>，也能在一定程度上减少计算量。</p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237415.png" alt="img"> </p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237416.png" alt="img"> </p>
+</blockquote>
+<p>训练过程：我们使用以下策略准备训练数据:我们不是在训练过程之前提前生成所有的负例，而是采用<strong>动态</strong>的方式随着训练过程生成负例。对于每个训练批次，我们随机选择<strong>一半正例</strong>，并按照图2中的管道将其<strong>转换为负例</strong>，从而使训练数据更加多样化。我们设置<strong>批大小为64，学习率从0.001开始，每1000步后衰减0.95。</strong></p>
+<p>我们采用<strong>SGD优化方法（梯度下降）</strong>，训练过程在达到最大epoch时终止。</p>
+<p>对于VGG16，我们直接使用我们的数据训练它，并在epoch 100终止它。</p>
+<p>对于ResNet50、ResNet101和resnet152模型，我们首先加载ImageNet<strong>预训练模型</strong>，并使用我们的数据对它们进行<strong>微调</strong>。训练过程将在epoch 20终止。然后采用<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/51708428">难分样本挖掘策略</a>对模型进行优化。在我们的训练中，硬例包括预测假概率大于0.5的正例和预测假概率小于0.5的反例。我们采用相同的训练程序，学习率从0.0001开始。这个阶段在epoch 20代之后终止。</p>
+<blockquote>
+<p>难分样本挖掘策略：本来应该是负样本，但是分成了正样本，重新放回负样本再次训练（能简单区分的模型训练次数少，较难区分的进行多次训练）</p>
+<p><img src="/2022/11/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/DSP-SWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B/-167530665237417.png" alt="img"> </p>
+</blockquote>
+<p>4个网络训练完后的性能评估</p>
+<ul>
+<li><strong>帧级</strong>性能评估:ResNet系列比VPP好,因为有残差连接,而ResNet系列中ResNet50的性能最好，说明随着网络深度的增加，分类相关信息减少</li>
+<li>视频级性能评估:因为各种光照变化,遮挡,正确检测每一帧比较难,如果视频中有一定数量的帧被检测出是假的，我们就会根据经验假设该视频是深度伪造生成的。因此，我们将视频的所有帧输入到基于CNN的模型中，然后返回输出得分前三分之一的平均值作为视频的整体输出。ResNet仍然优于VPP。</li>
+</ul>
+<p>•传统<strong>CNN</strong>可以分为卷积部分与全连接部分，卷积部分不需要固定图像尺寸，而全连接部分则需要<strong>固定尺寸的输入</strong>。</p>
+<p>•<strong>SPP-Net</strong>网络架构在卷积层后接入了<strong>金字塔池化层</strong>，解决了CNN输入数据的维度必须要固定的一大难题。</p>
+<p>•DSP-FWA在图像和特征层次上采用了双空间金字塔策略来解决多尺度问题。</p>
+<h2 id="性能评估"><a href="#性能评估" class="headerlink" title="性能评估"></a>性能评估</h2><p>AUC分数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</span><br><span class="line">fake_before_score = [<span class="number">0.192</span>,<span class="number">0.510</span>,<span class="number">0.937</span>,<span class="number">0.526</span>,<span class="number">0.991</span>,<span class="number">0.941</span>,<span class="number">0.839</span>,<span class="number">0.924</span>,<span class="number">0.864</span>,<span class="number">0.715</span>,<span class="number">0.126</span>,<span class="number">0.808</span>,<span class="number">0.543</span>,<span class="number">0.298</span>,<span class="number">0.102</span>,<span class="number">0.375</span>,<span class="number">0.583</span>,<span class="number">0.750</span>,<span class="number">0.865</span>,<span class="number">0.951</span>,<span class="number">0.997</span>,<span class="number">0.980</span>,<span class="number">0.900</span>,<span class="number">0.712</span>,<span class="number">0.243</span>,<span class="number">0.602</span>,<span class="number">0.395</span>,<span class="number">0.579</span>,<span class="number">0.965</span>,<span class="number">0.845</span>,<span class="number">0.709</span>,<span class="number">0.412</span>,<span class="number">0.989</span>,<span class="number">0.998</span>,<span class="number">0.994</span>,<span class="number">0.999</span>,<span class="number">0.923</span>,<span class="number">0.984</span>,<span class="number">0.988</span>,<span class="number">0.999</span>,<span class="number">0.995</span>,<span class="number">0.988</span>,<span class="number">0.994</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.998</span>,<span class="number">0.688</span>,<span class="number">0.893</span>,<span class="number">0.316</span>,<span class="number">0.389</span>,<span class="number">0.705</span>,<span class="number">0.063</span>,<span class="number">0.667</span>,<span class="number">0.683</span>,<span class="number">0.712</span>,<span class="number">0.716</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.989</span>,<span class="number">0.773</span>,<span class="number">0.556</span>,<span class="number">0.474</span>,<span class="number">0.605</span>,<span class="number">0.262</span>,<span class="number">0.160</span>,<span class="number">0.029</span>,<span class="number">0.069</span>,<span class="number">0.024</span>,<span class="number">0.045</span>,<span class="number">0.019</span>,<span class="number">0.003</span>,<span class="number">0.961</span>,<span class="number">0.935</span>,<span class="number">0.959</span>,<span class="number">0.786</span>,<span class="number">0.075</span>,<span class="number">0.564</span>,<span class="number">0.409</span>,<span class="number">0.376</span>,<span class="number">0.129</span>,<span class="number">0.491</span>,<span class="number">0.422</span>,<span class="number">0.943</span>,<span class="number">0.963</span>,<span class="number">0.685</span>,<span class="number">0.671</span>,<span class="number">0.750</span>,<span class="number">0.202</span>,<span class="number">0.325</span>,<span class="number">0.519</span>,<span class="number">0.560</span>,<span class="number">0.779</span>,<span class="number">0.762</span>,<span class="number">0.639</span>,<span class="number">0.795</span>,<span class="number">0.971</span>,<span class="number">0.593</span>,<span class="number">0.915</span>,<span class="number">0.646</span>,<span class="number">0.941</span>,<span class="number">0.972</span>,<span class="number">0.432</span>,<span class="number">0.535</span>,<span class="number">0.591</span>,<span class="number">0.934</span>,<span class="number">0.363</span>,<span class="number">0.223</span>,<span class="number">0.677</span>,<span class="number">0.321</span>,<span class="number">0.325</span>,<span class="number">0.333</span>,<span class="number">0.877</span>,<span class="number">0.996</span>,<span class="number">0.980</span>,<span class="number">0.985</span>,<span class="number">0.996</span>,<span class="number">1.000</span>,<span class="number">0.997</span>,<span class="number">0.999</span>,<span class="number">0.979</span>,<span class="number">0.999</span>,<span class="number">0.992</span>,<span class="number">0.971</span>,<span class="number">0.989</span>,<span class="number">0.984</span>,<span class="number">0.997</span>,<span class="number">0.886</span>,<span class="number">0.837</span>,<span class="number">0.980</span>,<span class="number">0.935</span>,<span class="number">0.999</span>,<span class="number">0.991</span>,<span class="number">0.935</span>,<span class="number">0.971</span>,<span class="number">0.898</span>,<span class="number">0.763</span>,<span class="number">0.778</span>,<span class="number">0.821</span>,<span class="number">0.768</span>,<span class="number">1.000</span>,<span class="number">0.994</span>,<span class="number">0.837</span>,<span class="number">0.982</span>,<span class="number">0.865</span>,<span class="number">0.696</span>,<span class="number">0.111</span>,<span class="number">0.625</span>,<span class="number">0.127</span>,<span class="number">0.019</span>,<span class="number">0.018</span>,<span class="number">0.138</span>,<span class="number">0.886</span>,<span class="number">0.804</span>,<span class="number">0.590</span>,<span class="number">0.597</span>,<span class="number">0.977</span>,<span class="number">0.920</span>,<span class="number">0.346</span>,<span class="number">0.918</span>,<span class="number">0.436</span>,<span class="number">0.893</span>,<span class="number">0.502</span>,<span class="number">0.933</span>,<span class="number">0.823</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.984</span>,<span class="number">0.847</span>,<span class="number">0.812</span>,<span class="number">0.449</span>,<span class="number">0.988</span>,<span class="number">0.963</span>,<span class="number">0.968</span>,<span class="number">0.880</span>,<span class="number">0.999</span>,<span class="number">0.995</span>,<span class="number">0.992</span>,<span class="number">0.982</span>,<span class="number">0.950</span>,<span class="number">0.907</span>,<span class="number">0.512</span>,<span class="number">0.535</span>,<span class="number">0.371</span>,<span class="number">0.609</span>,<span class="number">0.931</span>,<span class="number">0.910</span>,<span class="number">0.917</span>,<span class="number">0.992</span>,<span class="number">0.999</span>,<span class="number">0.968</span>,<span class="number">0.978</span>,<span class="number">0.944</span>,<span class="number">0.939</span>,<span class="number">0.995</span>,<span class="number">0.990</span>,<span class="number">0.979</span>,<span class="number">0.936</span>,<span class="number">0.872</span>,<span class="number">0.977</span>,<span class="number">0.946</span>,<span class="number">0.859</span>,<span class="number">0.996</span>,<span class="number">0.995</span>,<span class="number">0.991</span>,<span class="number">0.972</span>,<span class="number">0.822</span>,<span class="number">0.567</span>,<span class="number">0.764</span>,<span class="number">0.584</span>,<span class="number">0.336</span>,<span class="number">0.877</span>,<span class="number">0.780</span>,<span class="number">0.825</span>,<span class="number">0.815</span>,<span class="number">0.464</span>,<span class="number">0.998</span>,<span class="number">0.999</span>,<span class="number">0.993</span>,<span class="number">0.988</span>,<span class="number">0.354</span>,<span class="number">0.501</span>,<span class="number">0.955</span>,<span class="number">0.946</span>,<span class="number">0.985</span>,<span class="number">0.947</span>,<span class="number">0.979</span>,<span class="number">0.970</span>,<span class="number">0.999</span>,<span class="number">0.997</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.954</span>,<span class="number">0.990</span>,<span class="number">0.960</span>,<span class="number">0.925</span>,<span class="number">0.981</span>,<span class="number">0.896</span>,<span class="number">0.973</span>,<span class="number">0.618</span>,<span class="number">0.824</span>,<span class="number">0.986</span>,<span class="number">0.901</span>,<span class="number">0.987</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.998</span>,<span class="number">1.000</span>,<span class="number">0.949</span>,<span class="number">0.937</span>,<span class="number">0.851</span>,<span class="number">0.899</span>,<span class="number">0.921</span>,<span class="number">0.996</span>,<span class="number">0.967</span>,<span class="number">0.992</span>,<span class="number">0.989</span>,<span class="number">0.741</span>,<span class="number">0.734</span>,<span class="number">0.781</span>,<span class="number">0.526</span>,<span class="number">0.799</span>,<span class="number">0.370</span>,<span class="number">0.258</span>,<span class="number">0.968</span>,<span class="number">0.990</span>,<span class="number">0.909</span>,<span class="number">0.771</span>,<span class="number">0.966</span>,<span class="number">0.992</span>,<span class="number">0.990</span>,<span class="number">0.999</span>,<span class="number">0.983</span>,<span class="number">0.970</span>,<span class="number">0.973</span>,<span class="number">0.796</span>,<span class="number">0.866</span>,<span class="number">0.603</span>,<span class="number">0.825</span>,<span class="number">0.928</span>,<span class="number">0.798</span>,<span class="number">0.945</span>,<span class="number">0.770</span>,<span class="number">0.994</span>,<span class="number">0.311</span>,<span class="number">0.825</span>,<span class="number">0.465</span>,<span class="number">0.995</span>,<span class="number">0.991</span>,<span class="number">0.976</span>,<span class="number">0.995</span>,<span class="number">0.990</span>,<span class="number">0.956</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.993</span>,<span class="number">0.792</span>,<span class="number">0.666</span>,<span class="number">0.928</span>,<span class="number">0.730</span>,<span class="number">0.239</span>,<span class="number">0.699</span>,<span class="number">0.850</span>,<span class="number">0.183</span>,<span class="number">0.224</span>,<span class="number">0.989</span>,<span class="number">0.955</span>,<span class="number">0.924</span>,<span class="number">0.501</span>,<span class="number">0.471</span>,<span class="number">0.139</span>,<span class="number">0.299</span>,<span class="number">0.011</span>,<span class="number">0.100</span>,<span class="number">0.033</span>,<span class="number">0.069</span>,<span class="number">0.026</span>,<span class="number">0.893</span>,<span class="number">0.919</span>,<span class="number">0.982</span>,<span class="number">0.975</span>,<span class="number">0.510</span>,<span class="number">0.798</span>,<span class="number">0.601</span>,<span class="number">0.402</span>,<span class="number">0.929</span>,<span class="number">0.923</span>,<span class="number">0.965</span>,<span class="number">0.966</span>,<span class="number">0.915</span>,<span class="number">0.797</span>,<span class="number">0.788</span>,<span class="number">0.566</span>,<span class="number">0.578</span>,<span class="number">0.922</span>,<span class="number">0.986</span>,<span class="number">0.979</span>,<span class="number">0.975</span>,<span class="number">0.981</span>,<span class="number">0.970</span>,<span class="number">0.899</span>,<span class="number">0.909</span>,<span class="number">0.428</span>,<span class="number">0.492</span>,<span class="number">0.935</span>,<span class="number">0.795</span>]</span><br><span class="line">true_before_score = [<span class="number">0.994</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.998</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.994</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.994</span>,<span class="number">0.991</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.997</span>,<span class="number">0.987</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.995</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.994</span>,<span class="number">0.997</span>,<span class="number">0.994</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>]</span><br><span class="line">fake_after_score = [<span class="number">0.001</span>,<span class="number">0.001</span>,<span class="number">0.021</span>,<span class="number">0.008</span>,<span class="number">0.003</span>,<span class="number">0.021</span>,<span class="number">0.077</span>,<span class="number">0.162</span>,<span class="number">0.260</span>,<span class="number">0.428</span>,<span class="number">0.077</span>,<span class="number">0.008</span>,<span class="number">0.025</span>,<span class="number">0.061</span>,<span class="number">0.015</span>,<span class="number">0.039</span>,<span class="number">0.134</span>,<span class="number">0.144</span>,<span class="number">0.700</span>,<span class="number">0.622</span>,<span class="number">0.244</span>,<span class="number">0.197</span>,<span class="number">0.145</span>,<span class="number">0.331</span>,<span class="number">0.087</span>,<span class="number">0.264</span>,<span class="number">0.671</span>,<span class="number">0.873</span>,<span class="number">0.914</span>,<span class="number">0.934</span>,<span class="number">0.963</span>,<span class="number">0.856</span>,<span class="number">0.758</span>,<span class="number">0.495</span>,<span class="number">0.190</span>,<span class="number">0.943</span>,<span class="number">0.938</span>,<span class="number">0.914</span>,<span class="number">0.989</span>,<span class="number">0.760</span>,<span class="number">0.998</span>,<span class="number">0.949</span>,<span class="number">0.893</span>,<span class="number">0.878</span>,<span class="number">0.978</span>,<span class="number">0.980</span>,<span class="number">0.998</span>,<span class="number">0.941</span>,<span class="number">0.972</span>,<span class="number">0.994</span>,<span class="number">0.948</span>,<span class="number">0.959</span>,<span class="number">0.855</span>,<span class="number">0.929</span>,<span class="number">0.947</span>,<span class="number">0.974</span>,<span class="number">0.984</span>,<span class="number">0.928</span>,<span class="number">0.911</span>,<span class="number">0.996</span>,<span class="number">0.996</span>,<span class="number">0.988</span>,<span class="number">0.986</span>,<span class="number">0.995</span>,<span class="number">0.966</span>,<span class="number">0.997</span>,<span class="number">0.993</span>,<span class="number">0.997</span>,<span class="number">0.998</span>,<span class="number">0.997</span>,<span class="number">0.998</span>,<span class="number">0.996</span>,<span class="number">0.983</span>,<span class="number">0.992</span>,<span class="number">0.981</span>,<span class="number">0.986</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.992</span>,<span class="number">0.996</span>,<span class="number">0.996</span>,<span class="number">0.999</span>,<span class="number">0.998</span>,<span class="number">0.980</span>,<span class="number">0.988</span>,<span class="number">0.991</span>,<span class="number">0.996</span>,<span class="number">0.874</span>,<span class="number">0.975</span>,<span class="number">0.980</span>,<span class="number">0.870</span>,<span class="number">0.942</span>,<span class="number">0.927</span>,<span class="number">0.997</span>,<span class="number">0.977</span>,<span class="number">0.556</span>,<span class="number">0.391</span>,<span class="number">0.648</span>,<span class="number">0.994</span>,<span class="number">0.246</span>,<span class="number">0.490</span>,<span class="number">0.145</span>,<span class="number">0.344</span>,<span class="number">0.863</span>,<span class="number">0.347</span>,<span class="number">0.811</span>,<span class="number">0.643</span>,<span class="number">0.029</span>,<span class="number">0.037</span>,<span class="number">0.194</span>,<span class="number">0.234</span>,<span class="number">0.192</span>,<span class="number">0.897</span>,<span class="number">0.353</span>,<span class="number">0.587</span>,<span class="number">0.048</span>,<span class="number">0.893</span>,<span class="number">0.650</span>,<span class="number">0.079</span>,<span class="number">0.301</span>,<span class="number">0.278</span>,<span class="number">0.501</span>,<span class="number">0.280</span>,<span class="number">0.395</span>,<span class="number">0.517</span>,<span class="number">0.731</span>,<span class="number">0.902</span>,<span class="number">0.831</span>,<span class="number">0.627</span>,<span class="number">0.706</span>,<span class="number">0.699</span>,<span class="number">0.591</span>,<span class="number">0.959</span>,<span class="number">0.992</span>,<span class="number">0.952</span>,<span class="number">0.513</span>,<span class="number">0.750</span>,<span class="number">0.817</span>,<span class="number">0.829</span>,<span class="number">0.969</span>,<span class="number">0.989</span>,<span class="number">0.801</span>,<span class="number">0.944</span>,<span class="number">0.994</span>,<span class="number">0.988</span>,<span class="number">0.846</span>,<span class="number">0.996</span>,<span class="number">0.984</span>,<span class="number">0.996</span>,<span class="number">0.996</span>,<span class="number">0.993</span>,<span class="number">0.951</span>,<span class="number">0.792</span>,<span class="number">0.980</span>,<span class="number">0.991</span>,<span class="number">0.961</span>,<span class="number">0.954</span>,<span class="number">0.958</span>,<span class="number">0.927</span>,<span class="number">0.974</span>,<span class="number">0.948</span>,<span class="number">0.916</span>,<span class="number">0.933</span>,<span class="number">0.938</span>,<span class="number">0.944</span>,<span class="number">0.960</span>,<span class="number">0.994</span>,<span class="number">0.934</span>,<span class="number">0.997</span>,<span class="number">0.991</span>,<span class="number">0.994</span>,<span class="number">0.979</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.911</span>,<span class="number">0.996</span>,<span class="number">0.995</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.997</span>,<span class="number">0.993</span>,<span class="number">0.995</span>,<span class="number">0.950</span>,<span class="number">0.990</span>,<span class="number">0.987</span>,<span class="number">0.999</span>,<span class="number">0.955</span>,<span class="number">0.990</span>,<span class="number">0.965</span>,<span class="number">0.998</span>,<span class="number">0.982</span>,<span class="number">0.993</span>,<span class="number">0.999</span>,<span class="number">0.936</span>,<span class="number">0.407</span>,<span class="number">0.730</span>,<span class="number">0.091</span>,<span class="number">0.513</span>,<span class="number">0.641</span>,<span class="number">0.924</span>,<span class="number">0.991</span>,<span class="number">0.983</span>,<span class="number">0.965</span>,<span class="number">0.968</span>,<span class="number">0.935</span>,<span class="number">0.980</span>,<span class="number">0.947</span>,<span class="number">0.949</span>,<span class="number">0.988</span>,<span class="number">0.996</span>,<span class="number">0.476</span>,<span class="number">0.947</span>,<span class="number">0.945</span>,<span class="number">0.693</span>,<span class="number">0.927</span>,<span class="number">0.867</span>,<span class="number">0.588</span>,<span class="number">0.819</span>,<span class="number">0.870</span>,<span class="number">0.727</span>,<span class="number">0.712</span>,<span class="number">0.547</span>,<span class="number">0.649</span>,<span class="number">0.778</span>,<span class="number">0.679</span>,<span class="number">0.426</span>,<span class="number">0.414</span>,<span class="number">0.514</span>,<span class="number">0.849</span>,<span class="number">0.599</span>,<span class="number">0.498</span>,<span class="number">0.220</span>,<span class="number">0.290</span>,<span class="number">0.150</span>,<span class="number">0.869</span>,<span class="number">0.934</span>,<span class="number">0.692</span>,<span class="number">0.676</span>,<span class="number">0.903</span>,<span class="number">0.313</span>,<span class="number">0.455</span>,<span class="number">0.988</span>,<span class="number">0.982</span>,<span class="number">0.985</span>,<span class="number">0.734</span>,<span class="number">0.148</span>,<span class="number">0.169</span>,<span class="number">0.660</span>,<span class="number">0.569</span>,<span class="number">0.396</span>,<span class="number">0.112</span>,<span class="number">0.360</span>,<span class="number">0.268</span>,<span class="number">0.278</span>,<span class="number">0.413</span>,<span class="number">0.240</span>,<span class="number">0.116</span>,<span class="number">0.408</span>,<span class="number">0.280</span>,<span class="number">0.715</span>,<span class="number">0.740</span>,<span class="number">0.469</span>,<span class="number">0.014</span>,<span class="number">0.326</span>,<span class="number">0.579</span>,<span class="number">0.603</span>,<span class="number">0.568</span>,<span class="number">0.553</span>,<span class="number">0.261</span>,<span class="number">0.073</span>,<span class="number">0.335</span>,<span class="number">0.249</span>,<span class="number">0.024</span>,<span class="number">0.110</span>,<span class="number">0.258</span>,<span class="number">0.085</span>,<span class="number">0.842</span>,<span class="number">0.744</span>,<span class="number">0.399</span>]</span><br><span class="line">true_after_score = [<span class="number">0.095</span>,<span class="number">0.095</span>,<span class="number">0.256</span>,<span class="number">0.093</span>,<span class="number">0.835</span>,<span class="number">0.832</span>,<span class="number">0.517</span>,<span class="number">0.962</span>,<span class="number">0.983</span>,<span class="number">0.989</span>,<span class="number">0.928</span>,<span class="number">0.995</span>,<span class="number">0.994</span>,<span class="number">0.996</span>,<span class="number">0.998</span>,<span class="number">0.990</span>,<span class="number">0.965</span>,<span class="number">0.994</span>,<span class="number">0.999</span>,<span class="number">0.964</span>,<span class="number">0.997</span>,<span class="number">0.998</span>,<span class="number">1.000</span>,<span class="number">0.998</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.993</span>,<span class="number">0.997</span>,<span class="number">0.988</span>,<span class="number">0.991</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.995</span>,<span class="number">0.991</span>,<span class="number">0.998</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.998</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.998</span>,<span class="number">0.995</span>,<span class="number">0.999</span>,<span class="number">0.952</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.996</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.997</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.996</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.997</span>,<span class="number">0.990</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.995</span>,<span class="number">0.991</span>,<span class="number">0.948</span>,<span class="number">0.999</span>,<span class="number">0.992</span>,<span class="number">0.998</span>,<span class="number">0.954</span>,<span class="number">0.940</span>,<span class="number">0.836</span>,<span class="number">0.523</span>,<span class="number">0.957</span>,<span class="number">0.868</span>,<span class="number">0.997</span>,<span class="number">0.974</span>,<span class="number">0.996</span>,<span class="number">0.954</span>,<span class="number">0.993</span>,<span class="number">0.998</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.989</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.998</span>,<span class="number">0.990</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.996</span>,<span class="number">0.991</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.997</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.996</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.997</span>,<span class="number">0.999</span>,<span class="number">0.998</span>,<span class="number">0.998</span>,<span class="number">0.999</span>,<span class="number">0.863</span>,<span class="number">0.956</span>,<span class="number">0.992</span>,<span class="number">0.943</span>,<span class="number">0.788</span>,<span class="number">0.979</span>,<span class="number">0.958</span>,<span class="number">0.989</span>,<span class="number">0.966</span>,<span class="number">0.797</span>,<span class="number">0.926</span>,<span class="number">0.958</span>,<span class="number">0.994</span>,<span class="number">0.994</span>,<span class="number">0.881</span>,<span class="number">0.978</span>,<span class="number">0.967</span>,<span class="number">0.626</span>,<span class="number">0.905</span>,<span class="number">0.917</span>,<span class="number">0.987</span>,<span class="number">0.981</span>,<span class="number">0.985</span>,<span class="number">0.920</span>,<span class="number">0.983</span>,<span class="number">0.969</span>,<span class="number">0.996</span>,<span class="number">0.966</span>,<span class="number">0.955</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">1.000</span>,<span class="number">0.997</span>,<span class="number">0.997</span>,<span class="number">0.994</span>,<span class="number">0.983</span>,<span class="number">0.998</span>,<span class="number">0.995</span>,<span class="number">0.999</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.996</span>,<span class="number">1.000</span>,<span class="number">0.999</span>,<span class="number">0.999</span>,<span class="number">0.990</span>,<span class="number">0.998</span>,<span class="number">1.000</span>,<span class="number">0.998</span>,<span class="number">0.998</span>,<span class="number">1.000</span>,<span class="number">1.000</span>]</span><br><span class="line"></span><br><span class="line">y_true_before = np.array([<span class="number">0</span>]*<span class="built_in">len</span>(fake_before_score)+[<span class="number">1</span>]*<span class="built_in">len</span>(true_before_score))</span><br><span class="line">y_scores_before = np.array(fake_before_score+true_before_score)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;AUC before is&quot;</span>,roc_auc_score(y_true_before, y_scores_before))</span><br><span class="line"></span><br><span class="line">y_true_after = np.array([<span class="number">0</span>]*<span class="built_in">len</span>(fake_after_score)+[<span class="number">1</span>]*<span class="built_in">len</span>(true_after_score))</span><br><span class="line">y_scores_after = np.array(fake_after_score+true_after_score)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;AUC after is&quot;</span>,roc_auc_score(y_true_after, y_scores_after))</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/10/24/%E5%8F%96%E8%AF%81/2021/" rel="next" title="长安杯2021">
+                <i class="fa fa-chevron-left"></i> 长安杯2021
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/11/27/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/torch%E5%87%BD%E6%95%B0/" rel="prev" title="torch函数">
+                torch函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DSP-FWA%E4%BC%AA%E9%80%A0%E6%A3%80%E6%B5%8B"><span class="nav-number">1.</span> <span class="nav-text">DSP-FWA伪造检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Installtion"><span class="nav-number">2.</span> <span class="nav-text">Installtion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E6%A3%80%E6%B5%8B"><span class="nav-number">3.</span> <span class="nav-text">视频检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.</span> <span class="nav-text">原理学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E8%AF%84%E4%BC%B0"><span class="nav-number">5.</span> <span class="nav-text">性能评估</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

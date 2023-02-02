@@ -123,7 +123,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211029162006182.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211029170737439.png">
 <meta property="article:published_time" content="2021-10-27T13:17:02.266Z">
-<meta property="article:modified_time" content="2022-05-11T15:32:52.933Z">
+<meta property="article:modified_time" content="2022-09-04T10:13:13.328Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="pwn">
 <meta property="article:tag" content="buu">
@@ -488,11 +488,19 @@
 </blockquote>
 <h3 id="什么东西会影响堆栈平衡"><a href="#什么东西会影响堆栈平衡" class="headerlink" title="什么东西会影响堆栈平衡"></a>什么东西会影响堆栈平衡</h3><p>先看一下call ret leave这三个函数，对后面的理解比较重要</p>
 <p><img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211029090508911-16354946953631.png" alt="image-20211029090508911"> </p>
+<blockquote>
+<p>call func:</p>
+<p>push eip + jmp func</p>
+<p>ret:</p>
+<p>pop eip + jmp eip</p>
+<p>leave:</p>
+<p>mov esp,ebp + pop ebp</p>
+</blockquote>
 <h3 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h3><p><img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211028143146819-16354946953632.png" alt="image-20211028143146819"> </p>
 <blockquote>
-<p>在有函数要被调用时,先将参数存入caller栈帧中,esp由于存储实参变化(push两次)</p>
-<p>call命令将返回地址(call的下一条指令)入栈,esp由于保存程序运行状态变化(push一次)</p>
-<p>再将caller的基址保存,esp由于保存caller的栈帧变化,ebp移动(相当于创建了新的栈帧,有了新函数的空间)(push一次)</p>
+<p>在有函数要被调用时,先将<code>参数a,b</code>存入caller栈帧中,esp由于存储实参变化(push两次)</p>
+<p>call命令将<code>返回地址eip</code>(call的下一条指令)入栈,esp由于保存程序运行状态变化(push一次)</p>
+<p>再将caller的<code>基址esp</code>保存,esp由于保存caller的栈帧变化,ebp移动(相当于创建了新的栈帧,有了新函数的空间)(push一次)</p>
 <p>要想复原没有函数被调用的状态</p>
 <p>就要将esp保存的栈帧状态pop(pop一次)</p>
 <p>再通过retn命令把返回地址pop给rip(pop一次)</p>
@@ -502,7 +510,7 @@
 <h3 id="堆栈平衡的方法"><a href="#堆栈平衡的方法" class="headerlink" title="堆栈平衡的方法"></a>堆栈平衡的方法</h3><p><img src="/2021/10/27/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.27-%E6%A0%88%E6%BA%A2%E5%87%BAbuu1/image-20211029162006182.png" alt="image-20211029162006182"> </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">payload=b&#x27;A&#x27;*23+p64(0x401186+1)  #局部变量15+ebp8+危险函数地址,跳过了fun的第一句push,使得堆栈平衡</span><br><span class="line"># payload=b&#x27;A&#x27;*23+p64(0x401198) + p64(0x401186) #也可以,局部变量15 + ebp8 + 这部分任意找ret语句,都可以 + 危险函数起始地址</span><br><span class="line"># payload=b&#x27;A&#x27;*15+p64(0x401186) #这样仍然可以</span><br></pre></td></tr></table></figure>
 
-<p>gets执行完后是栈对齐的,若不对payload做修    改,则会执行401186的push rbp,rsp-=8,此时栈不对齐,再执行完mov和lea,二者都不改变栈指针,就要执行system的调用了,此时仍是不对齐的状态，所以报错。</p>
+<p>gets执行完后是栈对齐的,若不对payload做修改,则会执行401186的push rbp,rsp-=8,此时栈不对齐,再执行完mov和lea,二者都不改变栈指针,就要执行system的调用了,此时仍是不对齐的状态，所以报错。</p>
 <p>第一种方法: 在payload里+1（+2其实也行，只要跳过push，不跳过call system就行），则此时跳转到了401187,把push rbp这一句跳过了，此时栈是对齐的，就能执行call system</p>
 <p>第二种方法：在payload里加上某个ret命令的地址，ret会将栈顶的指令弹到rip中，gets执行完后栈对齐，此时跳转到了某个ret命令，就把栈顶的p64(0x401186)pop到了rip，此时栈不对齐，rip下一步执行401186，push rbp，此时对齐了，在call之前就平衡了</p>
 <p>第三种方法：没能理解</p>
@@ -654,7 +662,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">74</span>
+                <span class="site-state-item-count">82</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -667,7 +675,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -725,7 +733,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
