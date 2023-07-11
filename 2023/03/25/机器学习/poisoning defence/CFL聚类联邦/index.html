@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="TNNLS 2020 – Clustered Federated Learning: Model-Agnostic Distributed Multi-Task Optimization under Privacy Constraints 在接近收敛时计算余弦相似度聚类客户端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CFL聚类联邦学习">
+<meta property="og:url" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="TNNLS 2020 – Clustered Federated Learning: Model-Agnostic Distributed Multi-Task Optimization under Privacy Constraints 在接近收敛时计算余弦相似度聚类客户端">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325194015085.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325190750777.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325195532318.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325195544129.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325200617145.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325203323059.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325202209860.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325211516663.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325213912453.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325214944215.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327105429563.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327103122365.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326111018639.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327112505290.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326220342923.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326220423113.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326220620817.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327094930945.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327094956763.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327095827846.png">
+<meta property="article:published_time" content="2023-03-25T08:44:37.783Z">
+<meta property="article:modified_time" content="2023-07-11T02:29:39.311Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325194015085.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2023/03/25/机器学习/poisoning defence/CFL聚类联邦/"/>
+
+
+
+
+
+  <title>CFL聚类联邦学习 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CFL聚类联邦学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-25T16:44:37+08:00">
+                2023-03-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>TNNLS 2020 – Clustered Federated Learning: Model-Agnostic Distributed Multi-Task Optimization under Privacy Constraints</p>
+<p>在接近收敛时计算余弦相似度聚类客户端</p>
+<span id="more"></span>
+
+<p>利用loss surface的几何性质来聚类,对普通的非凸函数也适用</p>
+<p>聚类只在联邦学习收敛到一个固定点后才执行(不断更新直到更新的范数小于阈值),所以CFL可以看作一个后处理方法,允许客户端获得更specialized(特化?反正是更好)的模型</p>
+<p>假定1:联邦学习认为一个模型就能拟合所有的数据分布</p>
+<blockquote>
+<p>形式化:一个模型参数就能同时最小化所有客户端的数据分布的风险函数</p>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325194015085.png" alt="image-20230325194015085" style="zoom:67%;"> 
+</blockquote>
+<ol>
+<li>一个<code>不够复杂的模型</code>(硬件不支持)不能同时拟合所有客户端的数据分布。</li>
+<li>如果不同客户的条件分布不同(<code>noniid</code>)，没有一个模型可以同时适合所有的分布。</li>
+</ol>
+<p>但在上面两种情况下,客户端中同一个cluster的<code>数据可以分离</code></p>
+<blockquote>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325190750777.png" alt="image-20230325190750777" style="zoom:67%;"> 
+</blockquote>
+<p>假定2:CFL,存在多个客户端分集,每个分集中的客户端都满足FL</p>
+<p>II 基于客户端<code>梯度更新</code>的<code>余弦相似度</code>推断客户端分集中的两个客户端<code>是否有着相同的数据分布</code>,从而得到<code>聚类结构</code>C</p>
+<p>III 能得到<code>聚类结构</code>后,CFL</p>
+<p>IV 相关文献</p>
+<p>V 实现细节</p>
+<p>VI 实验 </p>
+<p>II COSINE SIMILARITY BASED CLUSTERING </p>
+<p>因为服务器不能访问客户端数据,直接得到聚类结构C是很难的,但是可以推断客户端两两之间的关系</p>
+<h3 id="II-双分区"><a href="#II-双分区" class="headerlink" title="II 双分区"></a>II 双分区</h3><h3 id="定义1-双分区正确-映射不同"><a href="#定义1-双分区正确-映射不同" class="headerlink" title="定义1 双分区正确:映射不同"></a>定义1 双分区正确:映射不同</h3><p>确定客户端到数据分布的映射, 若两个客户端分集里所有客户端的映射中没有与对方相等的,这两个分集就划分正确了,即相同数据分布的客户端被分到了一个cluster中,经过k-1次正确的双分区划分就能得到大小为K的cluster</p>
+<p>m个客户端,每个客户端的数据为两个数据分布中的随机一个,每个客户端和一个风险函数(简化为了loss的和,在数据很多的时候可以近似真实的风险)相关联,联邦学习目标可以被分成两个风险函数,在收敛后,要不两个风险函数都为0(分布相同,满足假定1,一个模型就拟合了),要不相加为0(分布不相同,满足不了假定1),此时余弦相似度要不为1要不为-1</p>
+<blockquote>
+<p><img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325195532318.png" alt="image-20230325195532318" style="zoom:67%;">  <img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325195544129.png" alt="image-20230325195544129" style="zoom:67%;"> </p>
+<p>收敛性研究 mark</p>
+<p>[6] X. Li, K. Huang, W. Yang, S. Wang, and Z. Zhang, “On the convergence<br>of fedavg on non-iid data,” arXiv preprint arXiv:1907.02189, 2019.<br>[7] A. K. Sahu, T. Li, M. Sanjabi, M. Zaheer, A. Talwalkar, and V. Smith,<br>“On the convergence of federated optimization in heterogeneous networks,” arXiv preprint arXiv:1812.06127, 2018.</p>
+</blockquote>
+<p>不一致分布下,在FL最后的静止点两个梯度都没有归零; 一致分布下,收敛到灰色区域,两个风险函数都最小化</p>
+<blockquote>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325200617145.png" alt="image-20230325200617145" style="zoom:67%;"> 
+</blockquote>
+<p>对结果进行泛化:不要求loss和与真实risk近似,允许多个数据分布</p>
+<h3 id="定理1-m客户端-k个分布的相似度有上下界"><a href="#定理1-m客户端-k个分布的相似度有上下界" class="headerlink" title="定理1:m客户端,k个分布的相似度有上下界"></a>定理1:m客户端,k个分布的相似度有上下界</h3><p>m个客户端,每个客户端的数据为<strong>k</strong>个数据分布中的随机一个,每个客户端的经验风险函数近似于联邦学习目标每个平稳解的真实risk</p>
+<p>不同分布最大相似度的上界为xxx</p>
+<p>同分布最小相似度的下界为xxx</p>
+<blockquote>
+<p><img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325203323059.png" alt="image-20230325203323059" style="zoom:67%;"> <img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325202209860.png" alt="image-20230325202209860" style="zoom:67%;"> </p>
+</blockquote>
+<h3 id="推论1-下界-gt-上界-双分区正确"><a href="#推论1-下界-gt-上界-双分区正确" class="headerlink" title="推论1:下界&gt;上界,双分区正确"></a>推论1:下界&gt;上界,双分区正确</h3><p>如果算出的同分布相似度下界&gt;不同分布相似度上界,那个这两个数据一定不是同分布,能够用相似度来区分c1,c2</p>
+<h3 id="定义2-分离间隔-gt-0-双分区正确"><a href="#定义2-分离间隔-gt-0-双分区正确" class="headerlink" title="定义2:分离间隔&gt;0,双分区正确"></a>定义2:分离间隔&gt;0,双分区正确</h3><p>给定余弦相似度矩阵 和 客户端到数据分布的映射,分离间隔</p>
+<blockquote>
+ <img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325211516663.png" alt="image-20230325211516663" style="zoom:67%;"> 
+</blockquote>
+<p>根据推论1，当且仅当分离间隙&gt;0时，双分区在定义1的意义上是正确的。</p>
+<p>在实际中,αmin会比定理1的下界大很多,αmax会比定理1的上界小很多,特别是在参数维度很大的时候</p>
+<blockquote>
+<p>γ大于3的时候(risk函数近似的非常松散)无法划分</p>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325213912453.png" alt="image-20230325213912453" style="zoom:67%;"> 
+</blockquote>
+<p>如果一个模型就能拟合了,那么划分cluster会降低性能,所以规定划分的条件:在FL接近静止点(更新小于阈值1),且本地不接近静止点(更新大于阈值2)</p>
+<h3 id="III-CFL算法"><a href="#III-CFL算法" class="headerlink" title="III CFL算法"></a>III CFL算法</h3><p>CFL以自顶向下的方式递归地对客户端进行双分区:</p>
+<p>根据<code>算法2</code>进行FL以获得<code>平稳解θ∗</code></p>
+<blockquote>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230325214944215.png" alt="image-20230325214944215" style="zoom:67%;"> 
+</blockquote>
+<p>在FL收敛之后，判断本地<code>是否接近静止点</code>(更新小于阈值)</p>
+<p>接近就停止,返回θ∗</p>
+<p>不接近就算余弦相似度,服务器划分客户端,使得最大余弦相似度最小,<code>算法1</code>在O(m^3^)内就可以求解</p>
+<blockquote>
+<p>知识</p>
+<p><strong>Agglomerative Clustering Algorithm</strong></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/363879425">聚类算法(Clustering Algorithms)之层次聚类(Hierarchical Clustering) - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/M1M1M16/article/details/79415871">(1条消息) 聚类Agglomerative Clustering 及其三种方法Single-linkage、Complete-linkage，Group average_single linkage_超开心的柠檬茶的博客-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html">sklearn.cluster.AgglomerativeClustering — scikit-learn 1.2.2 documentation</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Hierarchical_clustering">分层聚类 - 维基百科 (wikipedia.org)</a></p>
+<p>n_clusters default=2</p>
+<p>affinity:If “precomputed”, a distance matrix (instead of a similarity matrix) is needed as input for the fit method.</p>
+<p>linkage:Which linkage criterion to use. The linkage criterion determines which distance to use between sets of observation. The algorithm will merge the pairs of cluster that minimize this criterion.决定要最小化什么条件来聚类</p>
+<p>用最小距离聚合的例子<a target="_blank" rel="noopener" href="https://www.bing.com/videos/search?q=Agglomerative+Clustering&view=detail&mid=1B6622E1B093AF0BC7831B6622E1B093AF0BC783&FORM=VIRE">Agglomerative Hierarchical Clustering Single link Complete link Clustering by Dr. Mahesh Huddar - Bing video</a></p>
+<p><img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327105429563.png" alt="image-20230327105429563"> </p>
+<p>Complete-linkage:要比较的距离为元素对之间的最大距离</p>
+<p><img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327103122365.png" alt="image-20230327103122365"> </p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/348290670">机器学习中的数学符号 - 知乎 (zhihu.com)</a></p>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326111018639.png" alt="image-20230326111018639" style="zoom: 67%;"> 
+</blockquote>
+<blockquote>
+<p>clustring = AgglomerativeClustering(affinity=”precomputed”, linkage=”complete”).fit(-S)</p>
+<p>affinity为precomputed说明使用距离矩阵(-S)，S是余弦相似度矩阵,S的值越大说明越相关，-S的值越大说明越不相关（距离越远），linkage为complete说明最小化最大距离</p>
+<p><img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327112505290.png" alt="image-20230327112505290"> </p>
+</blockquote>
+<p>算出最小的最大相似度从而进行划分之后,不同分布的max好计算,同划分的min不好计算,只能根据定理1的下界来估计</p>
+<blockquote>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326220342923.png" alt="image-20230326220342923" style="zoom:67%;">  
+</blockquote>
+<p>如果min&gt;max,那么能区分,推算一下得到可以双分区的条件:</p>
+<blockquote>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326220423113.png" alt="image-20230326220423113" style="zoom:67%;"> 
+</blockquote>
+<p>整体算法如下:</p>
+<blockquote>
+<img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230326220620817.png" alt="image-20230326220620817" style="zoom: 80%;"> 
+</blockquote>
+<h3 id="V-改进"><a href="#V-改进" class="headerlink" title="V 改进"></a>V 改进</h3><h3 id="使用更新比使用梯度更好"><a href="#使用更新比使用梯度更好" class="headerlink" title="使用更新比使用梯度更好"></a>使用更新比使用梯度更好</h3><h3 id="可以加密以避免隐私泄露"><a href="#可以加密以避免隐私泄露" class="headerlink" title="可以加密以避免隐私泄露"></a>可以加密以避免隐私泄露</h3><h3 id="客户端变化也能聚合，参数树"><a href="#客户端变化也能聚合，参数树" class="headerlink" title="客户端变化也能聚合，参数树"></a>客户端变化也能聚合，参数树</h3><p>维持一个参数树，每个cluster有一个节点，如果新加入一个客户端，就能遍历参数树来找到一个叶子cluster，允许了服务器为客户端提供多种模型（FL，专一）</p>
+<blockquote>
+<p><img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327094930945.png" alt="image-20230327094930945" style="zoom:67%;"> <img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327094956763.png" alt="image-20230327094956763"> </p>
+</blockquote>
+<p>所有改进结合后的算法</p>
+<blockquote>
+<p><img src="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/image-20230327095827846.png" alt="image-20230327095827846"> </p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/03/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/DnC%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E9%98%B2/" rel="next" title="模型投毒框架与DnC降维防御">
+                <i class="fa fa-chevron-left"></i> 模型投毒框架与DnC降维防御
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/" rel="prev" title="sniffer">
+                sniffer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#II-%E5%8F%8C%E5%88%86%E5%8C%BA"><span class="nav-number">1.</span> <span class="nav-text">II 双分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%891-%E5%8F%8C%E5%88%86%E5%8C%BA%E6%AD%A3%E7%A1%AE-%E6%98%A0%E5%B0%84%E4%B8%8D%E5%90%8C"><span class="nav-number">2.</span> <span class="nav-text">定义1 双分区正确:映射不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%90%861-m%E5%AE%A2%E6%88%B7%E7%AB%AF-k%E4%B8%AA%E5%88%86%E5%B8%83%E7%9A%84%E7%9B%B8%E4%BC%BC%E5%BA%A6%E6%9C%89%E4%B8%8A%E4%B8%8B%E7%95%8C"><span class="nav-number">3.</span> <span class="nav-text">定理1:m客户端,k个分布的相似度有上下界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%AE%BA1-%E4%B8%8B%E7%95%8C-gt-%E4%B8%8A%E7%95%8C-%E5%8F%8C%E5%88%86%E5%8C%BA%E6%AD%A3%E7%A1%AE"><span class="nav-number">4.</span> <span class="nav-text">推论1:下界&gt;上界,双分区正确</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%892-%E5%88%86%E7%A6%BB%E9%97%B4%E9%9A%94-gt-0-%E5%8F%8C%E5%88%86%E5%8C%BA%E6%AD%A3%E7%A1%AE"><span class="nav-number">5.</span> <span class="nav-text">定义2:分离间隔&gt;0,双分区正确</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#III-CFL%E7%AE%97%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">III CFL算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#V-%E6%94%B9%E8%BF%9B"><span class="nav-number">7.</span> <span class="nav-text">V 改进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9B%B4%E6%96%B0%E6%AF%94%E4%BD%BF%E7%94%A8%E6%A2%AF%E5%BA%A6%E6%9B%B4%E5%A5%BD"><span class="nav-number">8.</span> <span class="nav-text">使用更新比使用梯度更好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E5%8A%A0%E5%AF%86%E4%BB%A5%E9%81%BF%E5%85%8D%E9%9A%90%E7%A7%81%E6%B3%84%E9%9C%B2"><span class="nav-number">9.</span> <span class="nav-text">可以加密以避免隐私泄露</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%8F%98%E5%8C%96%E4%B9%9F%E8%83%BD%E8%81%9A%E5%90%88%EF%BC%8C%E5%8F%82%E6%95%B0%E6%A0%91"><span class="nav-number">10.</span> <span class="nav-text">客户端变化也能聚合，参数树</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

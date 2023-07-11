@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="USENIX 2020 – Local Model Poisoning Attacks to Byzantine-Robust Federated Learning 针对三个鲁棒聚合算法定制恶意梯度进行模型投毒攻击，并提出基于模型表现的防御方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fang模型投毒攻击">
+<meta property="og:url" content="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="USENIX 2020 – Local Model Poisoning Attacks to Byzantine-Robust Federated Learning 针对三个鲁棒聚合算法定制恶意梯度进行模型投毒攻击，并提出基于模型表现的防御方法">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230318140754366.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317142334244.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317145129202.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317150227312.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317161210238.png">
+<meta property="article:published_time" content="2023-03-16T11:21:14.920Z">
+<meta property="article:modified_time" content="2023-07-11T02:23:21.770Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230318140754366.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2023/03/16/机器学习/poisoning defence/模型投毒攻击/"/>
+
+
+
+
+
+  <title>Fang模型投毒攻击 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Fang模型投毒攻击</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-16T19:21:14+08:00">
+                2023-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>USENIX 2020 – Local Model Poisoning Attacks to Byzantine-Robust Federated Learning</p>
+<p>针对三个鲁棒聚合算法定制恶意梯度进行模型投毒攻击，并提出基于模型表现的防御方法</p>
+<span id="more"></span>
+
+<p>联邦学习面对统计挑战与系统挑战</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/257969390">联邦学习：面对统计挑战与系统挑战 - 知乎 (zhihu.com)</a> </p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/567218095">联邦学习中的攻击与防御综述 - 知乎 (zhihu.com)</a></p>
+<p><img src="/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230318140754366.png" alt="image-20230318140754366"> </p>
+<p>统计挑战就是non IID啥的,之前看的FLIS就是进行personalization</p>
+<p>系统挑战就是节点间通信,隐私保护,系统防御…</p>
+</blockquote>
+<p>在联邦学习的训练阶段可以投毒攻击(有目标后门攻击,无目标拜占庭攻击),测试阶段可以偏移攻击(对抗性样本)…</p>
+<p>本文讨论training phase poisoning attack–non targeted byzantine attack–model poisoning attck</p>
+<h2 id="Data-Poisoning-Attack"><a href="#Data-Poisoning-Attack" class="headerlink" title="Data Poisoning Attack"></a>Data Poisoning Attack</h2><p>攻击数据集</p>
+<p>攻击者操纵ML算法生成的结果和模型来达到他们的目标</p>
+<ul>
+<li>影响训练数据</li>
+<li>破坏模型完整性<ul>
+<li>在训练过程中注入少量损坏点</li>
+</ul>
+</li>
+</ul>
+<p>可用性攻击Availability Attack：修改<code>测试</code>阶段<code>预测值</code></p>
+<ul>
+<li>不加选择地影响预测结果</li>
+<li>使测试集预测出错</li>
+<li>拒绝服务</li>
+</ul>
+<p>完整性攻击Integrity Attack：保留其他样本预测值,造成特定的错误预测</p>
+<ul>
+<li>后门攻击</li>
+</ul>
+<p>Label flipping attack:标签翻转,用错误的标签进行训练</p>
+<h2 id="Model-Poisoning-Attack"><a href="#Model-Poisoning-Attack" class="headerlink" title="Model Poisoning Attack"></a>Model Poisoning Attack</h2><p>Local Model Poisoning Attacks to Byzantine-Robust Federated Learning</p>
+<h3 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h3><p>现有的4个<code>拜占庭鲁棒</code>联邦学习方法：用新的聚合方法提高鲁棒性  Krum [9], Bulyan [42], trimmed mean [66], median [66])</p>
+<p>现有的<code>数据投毒攻击</code>data poisoning attacks 只能在攻击者操纵下的客户端中投毒,效果不好[8, 30, 33, 50, 56, 62]</p>
+<p>现有的数据投毒攻击的防御: 根据<code>错误率</code>删除数据<code>RONI</code>[4]/根据<code>loss</code>大小划分数据<code>TRIM</code> [30],总之就是净化数据集</p>
+<p>创新:</p>
+<p><code>模型投毒攻击</code>Model Poisoning Attack </p>
+<p>模型投毒攻击的防御:推广RONI Error Rate based Rejection(<code>ERR</code>)/推广TRIM Loss Function based Rejection (<code>LFR</code>),LFR好一些,能防trimmed mean不能防Krum</p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>联邦学习:</p>
+<ol>
+<li>服务器发放全局模型参数给客户端作为本地模型参数</li>
+<li>客户端使用本地数据集更新模型参数(比如使用SGD以最小化loss)</li>
+<li>服务器聚合本地模型参数(本文中均为梯度)为新的全局模型参数</li>
+</ol>
+<p>拜占庭鲁棒训练聚合:</p>
+<ol>
+<li><p>Krum 选择m个客户端中与其他模型最相似的作为全局模型(c是可能被攻击的数目,计算<code>欧氏距离</code>,选出m-c-2个距离近的本地模型,求出距离和选最小的) </p>
+<p>Bulyan 结合了Krum和trimmed mean,用Krum来选择模型,使用trimmed mean变体来聚合</p>
+</li>
+<li><p>trimmed mean 对每个参数(一共d个参数,有m个客户端)进行<code>排序</code>,去除最大的和最小的β个,求剩下m-2β个的<code>均值</code></p>
+</li>
+<li><p>median 排序,每个参数都求<code>中位数</code>(最后的参数可能来自不同的模型)</p>
+</li>
+</ol>
+<ul>
+<li>攻击目标:无目标攻击,出错即可,最后会导致==拒绝服务攻击?为什么会Dos?==  有目标攻击是想控制输出</li>
+</ul>
+<p>​    虽然拜占庭训练约束了错误率,但是使用了big O来计算错误率,忽略了常数,错误率还是可以提升的</p>
+<ul>
+<li><p>攻击能力:能控制c个客户端</p>
+</li>
+<li><p>攻击背景:从聚合规则(算法)和训练数据(实例)的维度描述攻击者的背景知识和数据中毒攻击能力</p>
+</li>
+</ul>
+<p>​    可能知道聚合方法,知道自己控制的本地数据,知道code,本地模型</p>
+<h3 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h3><p>要通过本地模型控制全局模型,==sj==是全局模型的第j个参数应该转向的方向,1代表增加,-1代表减小</p>
+<p>c个客户端的优化策略是:</p>
+<blockquote>
+<p><img src="/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317142334244.png" alt="image-20230317142334244"> </p>
+<p>==s是全局模型参数变化的列向量==,$$s^T$$是s的转置,变成行向量,大小是1*模型参数d</p>
+<p>==w是没有攻击时选中的模型==,==w’是攻击后被选中的模型==</p>
+<p>w-w’是攻击前后模型的差,是一个列向量,大小是d*1</p>
+<p>本行是我的推断: 全局模型wRE,攻击前w,攻击后w’,则s=sign(w-wRE), s’=sign(w’-wRE) ,$$s^T(w-w’) = s^T((s+wRE)-(s’+wRE) = s^T(s-s’) = s²-s<em>s’=1-s</em>s’$$ , s为-1时s’为1能最大,s为1时s’为-1最大</p>
+<p>优化问题的实质就是，使得攻击后的梯度与攻击前的梯度差别尽量大。</p>
+</blockquote>
+<h4 id="Krum"><a href="#Krum" class="headerlink" title="Krum"></a>Krum</h4><p>攻击Krum就是要在上传c个客户端模型后使得c个中的一个被选中为全局模型</p>
+<ol>
+<li>知道所有的模型参数</li>
+</ol>
+<p>该优化问题的约束是高度非线性的,而且局部模型的搜索空间很大,采用近似值,表示优化问题的次优解,基于近似值的攻击有次优性能</p>
+<p>首先限制<code>近似值w1&#39; = wRE-λs</code> (w1’是最后要被选中的模型,==wRE是发放的全局模型==),对craft模型与<code>全局模型</code>之间的有向偏移进行建模</p>
+<blockquote>
+<p>s是全局模型参数的变化w-wRE,-s就是反向变化</p>
+</blockquote>
+<p>w1’ = w-λs ,==w是被选中的模型(下一轮的全局模型)==对craft模型与<code>本地模型</code>之间的有向偏移进行建模,但是效果差</p>
+<p>然后让其他c-1个客户端与w1相似,使得w1容易被选中,具体的方法是先用c个一样的craft模型计算出s，从而计算出w1，再随机抽样出c-1个和w1距离距离不超过ε的向量作为craft模型</p>
+<blockquote>
+<p>使用两个近似值后优化问题被转变为</p>
+<p><img src="/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317145129202.png" alt="image-20230317145129202"> </p>
+<p>因为目标函数$$s^T(w-w’) = s^T(w-(w_{RE}-λs)) = s^T (w − w_{Re}) + λs^T s$$ ,而$$s^T (w − w_{Re})$$是一个常数,$$s^T s=d$$是全局模型中参数的数量,所以目标函数可以简化为λ</p>
+<p>λ的上界为:</p>
+<p><img src="/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317150227312.png" alt="image-20230317150227312"> </p>
+<p>d是全局模型的参数数,D()是求欧氏距离,Γ是与wi距离最小的m-c-2个良性模型的集合</p>
+<p>使用二分搜索来求解lambda,先    将λ上界设置为λ,检查Krum是够选择了w1,没选择就λ减半</p>
+</blockquote>
+<ol start="2">
+<li>不知道所有的模型参数</li>
+</ol>
+<p>不知道w就不能知道s,用已知的c个攻击前模型的均值作为转变后的模型,求出s~</p>
+<blockquote>
+<p>优化问题:</p>
+<p><img src="/2023/03/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E5%87%BB/image-20230317161210238.png" alt="image-20230317161210238"> </p>
+<p>只加入一个w1’然后用Krum选,还是使用二分搜索来求解λ,若到达了阈值还是不行就再加一个w2’</p>
+</blockquote>
+<h4 id="trimmed-mean"><a href="#trimmed-mean" class="headerlink" title="trimmed mean"></a>trimmed mean</h4><ol>
+<li>Full knowledge</li>
+</ol>
+<p>wij是第i个客户端的第j个参数,wmaxj是第j个的<code>良性</code>本地模型参数的最大值,wminj是最小值,生成的craft模型要接近wmin/wmax</p>
+<p>当sj=-1时,选大于wmaxj的(减少了就增加),当sj=1时,选小于wminj的</p>
+<p>b&gt;1</p>
+<p>在sj=-1时,若wmaxj&gt;0就在[wmaxj,b*wmaxj]中随机采c个,若wmax&lt;0就在[wmaxj,wmax/b]中随机采c个</p>
+<p>在sj=1时,若wminj&gt;0就在[wminj/b,wminj]中随机采c个,若wmin&lt;0就在[wminj*b,wmin]中随机采c个</p>
+<p>虽然会被全部丢弃,但是良性梯度也被丢弃了,会导致acc的降低,虽然很少</p>
+<ol start="2">
+<li>partial konwledge</li>
+</ol>
+<p>不知道s,不知道wmax和wmin,s~还是只用c个已知的攻击前模型来计算</p>
+<p>计算c个模型的均值μ和方差σ,假设良性设备的参数满足高斯分布,wmax&lt;μ+3σ/μ+4σ的可能性较大,wmin&gt;μ-3σ/μ-4σ的可能性较大</p>
+<h3 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h3><p>数据集:MNIST,CHmnist,乳腺癌…</p>
+<p>逻辑回归多类分类器/深度神经网络</p>
+<p>用来对比的攻击方法</p>
+<ol>
+<li><p>高斯攻击:对第j轮的模型参数,使用攻击前模型来估计高斯分布,在高斯分布中采c个(随机采并不能攻破拜占庭鲁棒训练)</p>
+</li>
+<li><p>标签翻转攻击:数据投毒,不需要知道分布,直接翻转为总类数L-1-标签l</p>
+</li>
+<li><p>back梯度优化攻击:无目标攻击的state of art 数据投毒,没讲怎么做</p>
+</li>
+</ol>
+<p>结果:对Krum攻击的成功率很高,trimmed mean和median也能增加错误率,可能是因为Krum是选一个,其余两种都进行了聚合</p>
+<p>数据维度多越好攻击,受损设备越多越好攻击,nonIID程度越大越好攻击(攻击空间大),本地轮数多越不好攻击(模型变精确了攻击空间变小),客户端数越多越不好攻击,trimmed mean剪的越多越不好攻击(恶意梯度都被剪了),Krum的距离ε越小越好攻击(越容易被选中),联邦轮数越多越好攻击</p>
+<p>转移性:Krum的能转移到trimmed mean和median,trimmedmean的不能转移到Krum上</p>
+<p>和无目标数据投毒SOTA-BGA比起来更好</p>
+<h3 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h3><p>推广RONI ERR: 聚合全部模型为A,删掉一个客户端为B,用服务器的测试集计算A和B的错误率,删掉错误率影响最大的c个模型</p>
+<p>推广TRIM LFR: 删掉loss影响最大的c个模型</p>
+<p>无目标攻击:拜占庭</p>
+<p>有目标攻击:backdoor </p>
+<p>Eugene Bagdasaryan, Andreas Veit, Yiqing Hua, Deb-<br>orah Estrin, and Vitaly Shmatikov. How to backdoor<br>federated learning. In arxiv, 2018.</p>
+<p>协方差矩阵有两个奇异值,提取最大的1个,奇异向量方向上的梯度认为是良性梯度,偏离的越远的就认为越恶意,就可以实现降维</p>
+<p><code>evasion attack</code> 对抗样本Adversarial examples 加噪声，影响<code>测试阶段</code></p>
+<p>模型翻转攻击model inversion attacks</p>
+<blockquote>
+<p>Matt Fredrikson, Somesh Jha, and Thomas Ristenpart.<br>Model inversion attacks that exploit confidence informa-<br>tion and basic countermeasures. In ACM CCS, 2015.</p>
+<p>Matthew Fredrikson, Eric Lantz, Somesh Jha, Simon<br>Lin, David Page, and Thomas Ristenpart. Privacy in<br>pharmacogenetics: An end-to-end case study of person-<br>alized warfarin dosing. In USENIX Security Symposium,<br>2014.</p>
+</blockquote>
+<p>成员推断攻击membership inference attacks</p>
+<blockquote>
+<p>Luca Melis, Congzheng Song, Emiliano De Cristofaro,<br>and Vitaly Shmatikov. Exploiting unintended feature<br>leakage in collaborative learning. In IEEE S &amp; P, 2019.</p>
+<p>Apostolos Pyrgelis, Carmela Troncoso, and Emiliano De<br>Cristofaro. Knock knock, who’s there? membership<br>inference on aggregate location data. In NDSS, 2018.</p>
+<p>Reza Shokri, Marco Stronati, Congzheng Song, and Vi-<br>taly Shmatikov. Membership inference attacks against<br>machine learning models. In IEEE S &amp; P, 2017.</p>
+</blockquote>
+<p>属性推断攻击property inference attacks</p>
+<blockquote>
+<p>Giuseppe Ateniese, Luigi V Mancini, Angelo Spognardi,<br>Antonio Villani, Domenico Vitali, and Giovanni Felici.<br>Hacking smart machines with smarter ones: How to ex-<br>tract meaningful data from machine learning classifiers.</p>
+<p>Karan Ganju, Qi Wang, Wei Yang, Carl A. Gunter, and<br>Nikita Borisov. Property inference attacks on fully con-<br>nected neural networks using permutation invariant rep-<br>resentations. In CCS, 2018.</p>
+</blockquote>
+<p>防御:Krum Trimmed mean median FoolsGold</p>
+<p>​    </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/02/17/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80/FedAvg/" rel="next" title="FedAvg">
+                <i class="fa fa-chevron-left"></i> FedAvg
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/03/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/DnC%E6%A8%A1%E5%9E%8B%E6%8A%95%E6%AF%92%E6%94%BB%E9%98%B2/" rel="prev" title="模型投毒框架与DnC降维防御">
+                模型投毒框架与DnC降维防御 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Poisoning-Attack"><span class="nav-number">1.</span> <span class="nav-text">Data Poisoning Attack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Model-Poisoning-Attack"><span class="nav-number">2.</span> <span class="nav-text">Model Poisoning Attack</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6"><span class="nav-number">2.1.</span> <span class="nav-text">框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">2.2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%BB%E5%87%BB"><span class="nav-number">2.3.</span> <span class="nav-text">攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Krum"><span class="nav-number">2.3.1.</span> <span class="nav-text">Krum</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#trimmed-mean"><span class="nav-number">2.3.2.</span> <span class="nav-text">trimmed mean</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0"><span class="nav-number">2.4.</span> <span class="nav-text">评估</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1"><span class="nav-number">2.5.</span> <span class="nav-text">防御</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="老师让了解一下Celeb-DF数据集的特点，不能拿到就上手开干 1909.12962.pdf (arxiv.org)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Celeb-DF数据集">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="老师让了解一下Celeb-DF数据集的特点，不能拿到就上手开干 1909.12962.pdf (arxiv.org)">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-16667512627136.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-166675126271610.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-166675126271611.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-166675126271712.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015081546263-16667509047531.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015082312435-16667509047542.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015130757026-16667509047543.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015131956213-16667509047544.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015152955230.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173416952.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173235444.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173626241.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173712729.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015174044912.png">
+<meta property="article:published_time" content="2022-10-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-10-26T02:36:02.998Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-16667512627136.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/10/14/机器学习/cv deepfake/celeb-df数据集/"/>
+
+
+
+
+
+  <title>Celeb-DF数据集 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Celeb-DF数据集</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-10-14T00:00:00+08:00">
+                2022-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>老师让了解一下Celeb-DF数据集的特点，不能拿到就上手开干</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1909.12962.pdf">1909.12962.pdf (arxiv.org)</a></p>
+<span id="more"></span>
+
+<h1 id="个人概括"><a href="#个人概括" class="headerlink" title="个人概括"></a>个人概括</h1><ul>
+<li><p>数据集介绍：迄今为止，Celeb-DF 包括从 YouTube 收集的590个不同年龄、种族和性别主题的原创视频，以及5639个相应的 DeepFake 视频。</p>
+</li>
+<li><p>和其他数据集比较：Celeb-DF的 <strong>DeepFake 视频数量大</strong>，检测性能的<strong>平均AUC很小</strong>(AUC越小表示分类器性能越差，也就是对这个数据集没有表现很好的分类器)</p>
+</li>
+</ul>
+<blockquote>
+<p>AUC介绍:</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1wz4y197LU/?spm_id_from=333.337.search-card.all.click&vd_source=6f0936ead220536edebc1dda72c5721a">【小萌五分钟】机器学习 | 模型评估: ROC曲线与AUC值_哔哩哔哩_bilibili</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e597f645de21">机器学习基础：AUC</a></p>
+<p><code>AUC</code>：在实际的数据集中经常会出现类不平衡现象，即<strong>负样本比正样本多很多</strong>（或者相反），此时如果用precision/recall 等指标的话，数据分布的波动就会出现预测的<strong>较大波动</strong>，而当测试集中的正负样本的分布变化的时候，ROC曲线能够<strong>保持不变</strong>。<code>AUC</code>就是ROC曲线的面积，AUC考虑了分类器对于正例和负例的分类能力，在<strong>样本不平衡</strong>的情况下，依然能够对分类器作出合理的评价</p>
+</blockquote>
+<ol>
+<li>导论：</li>
+</ol>
+<p>深度神经网络DNN出现，制作假视频更简单（<code>Deepfake制作变简单</code>）</p>
+<p>Deepfake利用DNN合成了一张脸，将目标的脸换了，可能导致严重后果（<code>Deepfake很危险</code>）</p>
+<p>很多人关注造假检测挑战DFDC，好用的数据集能帮助DFDC，现在已经有了一些数据集（<code>需要数据集</code>）</p>
+<p>但是这些数据集和网上流传的Deepfake视频都明显不同，里面的假视频有很多缺点， 所以很容易被看出来，不可能骗到人（<code>指出其他数据集缺点</code>）</p>
+<p>Celeb-DF 包括从 YouTube 收集的590个不同年龄、种族和性别主题的原创视频，以及5639个相应的 DeepFake 视频。（<code>介绍自己的数据集</code>）</p>
+<p>用现有的Deepfake检测方法对数据集进行了评估，之前很好的检测方法现在测不出来（<code>之前的检测方法对这个数据集不太管用</code>）</p>
+<ol start="2">
+<li>背景：</li>
+</ol>
+<p>2.1 Deepfake视频生成：</p>
+<p>有一些复杂的Deepfake生成算法，但是没开源，没流行起来，一些简单的方法用的比较多（<code>介绍Deepfake生成算法</code>）</p>
+<p>Deepfake生成过程:<strong>人脸检测-&gt;特征提取-&gt;面部对齐-&gt;放到ED模型的编码器和解码器-&gt;生产伪造人脸-&gt;仿射变形(把合成的脸扭成原始目标的脸那样)-&gt;掩码修整–&gt;边界平滑</strong>（<code>介绍ED模型训练与合成过程</code>）</p>
+<p>2.2 Deepfake检测方法:</p>
+<p>有三类检测方法</p>
+<ul>
+<li><p>基于DeepFake视频中显示的<strong>身体/生理方面</strong>的不一致。如<strong>缺乏合理的眨眼，不连贯的头部姿势，提取面部时间序列捕获到特殊行为模式</strong>(<code>检测不像人的地方，如不眨眼，不连贯...</code>)</p>
+</li>
+<li><p>基于DeepFake视频合成过程中引入的信号级<strong>伪影</strong>(原本不存在但图上有的影像)，如<strong>人脸质量低，拼接边界明显，颜色不匹配，人脸方向不一致</strong>(<code>检测合成过程中错误引入的东西，如导入的人脸和之前颜色不一样，边界清晰...</code>)</p>
+</li>
+<li><p>直接使用DNN，<strong>数据驱动</strong>(<code>狂喂数据，暴力训练?</code>)</p>
+</li>
+</ul>
+<p>2.3 现有DeepFake数据集</p>
+<p>详细介绍现有数据集，有什么<strong>数据</strong>，用什么<strong>算法</strong>生成的，这部分没什么好翻的，感兴趣就看原文吧</p>
+<ol start="3">
+<li>Celeb-DF数据集</li>
+</ol>
+<p>和其他数据集的对比：</p>
+<blockquote>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-16667512627136.png" alt="img"> </p>
+</blockquote>
+<p>3.1 基本信息</p>
+<p>Celeb-DF数据集由590个真实视频和5639个DeepFake视频(相当于200多万视频帧)组成。所有视频的平均长度约为13秒，标准帧率为每秒30帧。真实的视频是从YouTube上公开的视频中挑选出来的，这些视频对应于对59位名人的采访，他们的性别、年龄和种族分布各异。真实视频中男性占56.8%，女性占43.2%。8.5%为60岁以上，30.5%为50 - 60岁，26.6%为40多岁，28.0%为30多岁，6.4%为30岁以下。5.1%为亚洲人，6.8%为非裔美国人，88.1%为白种人。此外，真实的视频展示了大范围的变化，如受试者的脸大小(像素)，方向，照明条件和背景。DeepFake的视频是通过交换59对受试者的面孔生成的。最后的视频是MPEG4.0格式的。（比较杂，不好总结，直接看黑字吧）</p>
+<p>3.2 合成方法</p>
+<p>在上述数据集中观察到一些可改进的点，我们拿来改进了Deepfake合成方法</p>
+<ul>
+<li><p>使用具有更多层和更高维度的编码器和解码器模型来实现的<strong>提高了合成人脸的分辨率</strong></p>
+</li>
+<li><p>在训练阶段随机打乱人脸颜色，且运用颜色转移算法来<strong>解决颜色不匹配问题</strong></p>
+</li>
+<li><p>之前的掩码要不是矩形的（可能覆盖不住目标人脸），要不是只有眉毛和下巴处的几个特征点，（边界有凸起，不光滑）Celeb-DF基于眉毛上的特征点，脸颊处的内插点，下唇和下巴之间的内插点<strong>生成了平滑的掩码</strong> </p>
+</li>
+<li><p>利用卡尔曼平滑算法对人脸标志的时间序列进行滤波，以减少每帧中标志的不精确变化，即<strong>减少合成人脸在不同时间帧上的闪烁问题</strong></p>
+</li>
+</ul>
+<p>3.3 视觉质量</p>
+<p>用Mask-SSIM评分作为指标评估了一下,<strong>证明了一下确实提高了视频的质量</strong></p>
+<p>4.评估DeepFake检测方法</p>
+<p>用市面上已有的DeepFake检测方法检测Celeb-DF数据集,拿平均检测性能和别的数据集比较</p>
+<p>4.1 被评估的检测方法罗列</p>
+<p>选了九个检测方法，介绍了一下，没什么好翻译的，感兴趣看原文吧</p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-166675126271610.png" alt="img"> </p>
+<p>4.2 实验设置</p>
+<p><strong>选择帧级AUC来评估整体检测性能</strong></p>
+<p>4.3 结果分析（Celeb-DF的AUC得分很低，很难被检测出来就是了，一大堆数据，图表，不想贴了）</p>
+<p>比较<strong>数据集</strong>上各种方法的<strong>帧级AUC得分</strong>(%)</p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-166675126271611.png" alt="img"> </p>
+<p>六种最先进的<strong>检测方法</strong>的<strong>AUC评分结果图</strong>：</p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/-166675126271712.png" alt="img"> </p>
+<p>5.总结</p>
+<p>Celeb-DF数据集缩小了DeepFake数据集与网上流传的DeepFake视频在视觉质量上的差距。</p>
+<p>现在的DeepFake检测方法还有很大的改进空间</p>
+<h1 id="Celeb-DF原文"><a href="#Celeb-DF原文" class="headerlink" title="Celeb-DF原文"></a>Celeb-DF原文</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>人工智能合成的换脸视频，通常被称为Deepfake，是威胁网络信息可信度的新兴问题。开发和评估DeepFake检测算法需要大规模的数据集。然而，目前DeepFake数据集的视觉质量较低，与互联网上流传的DeepFake视频不一样。我们提出了一个新的大规模具有挑战性的DeepFake视频数据集，CelebDF，其中包含5639个使用改进的合成过程生成的高质量DeepFake名人视频。我们对DeepFake检测方法和数据集进行了全面评估，以展示Celeb-DF带来的挑战的升级水平。</p>
+<blockquote>
+<p>Deepfake危险,要写检测算法需要数据集,我搞了个数据集:Celeb-DF,很有挑战性</p>
+</blockquote>
+<h2 id="1-导论"><a href="#1-导论" class="headerlink" title="1.导论"></a>1.导论</h2><p>人工智能技术的出现让令人担忧的虚假信息问题出现了一个转折，特别是深度神经网络(DNNs)创造的虚假视频。虽然伪造和操纵数字图像和视频并不是什么新鲜事，但DNN的使用使制作令人信服的假视频的过程变得越来越容易、越来越快。</p>
+<blockquote>
+<p>深度神经网络DNN出现,制作假视频更简单</p>
+</blockquote>
+<p>一种基于DNN的虚假视频，俗称Deepfake，最近引起了广泛关注。在DeepFake视频中，目标个体的脸被DNN模型合成的供体个体的脸所取代，保留了目标的面部表情和头部姿势。由于面孔与身份有着内在的联系，精心制作的深度造假可以制造一个人的存在和活动的幻觉，而这些在现实中并没有发生，这可能会导致严重的政治、社会、金融和法律后果[11]。</p>
+<blockquote>
+<p>Deepfake利用DNN合成了一张脸,将目标的脸换了,可能导致严重后果</p>
+</blockquote>
+<p>随着人们对深度造假的关注不断升级，最近人们对开发深度造假检测方法的兴趣激增[6,17,27,53,33,28,41,40,35,34,36]，全球深度造假检测挑战即将到来。DeepFake大规模数据集的可用性视频是DeepFake检测方法发展的一个有利因素。到目前为止，我们有UADFV数据集[53]、DeepFake- timit数据集(DF-TIMIT)[25]、FaceForenscics++数据集(FF-DF)[40]2、谷歌DeepFake检测数据集(DFD)[15]和FaceBook DeepFake检测挑战(DFDC)数据集[14]。</p>
+<blockquote>
+<p>很多人关注造假检测挑战DFDC,好用的数据集能帮助DFDC,现在已经有了一些数据集</p>
+</blockquote>
+<p>然而，仔细观察现有数据集中的DeepFake视频，就会发现其视觉质量与互联网上流传的真实DeepFake视频形成了鲜明对比。图1突出显示了在这些数据集中可以发现的几种常见的视觉伪影，包括低质量的合成人脸、可见的拼接边界、颜色不匹配、原始人脸可见部分以及合成人脸方向不一致。这些伪影可能是合成方法步骤不完善的结果，以及在纳入数据集之前缺乏对合成视频的管理。</p>
+<p>此外，视觉质量如此低下的DeepFake视频很难令人信服，也不太可能产生真正的影响。相应地，当检测方法在野外部署时，对这些数据集的高检测性能可能不具有很强的相关性。</p>
+<blockquote>
+<p>但是这些数据集和网上流传的Deepfake视频都明显不同,假视频有很多缺点,很容易看出来,不可能骗到人</p>
+</blockquote>
+<p>在这项工作中，我们提出了一个新的大规模和具有挑战性的DeepFake视频数据集，Celeb-DF，用于开发和评估DeepFake检测算法。</p>
+<p>在Celeb-DF数据集中，共有5639个DeepFake视频，对应的帧数超过200万帧。</p>
+<p>真正的源视频是基于YouTube上公开的59位不同性别、年龄和种族的名人的视频剪辑。DeepFake视频是使用改进的DeepFake合成方法生成的。因此，与现有数据集相比，在Celeb-DF中合成的DeepFake视频的整体视觉质量有了很大的提高，显著的视觉伪影明显减少，如图2所示。 </p>
+<p>基于Celeb-DF数据集和其他现有数据集，我们对目前的DeepFake检测方法进行了评估。这是迄今为止对DeepFake检测方法最全面的性能评估。结果表明，Celeb-DF对大多数现有的检测方法都具有挑战性，尽管许多DeepFake检测方法在之前的数据集上显示出了很高的，有时接近完美的准确性。</p>
+<blockquote>
+<p>Celeb-DF 包括从 YouTube 收集的590个不同年龄、种族和性别主题的原创视频，以及5639个相应的 DeepFake 视频。</p>
+<p>用现有的Deepfake检测方法对数据集进行了评估，之前很好的检测方法现在测不出来</p>
+</blockquote>
+<h2 id="2-背景"><a href="#2-背景" class="headerlink" title="2.背景"></a>2.背景</h2><h3 id="2-1-Deepfake视频生成"><a href="#2-1-Deepfake视频生成" class="headerlink" title="2.1 Deepfake视频生成"></a>2.1 Deepfake视频生成</h3><p>尽管近年来已经出现了许多复杂的算法来生成逼真的合成人脸视频[9,13,46,51,26,47,37,20,23,10,21,50]，但这些算法中的大多数还没有成为任何人都可以使用的主流开源软件工具。有几个独立的开源实现，例如，FakeApp [5]， DFaker [2]， faceswap- gan [3]， faceswap[4]和DeepFaceLab[1]是一种更简单的方法，基于神经图像样式传输[29]的工作，成为大规模创建DeepFake视频的首选工具。我们将这种方法称为基本的DeepFake maker，现在互联网上流传的许多DeepFake视频或现有数据集都用到了这些方法。</p>
+<blockquote>
+<p>有一些复杂的Deepfake生成算法，但是没开源，没流行起来，一些简单的方法用的比较多</p>
+</blockquote>
+<p>基本DeepFake maker的整体流水线如图3(左)所示。从输入的视频中，<strong>检测</strong>目标的面部，并进一步<strong>提取面部标志</strong>。标志用于将<strong>面部对齐到标准配置</strong>[22]。对齐后的面部<strong>被裁剪并输入自动编码器</strong>[24]，合成供体的面部表情与原始目标面部表情相同。</p>
+<p>自动编码器通常由编码器和解码器两个卷积神经网络组成。编码器E将输入目标的面转换为称为代码的向量。为了确保编码器捕获与身份无关的属性，如面部表情，有一个单独的编码器，无论受试者的身份。另一方面，每个身份都有一个专用的解码器Di，它从代码中生成相应主体的脸。编码器和解码器以无监督的方式使用多个受试者的不对应的脸集进行串联训练，如图3(右)所示。具体而言，将每个受试者的输入面分别使用E和Di交替组成编码器-解码器对，并优化其参数以最小化重构误差(输入面与重构面之间的’ 1差)。参数更新与反向传播一起执行，直到收敛。</p>
+<p>然后，合成的面部<strong>被扭曲回原始目标面部的配置</strong>，并使用面部标志的<strong>掩码进行修整</strong>。最后一步是<strong>平滑</strong>合成区域和原始视频帧之间的边界。整个过程是自动的，几乎不需要人工干预。</p>
+<blockquote>
+<p>Deepfake生成过程(ED模型训练与合成过程):人脸检测-&gt;特征提取-&gt;面部对齐-&gt;仿射变形(把合成的脸扭成原始目标的脸那样)-&gt;掩码修整-&gt;边界平滑</p>
+</blockquote>
+<h3 id="2-2-DeepFake检测方法"><a href="#2-2-DeepFake检测方法" class="headerlink" title="2.2 DeepFake检测方法"></a>2.2 DeepFake检测方法</h3><p>自从DeepFake成为全球现象以来，人们对DeepFake的检测方法越来越感兴趣。目前大多数DeepFake检测方法都使用数据驱动的深度神经网络(DNNs)作为骨干。由于合成的人脸被拼接到原始视频帧中，可以应用最先进的DNN<strong>拼接检测</strong>方法，如[54,55,30,8]。也有专门用于检测DeepFake视频的算法，可分为三类。</p>
+<ul>
+<li>第一类方法是基于DeepFake视频中显示的<strong>身体/生理方面</strong>的不一致。</li>
+</ul>
+<p>​    [27]工作中的方法利用了许多DeepFake视频<strong>缺乏合理的眨眼</strong>的观察结果，这是由于使用在线肖像作为训练数据，出于美学原因，这些肖像通常不会闭上眼睛。[53]中使用了DeepFake视频中不连贯的<strong>头部姿势</strong>来曝光DeepFake视频。 在[7]中，从真实视频中提取的面部标志的<strong>时间序列</strong>捕获了特定个体的特殊行为模式，用于识别DeepFake视频。</p>
+<ul>
+<li>第二类DeepFake检测算法(如[33,28])使用<strong>合成过程中引入的信号级伪影</strong>，如导论中所述。</li>
+<li>第三类DeepFake检测方法(如[6,17,35,36])是<strong>数据驱动</strong>的，它直接使用在真假视频上训练过的各种类型的dnn，而不依赖于任何特定的伪影。</li>
+</ul>
+<blockquote>
+<ol>
+<li>检测不像人的地方(如不眨眼,不连贯…)</li>
+<li>检测合成过程中错误引入的东西(如导入的人脸和之前颜色不一样,边界清晰…)</li>
+<li>直接用训练过的DNN,喂数据(暴力训练?)</li>
+</ol>
+</blockquote>
+<h3 id="2-3-现有DeepFake数据集"><a href="#2-3-现有DeepFake数据集" class="headerlink" title="2.3 现有DeepFake数据集"></a>2.3 现有DeepFake数据集</h3><p>DeepFake检测方法需要训练数据，需要进行评估。因此，对大规模DeepFake视频数据集的需求越来越大。表1列出了当前DeepFake的数据集。</p>
+<p>UADFV: UADFV数据集[53]包含49个真正的YouTube视频和49个DeepFake视频。DeepFake视频是使用FakeAPP[5]的DNN模型生成的。</p>
+<p>DF-TIMIT: DeepFake- timit数据集[25]包含640个DeepFake视频，使用faceeswap - gan[3]生成，并基于Vid-TIMIT数据集[43]。视频被分为两个大小相等的子集:DF-TIMIT-LQ和DF-TIMIT-HQ，合成的人脸大小分别为64 × 64和128 × 128像素。</p>
+<p>FF-DF: faceforrenc++数据集[40]包括一个深度伪造视频子集，其中有1000个真正的YouTube视频和相同数量的使用faceswap[4]生成的合成视频。</p>
+<p>DFD:谷歌/Jigsaw DeepFake检测数据集[15]有3068个DeepFake视频，这些视频是基于28个经过同意的不同性别、年龄和种族的个人的363个原创视频生成的。合成算法的细节尚未披露，但它很可能是DeepFake制造者基本算法的改进实现。</p>
+<p>DFDC: Facebook DeepFake检测挑战数据集[14]是DeepFake检测挑战的一部分，该挑战有4113个DeepFake视频，基于66个不同性别、年龄和种族的个人的1,131个原创视频4创建。这个数据集使用了两种不同的合成算法，但合成算法的细节没有披露。</p>
+<p>基于发布时间和合成算法，我们将UADFV、DF-TIMIT和FF-DF分类为DeepFake的第一代数据集，而DFD、DFDC和提出的Celeb-DF数据集是第二代数据集。总体而言，第二代数据集在数量和质量上都比第一代数据集有所提高。</p>
+<blockquote>
+<p>详细介绍现有数据集，有些什么数据，用什么算法生成的，这部分感兴趣就看原文吧</p>
+</blockquote>
+<h2 id="3-Celeb-DF数据集"><a href="#3-Celeb-DF数据集" class="headerlink" title="3.Celeb-DF数据集"></a>3.Celeb-DF数据集</h2><p>虽然目前的DeepFake数据集有足够的视频数量，但正如导论和图1所示，这些数据集中的DeepFake视频有各种各样的视觉假象，很容易将其与真实视频区分开来。为了提供更多相关数据来评估和支持DeepFake检测方法的未来发展，我们构建了Celeb-DF数据集。Celeb-DF数据集与其他DeepFake现有数据集的比较如表1所示。</p>
+<blockquote>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015081546263-16667509047531.png" alt="image-20221015081546263"> </p>
+</blockquote>
+<h3 id="3-1-基本信息"><a href="#3-1-基本信息" class="headerlink" title="3.1 基本信息"></a>3.1 基本信息</h3><p>Celeb-DF数据集由590个真实视频和5639个DeepFake视频(相当于200多万视频帧)组成。所有视频的平均长度约为13秒，标准帧率为每秒30帧。真实的视频是从YouTube上公开的视频中挑选出来的，这些视频对应于对59位名人的采访，他们的性别、年龄和种族分布各异。真实视频中男性占56.8%，女性占43.2%。8.5%为60岁以上，30.5%为50 - 60岁，26.6%为40多岁，28.0%为30多岁，6.4%为30岁以下。5.1%为亚洲人，6.8%为非裔美国人，88.1%为白种人。此外，真实的视频展示了大范围的变化，如受试者的脸大小(像素)，方向，照明条件和背景。DeepFake的视频是通过交换59对受试者的面孔生成的。最后的视频是MPEG4.0格式的。</p>
+<h3 id="3-2-合成方法"><a href="#3-2-合成方法" class="headerlink" title="3.2 合成方法"></a>3.2 合成方法</h3><p>Celeb-DF中的DeepFake视频是使用改进的DeepFake合成算法生成的，这是提高视觉质量的关键，如图2所示。具体来说，针对现有数据集中观察到的以下特定视觉工件，基本的DeepFake maker算法在几个方面进行了改进。</p>
+<p>合成的人脸分辨率低:DeepFake maker基本算法生成的人脸分辨率低(通常是64 × 64或128 × 128像素)。我们将合成人脸的分辨率提高为256 × 256像素。这是通过使用具有<strong>更多层和更高维度的编码器和解码器模型来实现的</strong>。为了在增加训练时间和更好的合成效果之间取得平衡，我们根据经验确定了结构。合成的人脸分辨率越高，视觉质量越好，在容纳输入目标人脸时受调整大小和旋转操作的影响越小，如图4所示。</p>
+<blockquote>
+<p>使用具有更多层和更高维度的编码器和解码器模型来实现的<strong>提高了合成人脸的分辨率</strong></p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015082312435-16667509047542.png" alt="image-20221015082312435"> </p>
+</blockquote>
+<p>颜色不匹配:通过训练数据增强和后处理，在Celeb-DF中合成的供体面部与原始目标面部的颜色不匹配明显减少。具体来说，在每个训练阶段，我们随机打乱训练人脸的颜色，迫使dnn合成一个与输入图像具有相同颜色图案的图像。我们还在合成的供体人脸和输入目标人脸之间应用了颜色转移算法[38]。图5显示了一个合成人脸的例子，没有(左)和(右)色彩校正。</p>
+<blockquote>
+<p>在训练阶段随机打乱人脸颜色，且运用颜色转移算法来<strong>解决颜色不匹配问题</strong></p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015130757026-16667509047543.png" alt="image-20221015130757026"> </p>
+</blockquote>
+<p>不准确的掩码:在之前的数据集中，掩码要么是矩形的(可能无法完全覆盖原始视频帧中的面部部分)，要么是眉毛和下唇上的特征点凸起，使掩码的边界可见。</p>
+<p>我们改进了Celeb-DF的掩模生成步骤。我们首先合成一张有更多周围环境的脸，这样就可以完全覆盖扭曲后的原始面部部位。</p>
+<p>然后，我们创建一个平滑的掩码基于眉毛上的面部特征点和在脸颊和下唇和下巴之间的插值点。</p>
+<p>现有数据集使用的掩码生成与Celeb-DF的差异如图6所示，并举例说明。</p>
+<blockquote>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015131956213-16667509047544.png" alt="image-20221015131956213"> </p>
+</blockquote>
+<p>时间闪烁:我们在DeepFake视频中通过合并检测到的人脸特征点之间的时间相关性来减少合成人脸的时间闪烁。</p>
+<p>具体来说，利用卡尔曼平滑算法对人脸标志的时间序列进行滤波，以减少每帧中标志的不精确变化。</p>
+<blockquote>
+<p>减少合成人脸在不同时间帧上的闪烁问题</p>
+</blockquote>
+<h3 id="3-3-视觉质量"><a href="#3-3-视觉质量" class="headerlink" title="3.3 视觉质量"></a>3.3 视觉质量</h3><p>对合成算法的改进提高了Celeb-DF数据集中DeepFake视频的视觉质量，如图2所示。我们希望对Celeb-DF中DeepFake视频在视觉质量上的改善进行更定量的评估，并与之前的DeepFake数据集进行比较。理想情况下，无参考人脸图像质量指标是实现此目的的最佳选择。然而，不幸的是，到目前为止，还没有一个得到一致同意和广泛采用的度量标准。</p>
+<p>相反，我们遵循面部画中工作[45]，并使用Mask-SSIM评分[32]作为合成的DeepFake视频帧视觉质量的参考量化指标。</p>
+<p>Mask-SSIM对应DeepFake视频帧的头部区域(包括脸部和头发)与对应的原始视频帧之间的SSIM评分[52]，即原始目标的头部区域是视觉质量评价的参考。因此，低Mask-SSIM评分可能是由于低劣的视觉质量以及从目标到供体身份的变化。</p>
+<p>由于我们只比较来自DeepFake视频的帧，身份变化引起的错误与所有比较数据集的偏差类似。因此，Mask-SSIM的数值可能对评价合成人脸的绝对视觉质量没有意义，但Mask-SSIM之间的差异反映了视觉质量的差异。</p>
+<p>Mask-SSIM评分的取值范围为[0,1]，值越高对应的图像质量越好。表2显示了所有比较数据集的Mask-SSIM平均得分，其中Celeb-DF得分最高。这证实了视觉观察，Celeb-DF提高了视觉质量，如图2所示。</p>
+<blockquote>
+<p>用Mask-SSIM评分作为指标评估了一下,证明确实提高了视频的质量</p>
+</blockquote>
+<h2 id="4-评估DeepFake检测方法"><a href="#4-评估DeepFake检测方法" class="headerlink" title="4.评估DeepFake检测方法"></a>4.评估DeepFake检测方法</h2><p>使用Celeb-DF和其他现有的DeepFake数据集，我们对DeepFake检测进行了迄今为止最全面的性能评估，考虑了最多的DeepFake检测方法和数据集。</p>
+<p>这种评估有两个目的。首先，使用平均检测性能作为各种DeepFake数据集挑战水平的指标，我们进一步将Celeb-DF与现有的DeepFake数据集进行比较。此外，我们调查了当前DeepFake检测方法在大量DeepFake视频上的性能，特别是在Celeb-DF中的高质量视频上。</p>
+<blockquote>
+<p>用市面上已有的DeepFake检测方法检测Celeb-DF数据集,拿平均检测性能和别的数据集比较</p>
+</blockquote>
+<h3 id="4-1-DeepFake检测方法比较"><a href="#4-1-DeepFake检测方法比较" class="headerlink" title="4.1 DeepFake检测方法比较"></a>4.1 DeepFake检测方法比较</h3><p>我们在实验中考虑了九种DeepFake检测方法。由于需要在Celeb-DF数据集上运行每个方法，我们只选择那些公开或直接从作者那里获得代码和相应dnn模型的方法。</p>
+<ul>
+<li><p>双流[54]使用双流CNN在通用图像伪造检测中实现最先进的性能。底层CNN是在SwapMe数据集[54]上训练的GoogLeNet InceptionV3模型[48]。我们将其作为基线来比较其他专门的DeepFake检测方法。</p>
+</li>
+<li><p>MesoNet[6]是一种基于cnn的DeepFake检测方法，针对图像的介观特性。该模型使用作者收集的未发表的DeepFake数据集进行训练。我们评估了MesoNet的两个变体，即Meso4和MesoIncep 4。Meso4使用传统的卷积层，而MesoInception4基于更复杂的Inception模块[49]。</p>
+</li>
+<li><p>HeadPose[53]基于每个视频中估计的3D头部方向的支持向量机模型，利用合成视频头部姿势的不一致来检测DeepFake视频。该方法在UADFV数据集上训练支持向量机模型。</p>
+</li>
+<li><p>FWA[28]使用ResNet-50[19]检测DeepFake视频，以暴露由基本DeepFake maker算法中的调整大小和插值操作引入的面部扭曲工件。该模型对自收集的人脸图像进行训练。</p>
+</li>
+<li><p>VA[33]是一种最新的DeepFake检测方法，基于捕捉合成人脸的眼睛、牙齿和面部轮廓中的视觉工件。该方法有两种变体:V a - mlp基于多层前馈神经网络分类器，VA-LogReg使用更简单的逻辑回归模型。这些模型在未发表的数据集上进行训练，其中真实图像来自CelebA数据集[31]，而DeepFake视频来自YouTube。</p>
+</li>
+<li><p>Xception[40]对应于基于基于faceforesics ++数据集训练的XceptionNet模型[12]的DeepFake检测方法。Xception有三种变体，分别是exception -raw、exception -c23和exception -c40: exception -raw对原始视频进行训练，而exception -c23和exception -c40分别对H.264中等(23)和高压缩度(40)的视频进行训练。</p>
+</li>
+<li><p>Multi-task[34]是最近DeepFake的另一种检测方法，它使用CNN模型同时检测被操作的图像，并分割被操作的区域，作为一个多任务学习问题。该模型是在faceforesics数据集[39]上训练的。</p>
+</li>
+<li><p>Capsule[36]使用基于VGG19[44]网络的胶囊结构[42]作为DeepFake分类的骨干体系结构。该模型是在faceforesics ++数据集上训练的。</p>
+</li>
+<li><p>DSP-FW A是近年来在FW A的基础上进一步改进的一种方法，它包含了空间金字塔池(SPP)模块[18]，以更好地处理原始目标面分辨率的变化。该方法针对自采集的人脸图像进行训练。</p>
+</li>
+</ul>
+<p>表3给出了我们实验中考虑的DeepFake检测方法的底层模型、源代码和训练数据集的简明总结。</p>
+<blockquote>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015152955230.png" alt="image-20221015152955230"> </p>
+</blockquote>
+<h3 id="4-2实验设置"><a href="#4-2实验设置" class="headerlink" title="4.2实验设置"></a>4.2实验设置</h3><p>我们使用所有关键帧在帧级的ROC曲线下面积(AUC)评分来评估整体检测性能。这一选择有几个原因。</p>
+<p>首先，所有比较的方法分析单个帧（通常是视频的关键帧）并为每帧输出分类分数。因此，使用帧级AUC可以避免因聚合每个视频的帧级分数的不同方法而造成的差异。</p>
+<p>其次，使用帧级AUC评分消除了在不同数据集之间校准这些方法分类输出的必要性。为了增强对数值不精确性的鲁棒性，分类分数被四舍五入到小数点后的5位，即精度为10−5。由于视频是压缩的，我们只对关键帧执行评估。</p>
+<blockquote>
+<p><strong>选择帧级AUC来评估整体检测性能</strong></p>
+</blockquote>
+<p>我们使用推理代码和发布的预训练模型来比较每种检测方法的性能。这是因为这些方法中的大多数都没有用于训练机器学习模型的公开代码。因此，我们实际上无法在我们考虑的所有数据集上重新训练这些模型。我们使用每个比较检测方法提供的默认参数。</p>
+<blockquote>
+<p>上述方法没有开源,测试使用的是重构的代码,参数也是默认的参数</p>
+</blockquote>
+<h3 id="4-3结果分析"><a href="#4-3结果分析" class="headerlink" title="4.3结果分析"></a>4.3结果分析</h3><p>在表4中，我们列出了所有比较DeepFake检测方法在包括Celeb-DF在内的所有数据集上的单个帧级AUC得分，图9显示了几种顶级检测方法在多个数据集上的帧级ROC曲线。</p>
+<blockquote>
+<p>比较数据集上各种方法的帧级AUC得分(%)。粗体字对应的是最高的表现。</p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173416952.png" alt="image-20221015173416952"> </p>
+<p>六种最先进的检测方法的<strong>AUC评分结果图</strong>：</p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173235444.png" alt="image-20221015173235444"> </p>
+</blockquote>
+<p>对比不同的数据集，在图7中，我们展示了每个数据集上所有比较检测方法的平均帧级AUC得分。一般来说，Celeb-DF是当前检测方法中最具挑战性的，它们在Celeb-DF上的总体性能在所有数据集中是最低的。</p>
+<p>这些结果与视觉质量的差异一致。注意到目前的许多检测方法都是基于低分辨率和颜色不匹配等视觉假象，在针对CelebDF数据集的合成算法中进行了改进。此外，第二代数据集(DFD、DFDC和Celeb-DF，平均AUC评分低于70%)的检测难度明显更高，而一些检测方法在第一代数据集(UADFV、DFTIMIT和FF-DF，平均AUC评分在80%左右)上实现了近乎完美的检测。</p>
+<p>从单个检测方法来看，图8为每种检测方法在所有DeepFake数据集上的平均AUC得分对比。这些结果表明，检测也取得了进展，最新的DSP-FW A方法达到了最高的整体性能(87.4%)。</p>
+<blockquote>
+<p>所有检测方法在每个数据集上的平均AUC性能/每种检测方法在所有评估数据集上的平均AUC性能。</p>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173626241.png" alt="image-20221015173626241"> <img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015173712729.png" alt="image-20221015173712729"> </p>
+</blockquote>
+<p> 由于在线视频在上传和重分发的过程中，通常会被重新压缩成不同的格式(MPEG4.0和H264)和不同的质量，因此评估视频压缩检测性能的鲁棒性也很重要。表5分别显示了四种最先进的DeepFake检测方法对原始MPEG4.0视频和对Celeb-DF H.264压缩视频的中(23)度和高(40)度的平均帧级AUC得分。结果表明，随着压缩程度的增加，每种方法的性能都有所下降。特别是FWA和DSP-FWA在视频重压缩时性能下降明显，而exceptionc23和exception -c40的性能影响不明显。这是意料之中的，因为后一种方法是在压缩的H.264视频上训练的，因此它们在这种设置下更健壮。</p>
+<blockquote>
+<p><img src="/2022/10/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/celeb-df%E6%95%B0%E6%8D%AE%E9%9B%86/image-20221015174044912.png" alt="image-20221015174044912"> </p>
+</blockquote>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5.总结"></a>5.总结</h2><p>我们提出了一个新的具有挑战性的大规模数据集，用于开发和评估DeepFake检测方法。Celeb-DF数据集缩小了DeepFake数据集与网上流传的DeepFake视频在视觉质量上的差距。基于Celeb-DF数据集，我们对目前的DeepFake检测方法进行了综合性能评估，表明仍有很大的改进空间。</p>
+<p>对于未来的工作，最重要的任务是扩大Celeb-DF数据集，提高合成视频的视觉质量。这需要改进现有综合算法的运行效率和模型结构。此外，虽然造假者可以总体上提高视觉质量，但他们也可能采用反取证技术，目的是隐藏检测方法判断的DeepFake合成痕迹。预计伪造者可以采取这样的反措施，我们的目标是在Celeb-DF中加入反取证技术。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/10/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A6%82%E5%BF%B5%E5%85%A5%E9%97%A8/" rel="next" title="机器学习名词辨析">
+                <i class="fa fa-chevron-left"></i> 机器学习名词辨析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/10/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80/pytorch%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="prev" title="pytorch环境配置">
+                pytorch环境配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E6%A6%82%E6%8B%AC"><span class="nav-number">1.</span> <span class="nav-text">个人概括</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Celeb-DF%E5%8E%9F%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">Celeb-DF原文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">2.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AF%BC%E8%AE%BA"><span class="nav-number">2.2.</span> <span class="nav-text">1.导论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%83%8C%E6%99%AF"><span class="nav-number">2.3.</span> <span class="nav-text">2.背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Deepfake%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.1 Deepfake视频生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-DeepFake%E6%A3%80%E6%B5%8B%E6%96%B9%E6%B3%95"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.2 DeepFake检测方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E7%8E%B0%E6%9C%89DeepFake%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">2.3.3.</span> <span class="nav-text">2.3 现有DeepFake数据集</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Celeb-DF%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">2.4.</span> <span class="nav-text">3.Celeb-DF数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-number">2.4.1.</span> <span class="nav-text">3.1 基本信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%90%88%E6%88%90%E6%96%B9%E6%B3%95"><span class="nav-number">2.4.2.</span> <span class="nav-text">3.2 合成方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E8%A7%86%E8%A7%89%E8%B4%A8%E9%87%8F"><span class="nav-number">2.4.3.</span> <span class="nav-text">3.3 视觉质量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AF%84%E4%BC%B0DeepFake%E6%A3%80%E6%B5%8B%E6%96%B9%E6%B3%95"><span class="nav-number">2.5.</span> <span class="nav-text">4.评估DeepFake检测方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-DeepFake%E6%A3%80%E6%B5%8B%E6%96%B9%E6%B3%95%E6%AF%94%E8%BE%83"><span class="nav-number">2.5.1.</span> <span class="nav-text">4.1 DeepFake检测方法比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.5.2.</span> <span class="nav-text">4.2实验设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="nav-number">2.5.3.</span> <span class="nav-text">4.3结果分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-number">2.6.</span> <span class="nav-text">5.总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

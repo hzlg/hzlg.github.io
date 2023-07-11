@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="IMPROVING ADVERSARIAL ROBUSTNESS VIA CHANNEL-WISE ACTIVATION SUPPRESSING 通过基于channel的激活抑制提高对抗鲁棒性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="channelwise 对抗鲁棒性">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="IMPROVING ADVERSARIAL ROBUSTNESS VIA CHANNEL-WISE ACTIVATION SUPPRESSING 通过基于channel的激活抑制提高对抗鲁棒性">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/image-20221201221711518.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/image-20221201222942310.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/image-20221202170802934.png">
+<meta property="article:published_time" content="2022-11-29T06:57:19.172Z">
+<meta property="article:modified_time" content="2023-07-11T02:46:43.042Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/image-20221201221711518.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/11/29/机器学习/channel/channel-wise 对抗鲁棒性/"/>
+
+
+
+
+
+  <title>channelwise 对抗鲁棒性 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">channelwise 对抗鲁棒性</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-11-29T14:57:19+08:00">
+                2022-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>IMPROVING ADVERSARIAL ROBUSTNESS VIA CHANNEL-WISE ACTIVATION SUPPRESSING</p>
+<p>通过基于channel的激活抑制提高对抗鲁棒性</p>
+<span id="more"></span>
+
+<p>对抗样本及其激活的研究对于使用深度神经网络（DNN）进行安全和鲁棒的学习已经引起了极大的关注。</p>
+<p>与现有工作不同，本文从通道激活的角度突出了对抗样本的两个新特征：</p>
+<p>1）对抗样本<strong>激活幅度</strong>activation magnitudes高于自然样本</p>
+<p>2）对抗样本比自然样本更<strong>均匀</strong>地激活通道</p>
+<p>我们发现，最先进的防御对抗性训练通过对抗样本的训练解决了高激活强度的第一个问题，而<strong>均匀激活</strong>的第二个问题仍然存在。</p>
+<p>这促使我们通过基于通道的激活抑制（Channel wise activation Suppressing，<strong>CAS</strong>）策略来抑制冗余激活，使其免受对抗性扰动的激活。</p>
+<p>我们表明，CAS可以训练一个固有地抑制对抗激活的模型，并且可以很容易地应用于现有的防御方法，以进一步提高其鲁棒性。我们的工作提供了一种简单但通用的训练策略，用于增强（robustifying）DNN的中间层激活。</p>
+<p>代码位于<a target="_blank" rel="noopener" href="https://github.com/bymavis/CAS_ICLR2021">https://github.com/bymavis/CAS_ICLR2021</a></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>深度神经网络(DNNs)已经成为解决现实世界复杂问题的标准模型，如图像分类(He等人，2016)、语音识别(Wang等人，2017)和自然语言处理(Devlin等人，2019)。</p>
+<p>dnn可以通过一系列线性(如卷积)和非线性(如ReLU激活)操作逼近极其复杂的函数。</p>
+<p>尽管dnn具有高超的学习能力，但研究发现它们在面对对抗性样本(或攻击)时很脆弱(Szegedy等人，2014;Goodfellow et al, 2015)，其中输入上的小扰动很容易破坏模型的预测。</p>
+<p>对抗样本可以在不同的模型之间转移(Liu et al, 2017;Wu等，2020a;Wang等人，2021)，甚至在物理世界中也保持破坏性(Kurakin等人，2016;Duan等人，2020年)，提出了对自动驾驶(Eykholt等人，2018年)和医疗诊断(Ma等人，2021年)的安全担忧。</p>
+<blockquote>
+<p>dnn学习能力强,但是面对攻击很脆弱</p>
+</blockquote>
+<p>现有的针对对抗样本的防御方法包括<strong>输入去噪</strong>(Liao等人，2018;Bai等人，2019)、<strong>防御蒸馏</strong>(Papernot等人，2016)、<strong>梯度正则化</strong>(Gu &amp; Rigazio, 2014)、<strong>模型压缩</strong>(Das等人，2018)和<strong>对抗训练</strong>(Goodfellow等人，2015;Madry等，2018;王等，2019)，其中<strong>对抗训练</strong>展示了最可靠的<strong>鲁棒性</strong>(Athalye等人，2019;Croce &amp; Hein, 2020b)。</p>
+<p>对抗训练是一种数据增强技术，它在对抗而不是自然样本上训练dnn。在对抗性训练中，自然样本通过在它们周围的一个小的<code>lp范数球</code>中发现的最坏情况扰动来增强(或扰动)。这种增强已经被证明可以有效地平滑自然样本神经网络的损失情况(loss landscape)，并迫使网络更多地关注与分类最相关的像素。</p>
+<blockquote>
+<p>现在有一部分防御方法,其中对抗训练最好(对抗训练样本:FGSM)</p>
+</blockquote>
+<p>除了这些解释之外，从激活的角度来看，仍然没有很好地理解小的输入扰动是如何跨越中间层积累来破坏最终输出的，以及对抗训练如何有助于减少这种积累。因此，==中间层激活==的研究对于发展更深入的理解和更健壮的dnn变得至关重要。</p>
+<blockquote>
+<p>不知道扰动如何积累,对抗训练如何减少积累,所以要研究中间层激活</p>
+</blockquote>
+<p>在本文中，我们表明，如果从==通道的角度==进行研究，可以建立<strong>中间激活</strong>的某些特征与对抗鲁棒性之间的紧密联系。</p>
+<p>我们的通道分析的动机是:不同的卷积滤波器(或通道)<strong>学习不同的模式</strong>，当这些模式结合在一起时，描述特定类型的对象。从激活通道的新视角来研究对抗样本。</p>
+<p>与现有的激活工作假设不同的通道同等重要不同，我们关注的是<strong>通道之间的关系</strong>。直观地看，中间层的不同通道对分类预测的贡献不同，因此对对抗性扰动的脆弱性(或鲁棒性)也不同。</p>
+<blockquote>
+<p>中间层的不同通道对分类的贡献不同,对对抗性扰动的鲁棒性也不同,所以可以研究通道的关系来分析中间层的激活</p>
+</blockquote>
+<p>在给定一个中间DNN层的情况下，我们首先应用<strong>全局平均池化global average pooling(GAP)<strong>来获得</strong>通道激活</strong>，在此基础上，我们发现<strong>对抗样本的激活量高于自然样本的激活量</strong>。这意味着对抗性扰动通常对通道具有==信号增强效应==。</p>
+<p>我们还发现，与自然样本相比，对抗性样本激活的==通道更一致==。换句话说，有些冗余(或低贡献)通道不是由自然样本激活的，而是由对抗样本激活的。</p>
+<p>我们发现对抗训练可以有效地解决<strong>高幅度问题</strong>，但不能解决<strong>均匀通道激活问题</strong>，即一些冗余和低贡献的通道仍然被激活。这在一定程度上解释了为什么对抗训练是有效的，但它的表现并不令人满意。</p>
+<blockquote>
+<p>对抗样本特点: 1. 激活幅度高 2. 通道均匀激活/冗余通道激活</p>
+<p>对抗训练只能解决1,不能解决2</p>
+</blockquote>
+<p>为此，我们提出了一种新的训练策略——==基于通道的激活抑制==(Channel-wise Activation Suppressing CAS)，该策略通过辅助分类器自适应学习不同通道对分类预测的重要性，并利用学习到的通道重要性动态调整通道。</p>
+<p>如果应用于我们的CAS训练策略，现有最先进的对抗训练方法的鲁棒性可以持续提高。我们的主要贡献总结如下</p>
+<ul>
+<li>我们从通道激活的角度确定了DNN激活与对抗鲁棒性之间的<strong>两种联系</strong>:1)对抗样本的激活比自然样本的激活具有更高的幅度;2)对抗样本比自然样本激活通道更均匀。对抗训练只解决了第一个高激活量的问题，却未能解决第二个统一通道激活的问题。</li>
+<li>我们提出了一种新的训练策略，通过<strong>基于通道的激活抑制</strong>(CAS)训练鲁棒的DNN中间层。在训练阶段，CAS根据信道对分类预测的贡献来动态抑制冗余信道。CAS是一种通用的中间层强化技术，可以与现有的防御方法一起应用于任何dnn。</li>
+<li>我们的经验表明，我们的CAS训练策略可以持续提高当前最先进的对抗训练方法的鲁棒性。它是通用的，有效的，可以很容易地纳入许多现有的防御方法。我们还对基于通道的激活抑制对对抗鲁棒性的好处提供了一个<strong>完整的分析</strong>。</li>
+</ul>
+<blockquote>
+<p>基于通道的激活抑制方法:自适应学习通道关系,动态抑制冗余信道,以解决问题2</p>
+</blockquote>
+<h1 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h1><h2 id="对抗的防御"><a href="#对抗的防御" class="headerlink" title="对抗的防御"></a>对抗的防御</h2><p>自从发现对抗性样本以来，许多对抗性防御技术已经被提出。其中，许多被发现会造成<strong>混淆梯度</strong>，可以通过可微分函数逼近进行反向传播(BPDA)、随机变换期望(EOT)或重新参数化(Athalye等人，2019)来规避。</p>
+<blockquote>
+<p>介绍对抗防御技术</p>
+<p>这一篇:<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1802.00420">Obfuscated Gradients Give a False Sense of Security:Circumenting Defenses to Adversarial Examples</a></p>
+<p>基于混淆梯度进行的迭代训练将无法获得最优化的loss，从而给人一种攻击失败的假象。</p>
+</blockquote>
+<p>==对抗训练==(AT)已被证明是最有效的防御(Madry等人，2018年;王等，2019;2020b)，解决了以下<strong>最小-最大优化问题</strong></p>
+<p>![image-20221201205501660](channel-wise 对抗鲁棒性/image-20221201205501660.png)  </p>
+<p>式中，F为带参数θ的DNN模型，x为带类标签y的自然样本，x’为以x为中心的lp范数球B∈(x)={x’:||x’−x||p≤∈}内的对抗样本,F(x’，θ)为网络的输出，L为分类损失(如交叉熵损失)。</p>
+<blockquote>
+<p>![image-20230324120740302](channel-wise 对抗鲁棒性/image-20230324120740302.png) </p>
+</blockquote>
+<p>内部最大化问题依赖于在∈球内生成的对抗样本x’</p>
+<p>外部最小化问题根据内部最大化发现的最坏情况扰动优化模型参数</p>
+<p>还有一些其他变体的对抗训练具有一些新的目标函数或正则化,例如，TRADES (Zhang等，2019)优化了对抗鲁棒性和准确性的权衡目标。MART (Wang et al, 2020c)特别强调错误分类和正确分类的样本。AWP (Wu等人，2020b)将weight loss landscape（loss随weight的变化)的正则化纳入其中。</p>
+<p>然而，除了这些改进之外，从激活的角度来看，对抗训练如何帮助产生最先进的鲁棒性还没有得到很好的理解。</p>
+<blockquote>
+<p>介绍==对抗训练==,但是对抗训练还没有被完全理解</p>
+</blockquote>
+<h2 id="对抗鲁棒性的激活视角"><a href="#对抗鲁棒性的激活视角" class="headerlink" title="对抗鲁棒性的激活视角"></a>对抗鲁棒性的激活视角</h2><p>之前的一些工作从<strong>体系结构</strong>的角度研究了对抗鲁棒性，如跳跃式连接skip connection(Wu等人，2020a)和批处理归一化batch normalization(Galloway等人，2019)。</p>
+<p>对于<strong>中间激活</strong>，Ma et al(2018)认为对抗激活形成了一个具有更高内在维数的对抗子空间。Zhang等(2018)验证了具有不同激活函数的神经网络的鲁棒性。Xu等人(2019)从抑制、促进和平衡的角度探讨了对抗性扰动对激活的影响。 </p>
+<p>其他工作开发了新的激活操作与流形插值数据相关函数(Wang等人，2020a)和自适应量化技术(Rakin等人，2018)。</p>
+<p>以上工作<strong>直接修改激活函数</strong>，也有关注<strong>激活输出</strong>的工作</p>
+<p>例如，k winner takes all (kWTA) (Xiao et al, 2020)在每个激活层取最大的k个特征值，以增强对抗鲁棒性。然而，最近的研究表明，这种方法对自适应攻击并不健壮(Tramer等人，2020年)。</p>
+<p>随机激活剪枝(random Activation Pruning, SAP) (Dhillon et al, 2018)考虑了随机性和特征值。每种激活的选择都有与其绝对值成比例的概率。对抗神经修剪(ANP) (Madaan &amp; Hwang, 2020)使用贝叶斯方法修剪出易受对抗输入影响的特征。</p>
+<p>原型一致性损失(PCL) (Mustafa et al, 2019)被提出用于<strong>聚集类相关特征并将类中心彼此推开</strong>。</p>
+<p>特征去噪(FD) (Xie等人，2019)将去噪层添加到网络中，用于对特征映射进行采样去噪。</p>
+<p>然而，这些方法是基于对DNN中间层的<strong>完整输出</strong>(例如，不区分不同通道的整个特征或激活映射)的观察而开发的。相比之下，我们的CAS研究了通道重要性和通道相关性，抑制是在标签的指导下完成的。</p>
+<blockquote>
+<p>之前关于激活的研究</p>
+</blockquote>
+<h1 id="通道激活和对抗鲁棒性"><a href="#通道激活和对抗鲁棒性" class="headerlink" title="通道激活和对抗鲁棒性"></a>通道激活和对抗鲁棒性</h1><p>在本部分中，我们从==通道的角度==研究了DNN==中间激活的两个特征==，并展示了通道激活和对抗鲁棒性之间的两个经验联系。</p>
+<p>具体来说，我们在cifa -10 (Krizhevsky等人，2009)上对ResNet-18 (He等人，2016)和VGG16 (Simonyan &amp; Zisserman, 2014)进行训练，使用标准训练和典型设置下的对抗训练。然后我们应用<strong>全局平均池化</strong>从倒数第二层提取<strong>通道激活</strong>。</p>
+<p>我们从两个角度研究了提取的自然和对抗样本的通道激活:1)==激活的大小==和2)==通道的激活频率==。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/04f7771f4da2">Global average pooling (GAP) - 简书 (jianshu.com)</a> </p>
+<p>提取中间层通道激活进行研究</p>
+</blockquote>
+<h2 id="通道激活幅度"><a href="#通道激活幅度" class="headerlink" title="通道激活幅度"></a>通道激活幅度</h2><p>图1展示了自然测试样本和PGD-20攻击生成的对应对抗样本的平均激活量(Madry等人，2018)。</p>
+<img src="/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/image-20221201221711518.png" alt="image-20221201221711518" style="zoom:67%;"> 
+
+<blockquote>
+<p>对于标准(“STD”)和对抗训练(“ADV”)模型，倒数第二层(x轴512通道)<strong>通道激活的大小</strong>(y轴)。在每个图中，自然和对抗测试示样本的大小分别被平均和显示。512个通道按大小降序排序。</p>
+</blockquote>
+<p>对于标准模型(以自然例训练)，对抗例的激活量一般高于自然例的激活量，如图1(a)/1(c)所示。对抗性扰动对通道具有明显的==信号增强效应==，导致对抗性畸变从网络的输入层累积到输出层。</p>
+<p>如图1(b)/1(d)所示，<strong>对抗训练</strong>可以有效<strong>缩小</strong>自然样本和对抗样本之间的量级差距，有趣的是，它通过降低对抗样本的激活幅度来实现。</p>
+<p>这是因为对抗训练可以在较深层(即接近输出的层)<code>限制模型的Lipschiz常数</code>，从而减少了对抗扰动造成的幅度差距(Finlay et al, 2018;Sinha等人，2019)。</p>
+<p>注意，<strong>网络结构</strong>也会影响激活的大小。从图1可以看出，VGG中的量级比ResNet中有更多的零值，即VGG产生的稀疏通道比ResNet多。</p>
+<blockquote>
+<p>VGG稀疏通道比ResNet多</p>
+</blockquote>
+<h2 id="通道激活频率"><a href="#通道激活频率" class="headerlink" title="通道激活频率"></a>通道激活频率</h2><p>给定一个特定的类，不同的卷积滤波器学习与该类相关的不同模式。类似于对抗训练中的鲁棒与非鲁棒特征区分(Ilyas等，2019)，中间过滤器(或通道)也可以是鲁棒或非鲁棒。</p>
+<p>直观地说，对于同一类中的自然样本，<strong>健壮的通道产生更多的通用模式，应该更频繁地激活，而非健壮的通道应该较少地激活</strong>。</p>
+<p>因此，<strong>如果被对抗性扰动激活，非鲁棒通道会导致下一层发生更多变化，增加对抗性样本的脆弱性</strong>。</p>
+<blockquote>
+<p>通道分为鲁棒与非鲁棒,非鲁棒通道被激活不好</p>
+</blockquote>
+<p>为了研究这一点，我们在图2中可视化了通道激活的激活频率。</p>
+<img src="/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/image-20221201222942310.png" alt="image-20221201222942310" style="zoom:67%;"> 
+
+<blockquote>
+<p>使用(a)标准训练(“STD”)、(b)对抗训练(“ADV”)和(c)基于CAS的对抗训练(“CAS”)训练的ResNet-18在倒数第二层(x轴512个通道)的<strong>通道激活频率</strong>(y轴)。激活频率分别被计算为自然测试样本和他们的PGD-20对抗样本。通道按自然例的激活频率降序排序。</p>
+</blockquote>
+<p>这里，我们以CIFAR-10的一个特定类(例如类0)为例。如果一个通道的激活值大于阈值(例如，所有512个通道的最大激活值的1%)，则该通道被确定为激活的。</p>
+<p>在标准或对抗训练的ResNet-18模型上，我们分别用自然例和PGD对抗例计算每个通道的激活频率，并根据自然例的激活频率从高到低对通道进行排序。</p>
+<p>从图2(a)中可以观察到，对抗性的样本更加==一致地激活了通道==，它们往往频繁地激活那些很少被自然样本激活的通道(例如图2(a)中的右侧区域)。这个观察结果在不同的类中是一致的。<strong>低频通道为非鲁棒通道</strong>，对应于那些对类预测不太重要的冗余激活。</p>
+<p>我们还可以观察到，对抗性扰动也<strong>抑制了自然例的高频通道</strong>(图2(a)的左侧区域)。</p>
+<blockquote>
+<p>对抗样本很坏</p>
+</blockquote>
+<p>图2(b)显示，通过对抗性样本的训练，对抗性训练可以使自然和对抗性样本以相似的频率激活通道。然而，仍有一定比例的冗余通道(如通道#350 - #500)被对抗性示例激活。</p>
+<blockquote>
+<p>对抗训练能防御,但不完全</p>
+</blockquote>
+<p>这促使我们提出了一种基于通道的激活抑制(CAS)训练策略，以避免这些冗余通道被对抗性示例激活。</p>
+<p>图2(c)显示了我们的CAS策略应用于对抗训练的有效性，即我们的CAS可以抑制所有的通道，特别是在自然例子中低频通道。</p>
+<p>更多关于通道激活频率的可视化信息可以在附录C中找到。</p>
+<blockquote>
+<p>CAS抑制所有通道,尤其是低频,很好</p>
+</blockquote>
+<h1 id="基于通道的激活抑制"><a href="#基于通道的激活抑制" class="headerlink" title="基于通道的激活抑制"></a>基于通道的激活抑制</h1><p>在本节中，我们介绍了我们的==通道激活抑制(CAS)==训练策略，该策略动态学习并将通道重要性(对类预测)合并到训练阶段，以训练一个天生抑制那些不太重要的通道的DNN模型。</p>
+<p>![image-20221201224514391](channel-wise 对抗鲁棒性/image-20221201224514391.png) </p>
+<p>图3说明了我们的CAS培训策略。CAS模块由一个全局平均池化操作(即CAS模块中的GAP)和一个<strong>辅助分类器</strong>(即CAS模块中的fully-connected FC)组成，前者用于==获取通道的激活==，后者用于==学习通道的重要性==。然后<strong>将学习到的通道重要性乘回原始激活进行调整</strong>，然后将调整后的激活传递到下一层进行模型训练。利用CAS损耗和CE损耗相结合的方法<strong>同时训练整个网络和辅助分类器</strong>。CAS模块可以附加到DNN的任何中间层。</p>
+<h2 id="CAS-Module"><a href="#CAS-Module" class="headerlink" title="CAS Module"></a>CAS Module</h2><p>表示网络F的第l个激活层输出为 $$f^l∈ R^{H×W×K}$$ , 其中H、W、K分别表示激活映射的高度、宽度、通道。</p>
+<p>在CAS模块中，我们首先对原始激活$$f^l$$应用<strong>GAP运算</strong>，得到通道级激活$$\hat{f}^l∈R^K$$。</p>
+<p>第k通道的激活可以在形式上表示为 $$\hat{f}^l_k =\frac{1}{ H × W} \sum_{i=1}^{H}\sum_{j=1}^{W}f^l_k(i, j)$$</p>
+<p>然后将通道激活$$\hat{f}^l$$传递到<strong>辅助分类器</strong>中，以使用全连接(FC)层执行多类分类。</p>
+<p>对于C类，<strong>辅助分类器的参数</strong>可以写成$$M^l = [M^l_1, M^l_2,…, M^l_C]∈R^{K×C}$$，M是权重,它可以识别每个通道对特定类的重要性，并将应用于以通道的方式对原始激活$$f^l$$进行重新加权。</p>
+<p>在<strong>训练阶段</strong>，利用ground-truth标签y作为确定通道重要性的指标，即$$M^l_y∈R^K$$。</p>
+<p>在<strong>测试阶段</strong>，由于ground-truth标签不可用，我们简单地将与预测类$$\hat{y}^l$$相关的权重分量$$M^l_{\hat{y}^l}∈R^K$$作为通道重要度(详细分析见5.1节)。</p>
+<p>然后将计算得到的通道重要性应用于对原始激活映射$$f^l$$进行如下重加权,其中⊗表示通道上的乘法</p>
+<p>![image-20221202153920364](channel-wise 对抗鲁棒性/image-20221202153920364.png) </p>
+<p>调整后的$$\tilde{f}^l$$将通过正向传播传递到下一层。注意，到目前为止，辅助器和网络都没有经过训练，只是计算通道的重要性并以通道的方式<strong>调整激活</strong>。</p>
+<blockquote>
+<p>对未训练的网络的激活层的<strong>原始激活</strong>f^l^输出进行GAP运算,得到K个<strong>通道激活</strong>fk^l^</p>
+<p>将K个<strong>通道激活</strong>输入未训练的辅助分类器,得到对于特定分类,这K个通道的<strong>权重</strong>M</p>
+<p>对原始激活fl进行<strong>通道乘法</strong>,乘权重W</p>
+</blockquote>
+<h2 id="MODEL-TRAINING"><a href="#MODEL-TRAINING" class="headerlink" title="MODEL TRAINING"></a>MODEL TRAINING</h2><p>我们可以在dnn的S个不同的中间层中插入S个通道激活抑制(CAS)模块。CAS模块可以被视为网络的辅助组件，可以使用标准训练或不同类型的对抗训练进行训练。我们以原始对抗训练(Madry et al, 2018)为例，定义损失函数来同时训练网络和我们的CAS模块。我们的每个CAS模块都有一个FC层。</p>
+<p>以网络F的第l层激活层后插入的一个CAS模块为例，CAS损失函数可定义为</p>
+<p>$$L_{CAS}(\hat{p}^l(x’, θ, M), y) = −\sum_{c=1}^C1{c = y}·log\hat{p}^l_c(x’)$$              (4)</p>
+<p>1()代表指示函数,即0-1损失,C是类的数量,$$\hat{p}^l = softmax(\hat{f}^ lM ^l)∈RC$$是CAS模块中<strong>分类器的预测得分</strong>,x’是用于训练的对抗样本</p>
+<blockquote>
+<p>多分类交叉熵损失函数:</p>
+<p>![image-20221202162346389](channel-wise 对抗鲁棒性/image-20221202162346389.png)  </p>
+<p>p(x)真实分布,q(x)预测分布</p>
+<p>真实分布*log(通道c的预测概率pc(x’))</p>
+</blockquote>
+<p>注意，L_CAS是在辅助分类器上定义的交叉熵损失。同样，它也可以扩展到多个CAS模块。用CAS策略进行对抗训练的总体目标函数是:</p>
+<p>$$L(x’,y,θ,M)=L_{CE}(p(x’,θ),y)+β*\frac{1}{S}\sum_{S=1}^SL_{CAS}^S(\hat{p}^S(x’,θ,M),y)$$   (5)</p>
+<p>β是平衡CAS强度的可调参数。</p>
+<blockquote>
+<p>总体损失:网络CE损失+CAS损失</p>
+</blockquote>
+<p>除了原有的对抗训练(A T) (Madry等人，2018)，我们还可以将CAS与其他防御技术结合，如TRADES (Zhang等人，2019)和MART (Wang等人，2020c)。在附录B中，我们总结了原始at、TRADES、MART的损失函数，以及它们与CAS的组合版本。</p>
+<p>我们CAS的完整训练过程在附录A的算法1中描述。</p>
+<blockquote>
+<p>对每个batch    </p>
+<p>​    依据<strong>方程5</strong>使用PGD攻击生成<strong>对抗样本</strong></p>
+<p>​    使用通道激活$$\hat{f}^l$$计算<strong>方程4</strong>中的<strong>CAS损失</strong></p>
+<p>​    使用CAS中的权重参数$$M^l_y$$对原来的特征进行重新加权$$\tilde{f} ^l = f ^l⊗M ^l_y$$ </p>
+<p>​    使用调整后的$$\tilde{f} ^l$$继续前向传播，并在输出层计算<strong>CE损失</strong></p>
+<p>利用梯度下降法对各参数(θ，M)按<strong>方程5</strong>进行优化</p>
+<p>![image-20221202160034533](channel-wise 对抗鲁棒性/image-20221202160034533.png) </p>
+</blockquote>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>在本节中，我们首先全面理解CAS训练策略，然后评估它在基准数据集上对抗各种白盒和黑盒攻击的鲁棒性。</p>
+<h2 id="cas的实证理解"><a href="#cas的实证理解" class="headerlink" title="cas的实证理解"></a>cas的实证理解</h2><p>在这一部分中，我们首先展示了我们的CAS的通道抑制效果和鲁棒性，然后分析了我们的CAS在DNN的不同层应用时的有效性。CAS的参数分析见附录d。</p>
+<blockquote>
+<p>如第4节所述，CAS损失中的参数β控制着抑制强度。为了测试不同β下CAS训练的灵敏度，我们在ResNet18的Block4中插入一个CAS模块，在β∈[0,0.5,1,2,5,10,20]下使用对抗训练AT+CAS在cifar-10上训练网络。注意，β = 0表示标准对抗训练(at)。</p>
+<p>我们测试了模型在白盒设置针对FGSM, PGD-20和CW_∞的鲁棒性。如图8所示，在较大的β条件下训练的模型通常具有更强的鲁棒性，特别是对CW∞攻击。这是因为较大的β增加了通道抑制的强度，导致更大的类间边缘。</p>
+<p>![image-20221202163640901](channel-wise 对抗鲁棒性/image-20221202163640901.png) </p>
+<p>正如我们在图9中进一步显示的，使用CAS学习的表示在不同的类之间更加分离，并且在同一个类中更加紧凑。这往往会增加基于边界的攻击的难度，如白盒CW∞攻击和黑盒N攻击。</p>
+<p>![image-20221202163747293](channel-wise 对抗鲁棒性/image-20221202163747293.png) </p>
+</blockquote>
+<p>在附录E中，我们展示了CAS还可以帮助表示学习和自然训练。</p>
+<blockquote>
+<p>通过使用或不使用CAS策略的自然或对抗训练学习到的表示如图9所示。t-SNE (Maaten &amp; Hinton, 2008)二维嵌入是基于CIFAR-10上ResNet-18的倒数第二层提取的深度特征进行计算的。可以观察到，我们的CAS训练改善了自然训练和对抗训练的表示学习。这在很大程度上得益于我们的CAS训练具有较强的信道抑制能力。通道抑制有助于学习具有<strong>高类间分离</strong>和<strong>类内紧密性</strong>的高质量表示。有趣的是，我们的CAS训练甚至可以将自然训练的性能从92.75%提高到94.56%。这意味着我们的CAS是一种通用的训练策略，可以同时受益于模型训练和表示学习。虽然CAS不是一种直接的正则化技术，但它可以达到与现有的中心损失等表示增强技术类似的表示正则化效果(Wen et al, 2016)。</p>
+</blockquote>
+<h3 id="实验设置"><a href="#实验设置" class="headerlink" title="实验设置"></a>实验设置</h3><p>我们在cifa -10上使用SGD对ResNet-18进行200 epoch的对抗训练，SGD的动量为0.9，权值衰减为2e-4，初始学习率为0.1，在第75和90课时除以10。我们使用PGD-10 (?= 8/255，步长2/255)，随机开始训练。鲁棒性(对抗性例子的准确性)在攻击下进行评估:由PGD优化的FGSM (Goodfellow等人，2015)、PGD-20 (Madry等人，2018)和CW∞(Carlini &amp; Wagner, 2017)。</p>
+<h3 id="信道抑制好"><a href="#信道抑制好" class="headerlink" title="信道抑制好"></a>信道抑制好</h3><p>我们将CAS与三种基于激活或特征的防御方法进行比较:kWTA (Xiao等人，2020)、SAP (Dhillon等人，2018)和PCL (Mustafa等人，2019)。在这里，我们在每个激活层用20%稀疏最大值训练kWTA, SAP用典型的随机修剪，PCL用CE损失进行热身训练，然后用增加的PCL损失进行微调。</p>
+<p>图4显示了不同方法训练的ResNet-18倒数第二层的激活频率。</p>
+<blockquote>
+<p>![image-20221202195259250](channel-wise 对抗鲁棒性/image-20221202195259250.png)  </p>
+<p>不同激活或特征导向防御方法(kWTA、SAP、PCL和我们的CAS)下对抗和自然实例的激活频率分布比较。</p>
+</blockquote>
+<p>kWTA、SAP和PCL虽然表现出一定程度的信道抑制，但其效果不如我们的CAS训练那么显著。kWTA和SAP几乎没有通道抑制作用(如图4(a)中的#350 - #500通道和图4(b))中的#380 - #500通道),原因是它们主要通过在激活中引入一定的<strong>随机性</strong>来提高鲁棒性，因此很容易受到一些<strong>自适应攻击</strong>的攻击(Tramer et al, 2020;阿塔耶等人，2019年)。</p>
+<blockquote>
+<p>不行</p>
+</blockquote>
+<p>PCL仍然频繁地激活许多冗余通道(例如图4(c)中的通道#150 - #250)。这是因为PCL不直接强制通道抑制。</p>
+<blockquote>
+<p>不行</p>
+</blockquote>
+<p>与这些方法不同，我们的CAS演示了最有效的信道抑制。</p>
+<blockquote>
+<p>行</p>
+</blockquote>
+<h3 id="对抗鲁棒性好"><a href="#对抗鲁棒性好" class="headerlink" title="对抗鲁棒性好"></a>对抗鲁棒性好</h3><p>作为一个旁注，由于动态阈值，频率分布应该在同一模型内比较自然和对抗的样本，而不是在不同的模型之间。</p>
+<p>在同一模型内，对抗例的频率分布越接近自然例的频率分布，==对抗鲁棒性==越好(即对抗精度越接近自然精度)。</p>
+<p>从这个角度来看，我们的CAS可以有效减少自然实例和对抗样本之间的激活频率差距，产生优越的鲁棒性。表1报告了这些方法的自然准确性和鲁棒性。</p>
+<blockquote>
+<p>不同防御(kWTA、SAP、PCL和我们的CAS)对ResNet-18训练的鲁棒性(%)。平均PGD-100表示100步平均PGD攻击(Tramer等人，2020年)。</p>
+<p>![image-20221202165254621](channel-wise 对抗鲁棒性/image-20221202165254621.png) </p>
+</blockquote>
+<p>由于kWTA和SAP中引入的随机性，它们对使用边际损失(Tramer等人，2020年)或期望过度转换(EOT)攻击的平均PGD (Avg-PGD)并不健壮。</p>
+<blockquote>
+<p>不行</p>
+</blockquote>
+<p>我们的CAS训练策略不依赖于随机性，因此即使对平均pgd或EOT攻击也具有鲁棒性。</p>
+<blockquote>
+<p>行</p>
+</blockquote>
+<h3 id="通道抑制必不可少"><a href="#通道抑制必不可少" class="headerlink" title="通道抑制必不可少"></a>通道抑制必不可少</h3><p>我们接下来验证显式的Channel Suppressing信道抑制(CS)对于提高CAS的鲁棒性确实是必不可少的。具体来说，我们从CAS中移除![image-20221202165515044](channel-wise 对抗鲁棒性/image-20221202165515044.png) 中定义的CS，然后使用![image-20221202165533443](channel-wise 对抗鲁棒性/image-20221202165533443.png) 中定义的CAS损失对抗训练重新训练ResNet-18。表2表明，如果没有显式的信道抑制，鲁棒性就无法提高。</p>
+<blockquote>
+<p>基于ResNet-18的CIFAR-10上CAS模块信道抑制操作的有效性。CAS插入到ResNet-18的Block4。没有抑制意味着插入CAS模块，然而，在训练或测试期间不应用信道抑制操作。在这种情况下，CAS只是一个简单的辅助分类器。</p>
+<p>![image-20221202165601312](channel-wise 对抗鲁棒性/image-20221202165601312.png) </p>
+</blockquote>
+<h3 id="深层次的CAS好"><a href="#深层次的CAS好" class="headerlink" title="深层次的CAS好"></a>深层次的CAS好</h3><p>我们将CAS模块插入到ResNet-18的不同块中，并在表3中显示了不同的鲁棒性改进。直观地看，<strong>更深层的激活与类预测更相关</strong>，因此应该从我们的CAS训练中获益更多。然而，浅层可能会受到不准确的通道重要性估计的影响。如表3所示，情况确实如此:在Block4应用CAS时(例如在Block4的ReLU输出之后)获得了最大的改进。当将CAS插入到Block3或同时插入Block3和Block4时，鲁棒性也可以得到提高，但明显不如在Block4时显著。</p>
+<blockquote>
+<p>CAS模块在CIFAR-10上ResNet-18不同区块的有效性。</p>
+<p>![image-20221202170259256](channel-wise 对抗鲁棒性/image-20221202170259256.png) </p>
+</blockquote>
+<h3 id="CAS模块的鲁棒性"><a href="#CAS模块的鲁棒性" class="headerlink" title="CAS模块的鲁棒性"></a>CAS模块的鲁棒性</h3><p>因为我们的CAS模块根据标签(在训练期间)或预测(在测试期间)抑制通道激活,它可能会引起人们对CAS<strong>模块本身是否健壮</strong>或者<strong>CAS模块中的错误分类将如何影响最终结果</strong>的关注。</p>
+<p>一个观察结果是，当CAS模块被插入到接近网络最后一层的深层时，它<strong>可以学会做出与最后一层非常相似的预测</strong>。</p>
+<p>为了进行实证分析，我们在表4中测试CAS模块对不同攻击的鲁棒性。结果表明，该CAS模块本身具有较强的鲁棒性，具有较高的自然精度和对抗鲁棒性。更多评价见附录F.5。(CAS的鲁棒性不是虚假的,不是模糊梯度的结果)</p>
+<blockquote>
+<p>在CIFAR-10上使用(+CAS)或不使用CAS模块训练的ResNet-18模型对不同攻击的鲁棒性。对于+CAS模型，我们<strong>只使用CAS损耗对CAS模块进行攻击</strong>(公式4)。对于基线防御，我们攻击模型的最后一层。</p>
+<img src="/2022/11/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/image-20221202170802934.png" alt="image-20221202170802934" style="zoom:80%;"> 
+</blockquote>
+<h2 id="鲁棒性评价"><a href="#鲁棒性评价" class="headerlink" title="鲁棒性评价"></a>鲁棒性评价</h2><p>在本节中，我们使用ResNet-18 (He et al, 2016)评估我们在CIFAR-10 (Krizhevsky等人，2009)和SVHN (Netzer等人，2011)数据集上的CAS。</p>
+<p>我们将CAS训练策略应用于几种最先进的对抗训练方法:1)AT(对抗训练)(Madry等人，2018)，2)TRADES (Zhang等人，2019)，3)MART (Wang等人，2020c)。我们遵循他们论文中所述的默认设置。更多关于WideResNet-34-10 (Zagoruyko &amp; Komodakis, 2016)和VGG16 (Simonyan &amp; Zisserman, 2014)的结果可在附录F.1和F.2中找到。</p>
+<ul>
+<li>实验设置</li>
+</ul>
+<p>CIFAR-10的培训设置与5.1节相同。对于SVHN，我们使用SGD对ResNet-18进行对抗性训练，SGD的动量为0.9，权重衰减为5e-4，初始学习率为0.01(在第75和90个epoch除以10)，训练攻击PGD-10 (∈= 8/255，步长1/255)随机启动。</p>
+<ul>
+<li>白盒鲁棒性</li>
+</ul>
+<p>我们评估了所有防御模型对三种类型的白盒攻击的鲁棒性:FGSM, PGD-20(步长∈/10)和CW∞(由PGD优化)。</p>
+<p>为了比较我们的方法和基线，我们对CAS模型使用了自适应白盒攻击，即在CE和CAS的联合损失上执行攻击。</p>
+<p>在这里，我们报告了表5中最后一个训练时期获得的模型的鲁棒性。如表5所示，我们的CAS可以提高所有基线方法的自然准确性和鲁棒性，从而获得明显更好的鲁棒性。</p>
+<p>对CW∞攻击的改进比对FGSM或PGD-20攻击的改进更显著。这是因为使用信道抑制的CAS训练增大了预测裕度。如图9(附录E)所示，由cas训练的模型学习到的深度表示在每个类中更紧凑，而在不同的类之间更分散。这使得像CW∞这样基于边际的攻击更难成功。</p>
+<blockquote>
+<p>基于ResNet-18的最后一个检查点，CIFAR-10和SVHN上的白盒鲁棒性(各种白盒攻击的准确性(%))。“+CAS”表示将我们的CAS训练策略应用到现有的防御方法。最好的结果是加粗的。</p>
+<p>![image-20221202171911494](channel-wise 对抗鲁棒性/image-20221202171911494.png) </p>
+</blockquote>
+<p>在整个训练过程的最佳检查点获得的鲁棒性结果和学习曲线见附录F.3。我们的CAS还可以提高每个基线防御的最佳检查点模型的鲁棒性。因此，我们的CAS的改进是可靠的和一致的，而不是由过拟合的影响造成的(Rice et al, 2020)。我们还评估了在自动攻击(Croce &amp; Hein, 2020b)和不同攻击摄动预算下的CAS训练策略。附录F.4和F.5。</p>
+<ul>
+<li>黑盒鲁棒性</li>
+</ul>
+<p>我们评估了CAS和基线方法的黑盒鲁棒性，以对抗基于transfer和query的攻击。</p>
+<p>对于转移攻击transfer attack，通过对自然训练的ResNet-50应用PGD-20和CW∞攻击，在cifr -10/SVHN测试图像上生成对抗示例。</p>
+<p>对于基于查询的攻击query-based attack，我们采用N攻击(Li et al, 2019)。由于N Attack需要大量查询，我们从CIFAR-10/SVHN测试集中随机抽样1,000张图像，并将最大查询限制为20,000张。</p>
+<p>我们在最后一个训练阶段获得的模型上测试这两种黑盒攻击。结果见表6。对于基于传输和查询的攻击，我们的CAS可以大大提高所有防御模型的鲁棒性。特别是针对N攻击，我们的CAS训练策略可以提高AT,TRADES and MART约30% - 40%。我们的CAS对N攻击特别有效的一个原因是N攻击利用了类似CW∞的裕度目标函数，可以通过信道抑制有效地阻止。</p>
+<blockquote>
+<p>ResNet-18在SVHN和CIFAR-10上的黑箱鲁棒性(各种黑箱攻击的准确性(%))。“+CAS”表示将我们的CAS训练策略应用到现有的防御方法。</p>
+<p>最好的结果是加粗的。</p>
+<p>![image-20221202172618613](channel-wise 对抗鲁棒性/image-20221202172618613.png) </p>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在本文中，我们从一个新颖的通道角度，在对抗鲁棒性和对抗训练的背景下，研究了深度神经网络(DNNs)的中间激活。</p>
+<p>我们强调了对抗激活通道的两个新特征:1)更高的强度和2)更均匀的激活频率。</p>
+<p>我们发现，标准对抗训练通过解决第一个更高强度的问题来提高鲁棒性，然而，它未能解决第二个更均匀的激活频率问题。</p>
+<p>为了克服这一问题，我们提出了信道激活抑制(CAS)，它动态学习信道重要性，并利用学习到的信道重要性在训练阶段抑制信道激活。</p>
+<p>当结合对抗性训练时，我们发现CAS可以固有地抑制被对抗样本激活的冗余通道来训练dnn。</p>
+<p>我们的CAS是一种简单但通用的训练策略，可以很容易地插入到不同的防御方法中，以进一步提高它们的鲁棒性，并可以很容易地应用于增强dnn的中间层。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/11/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%9F%BA%E7%A1%80/%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7%E8%83%8C%E6%99%AFor%E7%BB%BC%E8%BF%B0/" rel="next" title="对抗样本背景">
+                <i class="fa fa-chevron-left"></i> 对抗样本背景
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/12/02/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/cv%20deepfake/OSN%E5%99%AA%E5%A3%B0%E6%A8%A1%E6%8B%9F/" rel="prev" title="OSN噪声模拟">
+                OSN噪声模拟 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Related-Work"><span class="nav-number">2.</span> <span class="nav-text">Related Work</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%8A%97%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="nav-number">2.1.</span> <span class="nav-text">对抗的防御</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7%E7%9A%84%E6%BF%80%E6%B4%BB%E8%A7%86%E8%A7%92"><span class="nav-number">2.2.</span> <span class="nav-text">对抗鲁棒性的激活视角</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E9%81%93%E6%BF%80%E6%B4%BB%E5%92%8C%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7"><span class="nav-number">3.</span> <span class="nav-text">通道激活和对抗鲁棒性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E9%81%93%E6%BF%80%E6%B4%BB%E5%B9%85%E5%BA%A6"><span class="nav-number">3.1.</span> <span class="nav-text">通道激活幅度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E9%81%93%E6%BF%80%E6%B4%BB%E9%A2%91%E7%8E%87"><span class="nav-number">3.2.</span> <span class="nav-text">通道激活频率</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E9%80%9A%E9%81%93%E7%9A%84%E6%BF%80%E6%B4%BB%E6%8A%91%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">基于通道的激活抑制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CAS-Module"><span class="nav-number">4.1.</span> <span class="nav-text">CAS Module</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MODEL-TRAINING"><span class="nav-number">4.2.</span> <span class="nav-text">MODEL TRAINING</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">5.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cas%E7%9A%84%E5%AE%9E%E8%AF%81%E7%90%86%E8%A7%A3"><span class="nav-number">5.1.</span> <span class="nav-text">cas的实证理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.1.1.</span> <span class="nav-text">实验设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E9%81%93%E6%8A%91%E5%88%B6%E5%A5%BD"><span class="nav-number">5.1.2.</span> <span class="nav-text">信道抑制好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7%E5%A5%BD"><span class="nav-number">5.1.3.</span> <span class="nav-text">对抗鲁棒性好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E9%81%93%E6%8A%91%E5%88%B6%E5%BF%85%E4%B8%8D%E5%8F%AF%E5%B0%91"><span class="nav-number">5.1.4.</span> <span class="nav-text">通道抑制必不可少</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%B1%82%E6%AC%A1%E7%9A%84CAS%E5%A5%BD"><span class="nav-number">5.1.5.</span> <span class="nav-text">深层次的CAS好</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CAS%E6%A8%A1%E5%9D%97%E7%9A%84%E9%B2%81%E6%A3%92%E6%80%A7"><span class="nav-number">5.1.6.</span> <span class="nav-text">CAS模块的鲁棒性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%B2%81%E6%A3%92%E6%80%A7%E8%AF%84%E4%BB%B7"><span class="nav-number">5.2.</span> <span class="nav-text">鲁棒性评价</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

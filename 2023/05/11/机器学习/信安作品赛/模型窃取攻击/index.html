@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="model stealing attack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模型窃取">
+<meta property="og:url" content="https://hzlg.github.ioz/2023/05/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/%E6%A8%A1%E5%9E%8B%E7%AA%83%E5%8F%96%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="model stealing attack">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-05-11T01:13:25.515Z">
+<meta property="article:modified_time" content="2023-06-30T03:38:21.958Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2023/05/11/机器学习/信安作品赛/模型窃取攻击/"/>
+
+
+
+
+
+  <title>模型窃取 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2023/05/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/%E6%A8%A1%E5%9E%8B%E7%AA%83%E5%8F%96%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">模型窃取</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-05-11T09:13:25+08:00">
+                2023-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>model stealing attack</p>
+<span id="more"></span>
+
+<h2 id="参数-方程求解-路径寻找-代码"><a href="#参数-方程求解-路径寻找-代码" class="headerlink" title="参数:方程求解+路径寻找 代码"></a>参数:方程求解+路径寻找 <a target="_blank" rel="noopener" href="https://github.com/ftramer/Steal-ML">代码</a></h2><p><code>方程求解</code>：能线性模型，多类逻辑回归和神经网络，不能决策树，对于决策树，置信度值反映了树中输入路径上正确标记的训练数据点的数量；因此，简单的方程求解是不适用的。</p>
+<p><code>路径寻找</code>：我们展示了置信度值如何被用作树中路径的伪标识符，从而有助于发现树的结构。</p>
+<p>有一个oracle能返回叶子标识符，查询随机样本x所属的<strong>叶子标识符</strong>，搜索将x保留在该叶子中的所有<strong>约束</strong>/搜索将x保留在该叶子中要满足的谓词，查完每个叶子</p>
+<p>仅输出类标签：总之方法就是<code>找决策边界</code></p>
+<p>我们展示了使用自适应迭代搜索算法来发现树中路径的成功模型提取攻击。不可知学习算法启发的攻击。我们的新攻击在各种模型类的&gt;99%的输入空间上提取匹配目标的模型，但需要比方程求解攻击（特别是多类线性回归和神经网络）==多100倍的查询==。</p>
+<ol>
+<li>使用统一查询进行再训练：随机均匀采样m个点，然后查询oracle，并在这些样本上训练一个模型$f^~$。 </li>
+<li>线性搜索再训练：使用行搜索技术向oracle发出m个自适应查询，以找到接近模型决策边界的样本。然后在m个查询样本上训练一个模型$f^~$。 </li>
+<li>适应性再训练：该策略应用了主动学习技术。给定查询轮数r和查询预算m，首先在m/r均匀点上查询oracle，并训练一个模型$f^~$。在查询r轮中，他会沿着模型的决策边界选择新的点，并在再训练模型之前将这些点发送给oracle。</li>
+</ol>
+<h2 id="超参数-方程求解"><a href="#超参数-方程求解" class="headerlink" title="超参数:方程求解"></a>超参数:方程求解</h2><p>岭回归、逻辑回归、支持向量机和神经网络</p>
+<p>回归/分类</p>
+<p>目标函数: 损失函数+正则项</p>
+<p>$Non-kernel algorithms: L(w) = L(X, y, w) + λR(w)$<br>$Kernel algorithms: L(w) = L(φ(X), y, w) + λR(w)$</p>
+<p>通过最小化目标函数（损失函数+正则化）学习模型参数</p>
+<p>计算目标函数的梯度并设置为0，得到模型超参数方程组</p>
+<p>线性系统是超定的，方程数大于未知数数，利用线性最小二乘法导出近似解以估计超参数</p>
+<p>L2正则化&gt;L1正则化  交叉熵,square 铰链损失&gt;常规铰链损失</p>
+<h2 id="架构-时间侧信道偷NN-DaST代码"><a href="#架构-时间侧信道偷NN-DaST代码" class="headerlink" title="架构:时间侧信道偷NN DaST代码"></a><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1812.11720">架构:时间侧信道偷NN</a> <a target="_blank" rel="noopener" href="https://github.com/zhoumingyi/DaST">DaST代码</a></h2><blockquote>
+<p>“Stealing Neural Networks Via Timing Side Channels”是一篇关于通过时序侧信道窃取神经网络的研究论文。该论文由Abadi等人于2016年发表。</p>
+<p>这项研究旨在研究神经网络模型的隐私保护问题。研究者发现，通过观察目标神经网络在处理输入数据时的计算时间差异，攻击者可以获取关于目标网络结构和参数的敏感信息，进而复制或窃取该网络。</p>
+<p>攻击的基本思想是通过观察目标神经网络在不同输入数据上的计算时间来推断其内部结构和参数。具体来说，攻击者首先构建一个与目标网络具有相同结构的本地模型（称为”攻击模型”）。然后，攻击者使用一组不同的输入数据对攻击模型和目标模型进行测试，并记录它们的计算时间。</p>
+<p>通过对比攻击模型和目标模型在不同输入上的计算时间，攻击者可以观察到计算时间的差异。这些差异可以揭示出目标模型中不同计算阶段的时间开销，进而推断出目标模型的结构和参数信息。攻击者可以使用这些推断的信息来复制或窃取目标模型，从而损害其知识产权和隐私。</p>
+<p>该研究论文的主要贡献是揭示了神经网络模型在计算时间方面的隐私风险，并提出了一种新颖的侧信道攻击方法。它强调了保护神经网络隐私的重要性，并促使研究人员和开发者采取相应的防护措施，如对计算时间进行控制和调整，以减少时序侧信道的泄露风险。</p>
+<p>需要注意的是，该攻击方法是一种侧信道攻击，对于一般的神经网络应用场景，如果适当地进行随机化或者采用其他保护措施，可以降低这种攻击的风险。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/466455380">强化学习入门：基本思想和经典算法 - 知乎 (zhihu.com)</a></p>
+<p>利用时间侧信道，在恒定数量的查询次数下，窃取模型架构，重建接近目标模型的功能的替代模型架构</p>
+<p>本文表明，由于神经网络的总执行时间取决于网络的总层数或深度，因此在黑盒设置中存在定时侧通道。根据总执行时间，对手可以使用在包含执行时间随神经网络深度的变化的数据上训练的回归器来推断神经网络的总层数（深度）。所获得的这种附加的侧信道信息，即网络的深度，减少了用于寻找具有接近目标模型的功能的替代模型的搜索空间。</p>
+<p>用不同模型架构的执行时间训练一个回归器,就可以推断出模型层数</p>
+<p>为了有效地搜索最优神经网络，引入了一个优化问题，该问题使用基于<code>强化学习</code>的神经结构搜索来解决。<code>递归神经网络（RNN）</code>控制器<code>预测</code>一种新的替代体系结构，其性能决定了改善控制器对后续优化时期预测的<code>回报</code>[44]。</p>
+<p>优化问题最小化<code>替代模型预测标签</code>与<code>目标模型预测标签</code>之间的loss，不是最小化<code>替代模型预测标签</code>与<code>真实标签</code>的loss    </p>
+<p>RNN根据通过最小化损失获得的回报<code>更新其参数</code>，以预测性能接近目标模型的最佳替代架构</p>
+<p>有了层数,可以将替代模型的搜索空间缩小</p>
+<p>除了层数，模型还包括其他参数，使用强化学习在缩减后的模型空间中搜索最优的替代模型</p>
+<h2 id="决策树信息增益-Monitor"><a href="#决策树信息增益-Monitor" class="headerlink" title="决策树信息增益 Monitor"></a><a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3274694.3274740">决策树信息增益 Monitor</a></h2><p>对模型提取攻击的防御：做了一个monitor，监视用户的API和响应流</p>
+<h2 id="DNN决策边界"><a href="#DNN决策边界" class="headerlink" title="DNN决策边界"></a><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1602.02697.pdf">DNN决策边界</a></h2><blockquote>
+<p>机器学习(ML)模型，例如深度神经网络(dnn)，很容易受到对抗性示例的影响:恶意输入被修改以产生错误的模型输出，而对人类观察者来说似乎没有修改。潜在的攻击包括将恶意软件等恶意内容识别为合法或控制车辆行为。然而，<code>所有现有的对抗性示例攻击都需要了解模型内部或其训练数据</code>。我们介绍了攻击者在没有此类知识的情况下控制远程托管DNN的第一个实际演示。事实上，我们的黑盒对手的<code>唯一能力是观察DNN给选择输入的标签</code>。我们的攻击策略包括<code>训练一个局部模型</code>来替代目标DNN，使用由对手合成并由目标DNN标记的输入。我们使用局部替代来制作对抗性示例，并发现它们被目标DNN错误分类。</p>
+<p>为了执行真实世界和正确盲法评估，我们攻击了由MetaMind托管的DNN，这是一个在线深度学习API。我们发现他们的DNN错误分类了84.24%的用我们的替代品制作的对抗性示例。我们通过使用逻辑回归替代品对亚马逊和谷歌托管的模型进行相同的攻击，证明了我们的策略对许多ML技术的一般适用性。它们产生的对抗性样本被亚马逊和谷歌误分类的概率分别为96.19%和88.94%。我们还发现，这种黑盒攻击策略能够规避先前发现的使对抗性示例制作更加困难的防御策略。</p>
+</blockquote>
+<h2 id="决策树-SVM的决策边界"><a href="#决策树-SVM的决策边界" class="headerlink" title="决策树+SVM的决策边界"></a><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1605.07277.pdf">决策树+SVM的决策边界</a></h2><blockquote>
+<p>许多机器学习模型很容易受到对抗性示例的影响:专门设计的输入会导致机器学习模型产生错误的输出。影响一个模型的对抗性示例通常会影响另一个模型，即使两个模型具有不同的架构或在不同的训练集上进行训练，只要两个模型都被训练以执行相同的任务。因此，攻击者可能会训练自己的替代模型，制作针对替代模型的对抗性示例，并将它们转移到受害者模型中，而受害者的信息很少。最近的工作进一步开发了一种技术，该技术使用受害者模型作为预言器来标记替代的合成训练集，因此攻击者甚至不需要收集训练集来发动攻击。我们使用储层采样扩展了这些最新技术，以大大提高替代模型训练过程的效率。我们在以前未探索的(替代，受害者)机器学习模型类对之间引入了新的可转移性攻击，最著名的是<code>支持向量机和决策树</code>。我们展示了我们对亚马逊(96.19%误分类率)和谷歌(88.94%)的两个商业机器学习分类系统的攻击，仅使用800个受害者模型查询，从而表明现有的机器学习方法通常容易受到系统黑箱攻击，无论其结构如何。</p>
+</blockquote>
+<h2 id="knockoff偷功能"><a href="#knockoff偷功能" class="headerlink" title="knockoff偷功能"></a><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1812.02766.pdf">knockoff偷功能</a></h2><p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9156604">Boosting the Transferability of Adversarial Samples via Attention | IEEE Conference Publication | IEEE Xplore</a> </p>
+<p>频域模型增广对抗样本</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2207.05382">Frequency Domain Model Augmentation for Adversarial Attack (arxiv.org)</a></p>
+<blockquote>
+<p>对于黑盒攻击，替代模型与受害者模型之间的差距通常较大，表现为攻击性能较弱。鉴于<strong>同时攻击多个模型可以提高对抗样例的可转移性</strong>，提出了<strong>利用变换后的图像模拟不同模型的模型增强方法</strong>。然而，现有的空间域转换不能转化为显著不同的增强模型。为了解决这个问题，我们提出了一种新的频谱模拟攻击，以针对常规训练和防御模型制作更具可转移性的对抗示例。具体来说，我们<strong>对输入进行频谱变换，从而在频域进行模型增广</strong>。我们从理论上证明了从频域导出的变换会导致不同的频谱显著性映射，这是我们提出的反映替代模型多样性的指标。值得注意的是，我们的方法通常可以与现有的攻击相结合。在ImageNet数据集上的大量实验证明了我们的方法的有效性，\textit{例如}，攻击9个最先进的防御模型，平均成功率为\textbf{95.4％}。我们的代码可在\url{this https URL}中获得。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/05/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/%E6%88%90%E5%91%98%E6%8E%A8%E7%90%86%E6%94%BB%E5%87%BB/" rel="next" title="成员推理">
+                <i class="fa fa-chevron-left"></i> 成员推理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/06/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/Readme/" rel="prev" title="web应用上线 & 云服务器配置">
+                web应用上线 & 云服务器配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0-%E6%96%B9%E7%A8%8B%E6%B1%82%E8%A7%A3-%E8%B7%AF%E5%BE%84%E5%AF%BB%E6%89%BE-%E4%BB%A3%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">参数:方程求解+路径寻找 代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%8F%82%E6%95%B0-%E6%96%B9%E7%A8%8B%E6%B1%82%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">超参数:方程求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84-%E6%97%B6%E9%97%B4%E4%BE%A7%E4%BF%A1%E9%81%93%E5%81%B7NN-DaST%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">架构:时间侧信道偷NN DaST代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E6%A0%91%E4%BF%A1%E6%81%AF%E5%A2%9E%E7%9B%8A-Monitor"><span class="nav-number">4.</span> <span class="nav-text">决策树信息增益 Monitor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNN%E5%86%B3%E7%AD%96%E8%BE%B9%E7%95%8C"><span class="nav-number">5.</span> <span class="nav-text">DNN决策边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E6%A0%91-SVM%E7%9A%84%E5%86%B3%E7%AD%96%E8%BE%B9%E7%95%8C"><span class="nav-number">6.</span> <span class="nav-text">决策树+SVM的决策边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#knockoff%E5%81%B7%E5%8A%9F%E8%83%BD"><span class="nav-number">7.</span> <span class="nav-text">knockoff偷功能</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

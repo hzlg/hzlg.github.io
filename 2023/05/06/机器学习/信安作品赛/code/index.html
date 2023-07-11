@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="php开发环境配置 &amp; sniffer部署">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sniffer">
+<meta property="og:url" content="https://hzlg.github.ioz/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="php开发环境配置 &amp; sniffer部署">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/201210142044268882.jpg">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/image-20230509095459449.png">
+<meta property="article:published_time" content="2023-05-06T08:29:21.781Z">
+<meta property="article:modified_time" content="2023-06-30T03:39:41.125Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/201210142044268882.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2023/05/06/机器学习/信安作品赛/code/"/>
+
+
+
+
+
+  <title>sniffer | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sniffer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-05-06T16:29:21+08:00">
+                2023-05-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>php开发环境配置 &amp; sniffer部署</p>
+<span id="more"></span>
+
+<blockquote>
+<p>首先需要启用IIS服务,添加网站,将web应用部署在服务器上,就==能看HTML==了</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/406654540">IIS这个Windows自带的Web服务器,方便又好用!</a></p>
+</blockquote>
+<p>main.html : post请求将登录表单提交到login.php中</p>
+<blockquote>
+<p>使用IIS部署web应用一开始是无法运行php的,需要</p>
+<ol>
+<li>下载<a target="_blank" rel="noopener" href="https://windows.php.net/download/">PHP</a>里的zip文件,解压</li>
+<li>将文件夹路径添加到环境变量中</li>
+<li>创建php.ini-development的副本,重命名为php.ini</li>
+<li>IIS中处理程序映射——添加模块映射</li>
+</ol>
+<p><img src="/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/201210142044268882.jpg" alt="img">  </p>
+<p>配置完就==能执行php文件了==</p>
+</blockquote>
+<blockquote>
+<p><a href="(https://cloud.tencent.com/developer/beta/article/1990743)">vscode调试php</a>:下载对应版本的<a target="_blank" rel="noopener" href="https://xdebug.org/download">Xdebug</a>(TS/NTS)/把phpinfo输入这里让他给你建议<a target="_blank" rel="noopener" href="https://xdebug.org/wizard">Xdebug: Support — Tailored Installation Instructions</a>,在php.ini里加配置↓(我设置的端口9003 &amp; 最好写完整的dll路径),加完了看看phoinfo里有没有xdebug,有就装成了</p>
+<p>vscode php debug插件,改setting.json(端口要一致)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[XDebug]</span><br><span class="line">zend_extension=D:\install\php-8.2.5-nts-Win32-vs16-x64\ext\php_xdebug-3.2.1-8.2-vs16-nts-x86_64.dll</span><br><span class="line">xdebug.remote_enable = 1</span><br><span class="line">xdebug.remote_autostart = 1</span><br><span class="line">xdebug.remote_port = 9003</span><br></pre></td></tr></table></figure>
+
+<p>配完就==能调试php了==</p>
+</blockquote>
+<p>login.php : 连接数据库,获取用户输入,查询数据库,处理查询结果</p>
+<blockquote>
+<p>phpinfo里没有mysqli是连不上mysql的,要开启mysqli扩展 <a target="_blank" rel="noopener" href="https://blog.csdn.net/www121104115/article/details/75006164">1</a> <a target="_blank" rel="noopener" href="https://www.php.cn/php-weizijiaocheng-379419.html">2</a> <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45159791/article/details/112985196">3</a></p>
+<p>php缺少mysqli扩展的原因：</p>
+<ol>
+<li><p>配置文件php.ini中没有开启php_mysqli.dll扩展；加一句extension=php_mysqli.dll/去掉;extension=php_mysqli.dll前的;号</p>
+</li>
+<li><p>extension_dir的地址没有指向ext目录； 修改php.ini  extension_dir = “D:\install\php-8.2.5-nts-Win32-vs16-x64\ext”</p>
+</li>
+<li><p>php_mysqli.dll文件不存在。</p>
+</li>
+</ol>
+<p>还要把configuration.json里的database内容改成自己数据库的名字,密码</p>
+<p>现在==能连接mysql了==</p>
+</blockquote>
+<p>windows上sudo要去掉,LMs.py里sklearn.linear_model.logistic要改</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># from sklearn.linear_model.logistic import _multinomial_loss, _multinomial_loss_grad, safe_sparse_dot</span><br><span class="line">from sklearn.utils.extmath import safe_sparse_dot</span><br></pre></td></tr></table></figure>
+
+<p>choose_model里model有<a target="_blank" rel="noopener" href="https://www.runoob.com/sql/sql-primarykey.html">PRIMARY KEY</a>约束,一个模型名字只能插入一次,不然就报错,<a target="_blank" rel="noopener" href="https://blog.csdn.net/sunny243788557/article/details/109603274">在MySQL中重复的插入数据</a>将insert into改成insert ignore into</p>
+<p>要windows vscode调试的话，sniffer local里的路径，还有utils里的路径的../都要改成.\\</p>
+<p>CNN的LM方程求解没有结果</p>
+<p>RNN的LM方程求解没有执行</p>
+<p>NN迁移模型没有结果</p>
+<blockquote>
+<p><img src="/2023/05/06/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/code/image-20230509095459449.png" alt="image-20230509095459449"> </p>
+</blockquote>
+<p>问题:title要改,NN要改,LM要改,最后展示的饼状图要改,柱状图要改</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/03/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/CFL%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6/" rel="next" title="CFL聚类联邦学习">
+                <i class="fa fa-chevron-left"></i> CFL聚类联邦学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/05/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BF%A1%E5%AE%89%E4%BD%9C%E5%93%81%E8%B5%9B/%E6%88%90%E5%91%98%E6%8E%A8%E7%90%86%E6%94%BB%E5%87%BB/" rel="prev" title="成员推理">
+                成员推理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

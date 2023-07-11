@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://hzlg.github.ioz/2022/01/14/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.14-%E8%92%B8%E7%B1%B3rop_02/image-20220117213028761.png">
 <meta property="og:image" content="https://hzlg.github.ioz/2022/01/14/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.14-%E8%92%B8%E7%B1%B3rop_02/image-20220118225153976.png">
 <meta property="article:published_time" content="2022-01-13T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-20T13:24:00.696Z">
+<meta property="article:modified_time" content="2023-06-11T07:40:43.128Z">
 <meta property="article:author" content="hzlg">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
@@ -366,7 +366,7 @@
 <blockquote>
 <p>把栈填满, 返回地址覆盖为system, /bin/sh当做system函数的参数()</p>
 </blockquote>
-<p>为什么要加一个p32(ret),预留返回地址是什么?</p>
+<p>为什么要加一个p32(ret),预留返回地址是什么? 要注意的是system()后面跟的是执行完system函数后要返回地址，接下来才是”/bin/sh”字符串的地址。因为我们执行完后也不打算干别的什么事，所以我们就随便写了一个0xdeadbeef作为返回地址。</p>
 <p>64位不知道怎么做</p>
 <h2 id="0x03-ROP–-Bypass-DEP-and-ASLR"><a href="#0x03-ROP–-Bypass-DEP-and-ASLR" class="headerlink" title="0x03 ROP– Bypass DEP and ASLR"></a>0x03 ROP– Bypass DEP and ASLR</h2><blockquote>
 <p>通过ROP绕过DEP和ASLR防护</p>
@@ -513,7 +513,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-count">96</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
