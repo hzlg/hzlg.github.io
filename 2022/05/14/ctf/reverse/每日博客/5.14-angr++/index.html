@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="做完了angr_ctf的题目,然而angr还有好多操作没用到,原理也没有特别清楚,学习一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5.14-angr概念总览&amp;文档学习">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="做完了angr_ctf的题目,然而angr还有好多操作没用到,原理也没有特别清楚,学习一下">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/image-20220515135552053.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/image-20220514205256631.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/image-20220514222220932.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/zjyy-16520118757264.jpg">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/v2-7ab77ff810027eb66b4fb1475abf73ff_720w.jpg">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/830671_V3ZBZVDYVEBVSTM.jpg">
+<meta property="article:published_time" content="2022-05-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-14T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/image-20220515135552053.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/05/14/ctf/reverse/每日博客/5.14-angr++/"/>
+
+
+
+
+
+  <title>5.14-angr概念总览&文档学习 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">5.14-angr概念总览&文档学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-14T00:00:00+08:00">
+                2022-05-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2022-05-15T00:00:00+08:00">
+                2022-05-15
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>做完了angr_ctf的题目,然而angr还有好多操作没用到,原理也没有特别清楚,学习一下</p>
+<span id="more"></span>
+
+<blockquote>
+<p>reference:</p>
+<p>入门总览 : <a target="_blank" rel="noopener" href="https://lantern.cool/note-tool-angr/">angr | Lantern’s 小站</a></p>
+<p>架构 : <a target="_blank" rel="noopener" href="https://www.cnblogs.com/0xJDchen/p/9291335.html">动若脱兔:深入浅出angr–初步理解符号执行以及angr架构 - 0xJDchen - 博客园 (cnblogs.com)</a> </p>
+<p>官方文档,但是机翻跟屎一样 : <a target="_blank" rel="noopener" href="https://docs.angr.io/">README - angr Documentation</a></p>
+<p>找到的翻译 : <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5e3592475158">angr 文档翻译（1-1） - 简书 (jianshu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://we.buptmerak.cn/archives/tag/angr">angr – 天璇Merak (buptmerak.cn)</a></p>
+</blockquote>
+<blockquote>
+<p>angr_problem/application:</p>
+<p><a target="_blank" rel="noopener" href="https://cn-sec.com/archives/1002040.html">angr符号变量转LLVM IR | CN-SEC 中文网</a></p>
+<p><a target="_blank" rel="noopener" href="https://security.tencent.com/index.php/blog/msg/112">利用符号执行去除控制流平坦化 - 博客 - 腾讯安全应急响应中心 (tencent.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sp5627896/article/details/83067907">利用angr获取CFG_sp5627896的博客-CSDN博客_angr生成cfg</a></p>
+</blockquote>
+<blockquote>
+<p>angr_practice:<br><a target="_blank" rel="noopener" href="https://tyaoo.github.io/2021/03/19/Reverse%E4%B8%ADAngr%E7%9A%84%E5%88%A9%E7%94%A8/">Reverse中Angr的利用 | Tyaoo’s Blog</a></p>
+<p><a target="_blank" rel="noopener" href="https://lantern.cool/note-tool-angr/#%E8%84%9A%E6%9C%AC-10">angr | Lantern’s 小站</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.modb.pro/db/184638">【技术分享】浅谈angr的缓解状态爆炸策略 - 墨天轮 (modb.pro)</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/4137">深入浅出angr（四） - 先知社区 (aliyun.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://aidaip.github.io/binary/2019/11/07/angr%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83.html">AiDai|angr从入门到放弃 (aidaip.github.io)</a></p>
+</blockquote>
+<blockquote>
+<p>angr_files:</p>
+<p><a target="_blank" rel="noopener" href="https://docs.angr.io/core-concepts/toplevel">Top Level Interfaces - angr Documentation</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5e3592475158">angr 文档翻译（1-1） - 简书 (jianshu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f660800bb70f">angr 文档翻译(1-2):加载一个二进制文件——CLE和angr工程 - 简书 (jianshu.com)</a></p>
+</blockquote>
+<h2 id="符号执行是什么"><a href="#符号执行是什么" class="headerlink" title="符号执行是什么"></a>符号执行是什么</h2><p>符号执行就是在运行程序时，<strong>用符号来替代真实值</strong>。</p>
+<p>符号执行相较于真实值执行的优点在于，当使用真实值执行程序时，我们能够遍历的程序路径只有一条，而使用符号进行执行时，由于符号是可变的，我们就可以利用这一特性，尽可能的将程序的<strong>每一条路径遍历</strong>，这样的话，必定存在至少一条能够输出正确结果的分支，每一条分支的结果都可以表示为一个<strong>离散关系式</strong>，使用约束求解引擎即可分析出正确结果。</p>
+<blockquote>
+<p>符号执行是一种程序分析技术。其可以通过分析程序来<strong>得到让特定代码区域执行的输入</strong>。</p>
+<p>使用符号执行分析一个程序时，该程序会<strong>使用符号值作为输入</strong>，而非一般执行程序时使用的具体值。在达到目标代码时，分析器可以得到相应的<strong>路径约束</strong>，然后通过约束求解器来得到可以触发目标代码的具体值。</p>
+</blockquote>
+<p>具体例子 : </p>
+<p><img src="/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/image-20220515135552053.png" alt="image-20220515135552053"> </p>
+<p>上面的是静态符号执行, 但是在实际执行过程中可能会出现很多问题，其中一个就是<strong>约束式无法通过约束式求解</strong>的问题</p>
+<p><strong>动态</strong>的符号执行：</p>
+<p>这里的解决方案是将传统的<strong>静态符号执行和实际执行</strong>结合起来，称之为<strong>动态符号执行</strong>（concolic execution），concolic维持了两个状态。一种是实际变量的状态，另一种是符号化的状态。实际状态将随机生成值映射到变量中，而符号化状态将变量进行符号化。<strong>concolic首先将实际状态运行，并收集实际运行时该路径的变量符号化的约束式</strong>，求解。并将<strong>约束式取反</strong>，获取另一条路径的约束式并求解。过程不断重复，直到路径被探索完，或者达到用户设置的限制。</p>
+<p><img src="/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/image-20220514205256631.png" alt="image-20220514205256631"> </p>
+<h2 id="利用angr暴力求解流程"><a href="#利用angr暴力求解流程" class="headerlink" title="利用angr暴力求解流程"></a>利用angr暴力求解流程</h2><ul>
+<li>装载二进制文件到<strong>分析平台</strong>（就像java定义对象，angr要把二进制文件读取为对象）</li>
+<li>转换二进制文件为<strong>中间语言</strong> (intermediate representation) (IR) （和ida很像，读取进来转换为汇编，angr是转换为统一的中间语言IR）</li>
+<li>转换 IR 为<strong>语义描述</strong> (即它做什么而不是它是什么，相当于ida f5转换成伪代码)</li>
+<li>执行<strong>实际分析</strong>。这可能是：<ul>
+<li>部分或全程序静态分析（提取条件，即依赖关系分析、程序切片)  “该片程序是否导致内存写入?”</li>
+<li>对程序状态空间的符号探索（程序对符号的不断改变,进入下一个区块） “我们可以执行它直到找到溢出吗？”</li>
+<li>上述内容的某种组合 “让我们仅执行导致内存写入的程序切片，以查找溢出”</li>
+</ul>
+</li>
+</ul>
+<p>通俗点的话就是设置输入变量为x，然后静态分析程序控制流cfg流，转化为中间语言，获得符号化的变量在程序流程中的改变，从而输出一个带符号化变量的值。</p>
+<h2 id="CLE加载文件-loader接口"><a href="#CLE加载文件-loader接口" class="headerlink" title="CLE加载文件-loader接口"></a>CLE加载文件-loader接口</h2><p>二进制文件的装载组件是<code>CLE</code>（CLE Load Everything)，它负责装载二进制对象以及它所依赖的库（<strong>将二进制文件加载到虚拟的地址空间</strong>），把这个对象以易于操作的方式交给 angr 的其他组件，最后生成地址空间，表示该程序已加载并可以准备运行。</p>
+<p>装载完之后,angr获得了文件的属性,我们就可以通过 <code>loader</code> 查看加载对象、符号重定位信息等，同时也可以设置初始的加载选项。</p>
+<p>基本信息 : </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(b.entry) // 程序入口点</span><br><span class="line"><span class="built_in">print</span>(b.loader.min_addr, b.loader.max_addr) // 该二进制文件在内存空间中的最小地址和最大地址</span><br><span class="line"><span class="built_in">print</span>(b.filename) // 文件的全名</span><br></pre></td></tr></table></figure>
+
+<p>CLE.Loader代表一整个<strong>被加载的二进制对象的集合</strong>，它们被加载并且映射到同一个内存空间中。CLE的<strong>执行结果</strong>可以使用<code>.loader</code>属性获取</p>
+<p>每一个二进制对象都被一个能够处理对应文件类型(<code>cle.Backend</code>的子类)的加载器后端加载。比如，<code>cle.ELF</code>被用来加载ELF格式的二进制文件。</p>
+<p>内存中也会有一些和任何被加载的二进制文件都无关的对象。比如，被用来提供<a target="_blank" rel="noopener" href="http://www.cppblog.com/Tim/archive/2012/07/04/181018.html">线程本地存储TLS(Thread Local Storage)</a>支持的对象和用于提供未解析的符号的外部对象。</p>
+<p><img src="/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/image-20220514222220932.png" alt="image-20220514222220932"> </p>
+<p>可以看到在使用<code>load_options=&#123;&quot;auto_load_libs&quot;: False&#125;</code>后一些动态链接库没有被载入。</p>
+<blockquote>
+<p>如果 auto_load_libs 为 <code>true</code>, 那么程序如果调用到库函数的话就会直接调用 真正的库函数 ，如果有的库函数逻辑比较复杂，可能分析程序就出不来了。同时 angr 使用 python 实现了很多的库函数（保存在 angr.SIM_PROCEDURES 里面），默认情况下会使用列表内部的函数来替换实际的函数调用，如果不在列表内才会进入到真正的 library。</p>
+<p>如果 auto_load_libs 为 <code>false</code> ， 程序调用函数时，会直接返回一个 不受约束的符号值。</p>
+</blockquote>
+<h3 id="已加载的二进制对象"><a href="#已加载的二进制对象" class="headerlink" title="已加载的二进制对象"></a>已加载的二进制对象</h3><p>可以使用loader.all_objects来获取CLE已经加载的所有对象,也可以指定更加具体的类别,如<code>main_object/shared_objects/all_elf_objects/extern_object/kernel_object</code>等</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">22</span>]: obj = proj.loader.all_objects <span class="comment"># 可以使用loader.all_objects来获取CLE已经加载的所有对象</span></span><br><span class="line">In [<span class="number">23</span>]: obj</span><br><span class="line">Out[<span class="number">23</span>]:</span><br><span class="line">[&lt;ELF Object 00_angr_find, maps [<span class="number">0x8048000</span>:<span class="number">0x804a03f</span>]&gt;,</span><br><span class="line"> &lt;ELF Object libc-<span class="number">2.31</span>.so, maps [<span class="number">0x8100000</span>:<span class="number">0x82ee6bf</span>]&gt;,</span><br><span class="line"> &lt;ELF Object ld-<span class="number">2.31</span>.so, maps [<span class="number">0x8300000</span>:<span class="number">0x832c987</span>]&gt;,</span><br><span class="line"> &lt;ExternObject Object cle<span class="comment">##externs, maps [0x8400000:0x8407fff]&gt;,</span></span><br><span class="line"> &lt;ELFTLSObjectV2 Object cle<span class="comment">##tls, maps [0x8500000:0x8514807]&gt;,</span></span><br><span class="line"> &lt;KernelObject Object cle<span class="comment">##kernel, maps [0x8600000:0x8607fff]&gt;]</span></span><br><span class="line"> </span><br><span class="line">In [<span class="number">24</span>]: obj = proj.loader.main_object <span class="comment"># 指定更加具体的类别</span></span><br><span class="line">In [<span class="number">25</span>]: obj</span><br><span class="line">Out[<span class="number">25</span>]: &lt;ELF Object 00_angr_find, maps [<span class="number">0x8048000</span>:<span class="number">0x804a03f</span>]&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>获得加载对象后，直接与这些对象进行交互从中提取元数据，如：</p>
+<ul>
+<li>获取 ELF 的<strong>内存分段和文件分段</strong></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">27</span>]: obj.sections</span><br><span class="line">Out[<span class="number">27</span>]: &lt;Regions: [&lt;Unnamed | offset <span class="number">0x0</span>, vaddr <span class="number">0x0</span>, size <span class="number">0x0</span>&gt;, &lt;.interp | offset <span class="number">0x154</span>, vaddr <span class="number">0x8048154</span>, size <span class="number">0x13</span>&gt;, &lt;.note.ABI-tag | offset <span class="number">0x168</span>, vaddr <span class="number">0x8048168</span>, size <span class="number">0x20</span>&gt;,......</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取 <strong>PLT</strong> 表信息</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">28</span>]: obj.plt</span><br><span class="line">Out[<span class="number">28</span>]:</span><br><span class="line">&#123;<span class="string">&#x27;strcmp&#x27;</span>: <span class="number">134513616</span>,</span><br><span class="line"> <span class="string">&#x27;printf&#x27;</span>: <span class="number">134513632</span>,</span><br><span class="line"> <span class="string">&#x27;__stack_chk_fail&#x27;</span>: <span class="number">134513648</span>,</span><br><span class="line"> <span class="string">&#x27;puts&#x27;</span>: <span class="number">134513664</span>,</span><br><span class="line"> <span class="string">&#x27;exit&#x27;</span>: <span class="number">134513680</span>,</span><br><span class="line"> <span class="string">&#x27;__libc_start_main&#x27;</span>: <span class="number">134513696</span>,</span><br><span class="line"> <span class="string">&#x27;__isoc99_scanf&#x27;</span>: <span class="number">134513712</span>,</span><br><span class="line"> <span class="string">&#x27;__gmon_start__&#x27;</span>: <span class="number">134513728</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>显示<strong>预链接基址</strong>和实际装载的<strong>内存基址</strong>等地址信息(这是啥啊?)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.linked_base</span><br><span class="line"><span class="number">0x0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.mapped_base</span><br><span class="line"><span class="number">0x400000</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>obj.max_addr</span><br><span class="line"><span class="number">0x60721f</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="符号和重定位"><a href="#符号和重定位" class="headerlink" title="符号和重定位"></a>符号和重定位</h3><p>使用 CLE 可以操作二进制的符号信息</p>
+<p>“符号”在符号执行的世界中是一个基础概念，它将一个名字有效地映射到一个地址。</p>
+<p>从CLE中获取符号，最简单的方法是使用<code>loader.find_symbol</code>， 它接收一个<strong>名字</strong>或者一个<strong>地址</strong>并返回一个符号对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">3</span>]: check = proj.loader.find_symbol(<span class="string">&quot;check_equals_ORSDDWXHZURJRBDH&quot;</span>)</span><br><span class="line">In [<span class="number">4</span>]: check</span><br><span class="line">Out[<span class="number">4</span>]: &lt;Symbol <span class="string">&quot;check_equals_ORSDDWXHZURJRBDH&quot;</span> <span class="keyword">in</span> 10_angr_simprocedures at <span class="number">0x80485f5</span>&gt;</span><br><span class="line">    </span><br><span class="line">In [<span class="number">24</span>]: check_addr_obj = proj.loader.find_symbol(<span class="number">0x080485F5</span>)</span><br><span class="line">In [<span class="number">25</span>]: check_addr_obj</span><br><span class="line">Out[<span class="number">25</span>]: &lt;Symbol <span class="string">&quot;check_equals_ORSDDWXHZURJRBDH&quot;</span> <span class="keyword">in</span> 10_angr_simprocedures at <span class="number">0x80485f5</span>&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>一个符号最有用的属性是它的名字、父对象(owner)、和它的地址。但是一个符号的“地址”却是一个含糊的概念。有三种方式来准确表述一个符号的“地址”：</p>
+<ul>
+<li><p><code>.rebased_addr</code> 是一个符号在全局地址空间中的地址。</p>
+</li>
+<li><p><code>.linked_addr</code>是符号相对于二进制文件预链接基址的地址，这个地址和用诸如readelf(1)显示的地址是一样的。</p>
+</li>
+<li><p><code>.relative_addr</code>是符号相对于对象基址的地址。在一些文献中(尤其在windows的文献中)，这样的地址被称为RVA(相对虚拟地址)</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">8</span>]: <span class="built_in">hex</span>(check.linked_addr)</span><br><span class="line">Out[<span class="number">8</span>]: <span class="string">&#x27;0x80485f5&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">9</span>]: <span class="built_in">hex</span>(check.rebased_addr)</span><br><span class="line">Out[<span class="number">9</span>]: <span class="string">&#x27;0x80485f5&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">10</span>]: <span class="built_in">hex</span>(check.relative_addr)</span><br><span class="line">Out[<span class="number">10</span>]: <span class="string">&#x27;0x5f5&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">12</span>]: <span class="built_in">hex</span>(malloc.rebased_addr)</span><br><span class="line">Out[<span class="number">12</span>]: <span class="string">&#x27;0x8182d50&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">13</span>]: <span class="built_in">hex</span>(malloc.relative_addr)</span><br><span class="line">Out[<span class="number">13</span>]: <span class="string">&#x27;0x82d50&#x27;</span></span><br><span class="line"></span><br><span class="line">In [<span class="number">14</span>]: <span class="built_in">hex</span>(malloc.linked_addr)</span><br><span class="line">Out[<span class="number">14</span>]: <span class="string">&#x27;0x82d50&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>//我们可以通过<code>obj.relocs</code>(获取<code>Relocation</code>实例)看到一个对象的完成重定位表，或者通过<code>obj.imports</code>看到符号名和他们的重定位地址的映射关系。对于导出符号表，angr中没有相应对象与之对应。</p>
+<p>//一个对象中需要重定位的相应导入符号可以用<code>.symbol</code>获取。重定位将会写入的地址可以通过访问一个Symbol的地址的任何方式获取，你还可以通过<code>.owner_obj</code>来获得一个请求重定位的对象的引用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">In [<span class="number">27</span>]: obj = proj.loader.main_object</span><br><span class="line"></span><br><span class="line">In [<span class="number">28</span>]: obj</span><br><span class="line">Out[<span class="number">28</span>]: &lt;ELF Object 10_angr_simprocedures, maps [<span class="number">0x8048000</span>:<span class="number">0x804c05b</span>]&gt;</span><br><span class="line"></span><br><span class="line">In [<span class="number">29</span>]: obj.imports <span class="comment"># 符号名和重定位地址的映射关系</span></span><br><span class="line">Out[<span class="number">29</span>]:</span><br><span class="line">&#123;<span class="string">&#x27;__gmon_start__&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_GLOB_DAT at <span class="number">0x7fc782c7d1c0</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;printf&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d130</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;memcpy&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d190</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;__stack_chk_fail&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d1f0</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;puts&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d0a0</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;exit&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d220</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;__libc_start_main&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d100</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;memset&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d2b0</span>&gt;,</span><br><span class="line"> <span class="string">&#x27;__isoc99_scanf&#x27;</span>: &lt;cle.backends.elf.relocation.i386.R_386_JMP_SLOT at <span class="number">0x7fc782c7d280</span>&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="加载选项"><a href="#加载选项" class="headerlink" title="加载选项"></a>加载选项</h3><p>如果你正在使用<code>angr.Project</code>加载一些东西并且你想要给<code>cle.loader</code>实例传一个选项来创建Project，你可以直接传入关键字参数给Project的构造函数，你传入的关键字就会被传给CLE。如果你想要知道所有能够被作为选项传入的参数，你可以查看<a target="_blank" rel="noopener" href="https://api.angr.io/cle">cle — Binary Loader — angr 9.2.3 documentation</a>而在本文中，我们只看一些重要的并且被频繁使用的选项。</p>
+<h4 id="基本选项"><a href="#基本选项" class="headerlink" title="//基本选项"></a>//基本选项</h4><p>我们已经用过了<code>auto_load_libs</code>选项——它控制CLE是否自动加载共享库文件，默认是自动加载的。</p>
+<p>另外，有一个相反的选项<code>except_missing_libs</code>,这个选项如果被设置为true，将在二进制<strong>包含无法解析的共享库时抛出一个异常</strong>。</p>
+<p>你可以传入一个字符串列表给<code>force_load_libs</code>选项，每一个被列出的字符串将会被当做一个不可解析共享库依赖，</p>
+<p>或者你可以传入一个字符串列表给<code>skip_libs</code>来防止列表列出的共享库的被作为依赖添加。</p>
+<p>另外，你可以传入一个字符串列表给<code>custom_ld_path</code>选项，这个选项中的字符串会被作为额外的搜索共享库文件的路径，这些路径将会比任何默认路径先被搜索，默认路径包括：被加载文件所在的路径，当前工作路径，系统库路径。</p>
+<h4 id="Per-Binary-选项"><a href="#Per-Binary-选项" class="headerlink" title="//Per-Binary 选项"></a>//Per-Binary 选项</h4><p>如果你想要对一个特定的二进制对象设置一些选项，CLE也能满足你的需求。</p>
+<p>参数<code>main_opts</code>和<code>lib_opts</code>接收一个以python字典形式存储的选项组。</p>
+<p><code>main_opts</code>接收一个形如{选项名1：选项值1，选项名2：选项值2……}的字典，而<code>lib_opts</code>接收一个库名到形如{选项名1:选项值1，选项名2:选项值2……}的字典的映射。</p>
+<blockquote>
+<p>译者注：lib_opts是二级字典，原因是一个二进制文件可能加载多个库，而main_opts指定的是主程序加载参数，而主程序一般只有一个，因此是一级字典。</p>
+</blockquote>
+<p>这些选项的内容因不同的后台而异，下面是一些通用的选项：</p>
+<ul>
+<li>backend —— 使用哪个后台，可以是一个对象，也可以是一个名字(字符串)</li>
+<li>custom_base_addr —— 使用的基地址</li>
+<li>custom_entry_point —— 使用的入口点</li>
+<li>custom_arch —— 使用的处理器体系结构的名字</li>
+</ul>
+<h4 id="后台（Backends）"><a href="#后台（Backends）" class="headerlink" title="//后台（Backends）"></a>//后台（Backends）</h4><p>CLE目前有能够静态加载ELF,PE,CGC,Mach-O和ELF核心转储文件的后台，并且支持使用IDA加载二进制和加载文件到一个平坦地址空间。大部分情况下，CLE将会自动检测二进制文件来决定使用哪个后台，所以除非你在做一些很奇怪的工作，一般情况下你不需要指定使用哪个后台。</p>
+<p>你可以和上一节描述的一样，用传入一个键的方式强制CLE使用指定的后台。一些后台不能被自动检测，因此必须用<code>custom_arch</code>指定。键值不需要匹配任何一个架构：根据你给出的任意架构的任意通用标识符，angr都能够识别出你指的是哪个架构。</p>
+<p>为了指定使用的后台，使用下表列出的名字：</p>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>描述</th>
+<th>是否需要用custom_arch指定?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>elf</td>
+<td>基于PyELFTools的ELF文件静态加载器</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>pe</td>
+<td>基于PEFile的静态PE文件加载器</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>mach-o</td>
+<td>Mach-O文件的静态加载器，不支持动态链接或者变基</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>cgc</td>
+<td>Cyber Grand Challenge系统中的二进制文件的静态加载器</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>backedcgc</td>
+<td>允许指定内存和寄存器支持的CGC二进制文件静态加载器</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>elfcore</td>
+<td>ELF核心转储文件的静态加载器</td>
+<td>不需要</td>
+</tr>
+<tr>
+<td>ida</td>
+<td>启动ida来分析文件</td>
+<td>需要</td>
+</tr>
+<tr>
+<td>blob</td>
+<td>按照平坦模式加载文件到内存中</td>
+<td>需要</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>关于表中提到的CGC，<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://www.youtube.com/watch?v=SYYZjTx92KU">这个youtube视频</a>展示了什么是CGC，简单来说就是一个简化的操作系统，这个系统构建的目的主要是用于CTF比赛中供各队伍使用自己的AI来自动化分析和寻找这个简化的系统上运行的程序的漏洞，CGC比赛是CTF的另一种形式。</p>
+</blockquote>
+<h4 id="符号函数摘要集-SimProcedures"><a href="#符号函数摘要集-SimProcedures" class="headerlink" title="符号函数摘要集 SimProcedures"></a>符号函数摘要集 SimProcedures</h4><p>符号函数摘要集(Symbolic Function Summaries)</p>
+<blockquote>
+<p>译者注：这里的“摘要”不是指对符号函数的一个概括和总结，而是符号执行中的一个概念</p>
+</blockquote>
+<p>默认情况下，Project都会尝试用SimProcedures这个符号摘要集(symbolic summaries)替换主程序的外部调用。SimProcedure使用<br> pyhton函数高效地模拟外部库函数对state的影响。我们已经在SimProcedure中实现了<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://github.com/angr/angr/tree/master/angr/procedures">一个完整的函数集
+ </a>。这些内建过程(procedures)能够在<code>angr.SIM_PROCEDURES</code>字典中获得，这个字典是一个两层结构，第一层的键是包名(libc,posix,win32,stubs)，第二层的键是库函数的名字。用SimProcedure替代实际库函数的执行虽然存在<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://docs.angr.io/docs/gotchas.html">一些潜在的不准确性</a>，但是可以让你的分析更加可控，</p>
+<p>当找不到某个函数的摘要时：</p>
+<ul>
+<li>如果<code>auto_load_libs</code>的值为<code>True</code>（默认值），那么真正的库函数就会被执行。这可能是你想要的，也可能不是，取决于实际的函数是什么。比如说，一些libc函数十分复杂，难以分析，并且极有可能导致用于确定执行的路径的状态数爆炸。</li>
+<li>如果<code>auto_load_libs</code>是<code>False</code>，那么外部函数就是“未解析”的状态，并且Project对象将会将它们解析为叫做<code>ReturnUnconstrained</code>的通用“stub” SimProdurce。就如它的名字所描述的：每次这个符号被调用，它都会将一个唯一的无约束符号作为返回值。</li>
+<li>如果<code>use_sim_procedures</code>(这是<code>angr.Project</code>的参数，不是<code>cle.loader</code>的参数)是<code>False</code>（默认是True），那么只有外部对象提供的符号才会被SimProcedures替代，并且他们将会被一个<code>ReturnUnconstrained</code>stub替代。</li>
+<li>你可以给<code>angr.Project</code>传以下参数来指定一个不想被SimProcedure替代的符号：<br> <code>exclude_sim_procedures_list</code> 和 <code>exclude_sim_procedures_func</code>。</li>
+<li>查看<code>angr.Project._register_object</code>的源码来获取精确的算法。</li>
+</ul>
+<h3 id="钩子-Hooking"><a href="#钩子-Hooking" class="headerlink" title="钩子(Hooking)"></a>钩子(Hooking)</h3><p>angr使用python函数摘要替换库函数代码的机制叫做Hooking，而且你也可以这么做！在执行一次模拟（simulation）时，每一步执行angr都会检查当前地址是否被下了钩子（hooked），并且如果检查到钩子，就会执行钩子函数，而不是那个地址里的二进制码。</p>
+<p>1.hook SimProcedure里重写过的函数 eg: angr_ctf_13</p>
+<p>使用API<code>proj.hook(addr,hook)</code>可以完成hook，这里参数中的<code>hook</code>是一个SimProcedure实例。你可以用<code>.is_hooked</code>，<code>.unhook</code>和<code>.hook_by</code>属性来管理你project中的钩子，这些属性的含义就如字面的意思，这里就不解释了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">printf_addr = <span class="number">0x0804ED40</span></span><br><span class="line">   scanf_addr = <span class="number">0x0804ED80</span></span><br><span class="line">   strcmp_addr = <span class="number">0x08048280</span></span><br><span class="line">   puts_addr  = <span class="number">0x0804F350</span></span><br><span class="line"></span><br><span class="line">   main_addr = <span class="number">0x08048D10</span></span><br><span class="line"></span><br><span class="line">   proj.hook(printf_addr,angr.SIM_PROCEDURES[<span class="string">&#x27;libc&#x27;</span>][<span class="string">&#x27;printf&#x27;</span>]())</span><br><span class="line">   proj.hook(scanf_addr,angr.SIM_PROCEDURES[<span class="string">&#x27;libc&#x27;</span>][<span class="string">&#x27;scanf&#x27;</span>]())</span><br><span class="line">   proj.hook(strcmp_addr,angr.SIM_PROCEDURES[<span class="string">&#x27;libc&#x27;</span>][<span class="string">&#x27;strcmp&#x27;</span>]())</span><br><span class="line">   proj.hook(puts_addr,angr.SIM_PROCEDURES[<span class="string">&#x27;libc&#x27;</span>][<span class="string">&#x27;puts&#x27;</span>]())</span><br><span class="line"></span><br><span class="line">   proj.hook(main_addr,angr.SIM_PROCEDURES[<span class="string">&#x27;glibc&#x27;</span>][<span class="string">&#x27;__libc_start_main&#x27;</span>]()) <span class="comment"># 这里是glibc</span></span><br></pre></td></tr></table></figure>
+
+<p>2.hook 普通函数 eg: angr_ctf_09</p>
+<p>通过把<code>proj.hook(addr)</code>作为一个函数装饰器(function decorator)。，你可以指定你自己的函数作为hook函数。如果你这么做了，你还可以指定一个可选的关键词参数<code>length</code>来决定在你的hook函数执行结束之后，程序跳过多少字节的机器码再继续执行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">check_addr = <span class="number">0x080486B3</span> <span class="comment"># 要hook的地址</span></span><br><span class="line">check_hook_padding = <span class="number">5</span> <span class="comment"># 要hook的长度</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@proj.hook(<span class="params">check_addr, length = check_hook_padding</span>) </span><span class="comment"># proj跳过校验函数,再调用hook函数,@funA def funB等价于funB = funA(funB)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_hook</span>(<span class="params">state</span>):</span> <span class="comment"># 函数叫什么都无所谓</span></span><br><span class="line">    buffer_addr = <span class="number">0x0804A054</span></span><br><span class="line">    inputlen = <span class="number">0x10</span></span><br><span class="line"></span><br><span class="line">    input_BVS = state.memory.load(buffer_addr,inputlen) <span class="comment"># BVS从输入存储的地方取出len长度</span></span><br><span class="line"></span><br><span class="line">    cmpstr = <span class="string">&quot;XYMKBKUHNIQYNQXE&quot;</span></span><br><span class="line"></span><br><span class="line">    state.regs.eax = claripy.If( <span class="comment"># eax的值模仿校验函数,是比较结果,相等返回1</span></span><br><span class="line">            cmpstr == input_BVS,</span><br><span class="line">        claripy.BVV(<span class="number">1</span>,<span class="number">32</span>),</span><br><span class="line">        claripy.BVV(<span class="number">0</span>,<span class="number">32</span>)</span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>hook 符号 eg: angr_ctf_10</li>
+</ol>
+<p>此外，你可以使用<code>proj.hook_symbol(name,hook)</code>,提供一个符号名称作为第一个参数，这样第二个参数指定的钩子函数会被下到这个符号被调用的每个地址中。</p>
+<p>它的一个很重要的用途是用来扩展angr的内建库SimProcedure的行为。因为这些库函数仅仅是一些类，你可以写它们的子类，重写它们的方法，并且把这些子类使用在hook中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">mySimPro</span>(<span class="params">angr.SimProcedure</span>):</span> <span class="comment"># 继承angr.SimProcedures类</span></span><br><span class="line">       <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self, input_addr, input_len</span>):</span></span><br><span class="line">           input_bvs = self.state.memory.load(input_addr, input_len) <span class="comment"># bvs取出angr的输入</span></span><br><span class="line">           cmpstr = <span class="string">&quot;ORSDDWXHZURJRBDH&quot;</span></span><br><span class="line">           <span class="keyword">return</span> claripy.If( <span class="comment"># 返回值模仿校验函数,比较结果,相等返回1</span></span><br><span class="line">               cmpstr == input_bvs,</span><br><span class="line">               claripy.BVV(<span class="number">1</span>,<span class="number">32</span>),</span><br><span class="line">               claripy.BVV(<span class="number">0</span>,<span class="number">32</span>)</span><br><span class="line">                   )</span><br><span class="line"></span><br><span class="line">   check_symbol = <span class="string">&quot;check_equals_ORSDDWXHZURJRBDH&quot;</span> <span class="comment"># 要hook的函数名</span></span><br><span class="line">   check_symbol = <span class="number">0x080485F5</span> <span class="comment"># update:其实地址也行,不一定要是名字,要不改了名字不就坏了</span></span><br><span class="line">   proj.hook_symbol(check_symbol,mySimPro()) <span class="comment"># 根据函数名hook,记得加括号</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="factory-blocks-state-Simgr接口"><a href="#factory-blocks-state-Simgr接口" class="headerlink" title="factory-blocks/state/Simgr接口"></a>factory-blocks/state/Simgr接口</h2><p>即 <code>AngrObjectFactory</code>，提供重要分析对象的接口，如 <code>blocks / state / SimulationManager</code> 等。</p>
+<p>simgr的源码分析：<a target="_blank" rel="noopener" href="https://blog.csdn.net/doudoudouzoule/article/details/79467268">angr源码分析——Simulation Manager_FunctionY的博客-CSDN博客</a></p>
+<hr>
+<h3 id="blocks"><a href="#blocks" class="headerlink" title="blocks"></a>blocks</h3><p>Angr以<strong>block</strong>为单位分析代码，我们可以从block中获取许多有用的信息，例如代码<strong>汇编</strong>及<strong>指令数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">In [9]: block = proj.factory.block(proj.entry)</span><br><span class="line"></span><br><span class="line">In [10]: block</span><br><span class="line">Out[10]: &lt;Block for 0x8048450, 33 bytes&gt;</span><br><span class="line"></span><br><span class="line">In [11]: block.pp()</span><br><span class="line">         _start:</span><br><span class="line">8048450  xor     ebp, ebp</span><br><span class="line">8048452  pop     esi</span><br><span class="line">8048453  mov     ecx, esp</span><br><span class="line">8048455  and     esp, 0xfffffff0</span><br><span class="line">8048458  push    eax</span><br><span class="line">8048459  push    esp</span><br><span class="line">804845a  push    edx</span><br><span class="line">804845b  push    __libc_csu_fini</span><br><span class="line">8048460  push    __libc_csu_init</span><br><span class="line">8048465  push    ecx</span><br><span class="line">8048466  push    esi</span><br><span class="line">8048467  push    main</span><br><span class="line">804846c  call    __libc_start_main</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; block.</span><br><span class="line">block.BLOCK_MAX_SIZE          block.instruction_addrs       block.serialize_to_cmessage(</span><br><span class="line">block.addr                    block.instructions            block.size</span><br><span class="line">block.arch                    block.parse(                  block.thumb</span><br><span class="line">block.bytes                   block.parse_from_cmessage(    block.vex</span><br><span class="line">block.capstone                block.pp(                     block.vex_nostmt</span><br><span class="line">block.codenode                block.serialize(  </span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h3 id="SimState"><a href="#SimState" class="headerlink" title="SimState"></a>SimState</h3><p><strong>使用SimState保存程序执行状况</strong></p>
+<p>Project 对象仅表示程序的初始镜像，而在执行时，我们实际上是对 SimState 对象进行操作，它代表程序的一个实例镜像，模拟执行某个时刻的状态。</p>
+<p>包含程序的内存、寄存器、文件系统数据……任何会在执行中存在可修改的数据都可以在SimState中找到。</p>
+<p>SimState对象通常有三种：</p>
+<ol>
+<li><code>blank_state(**kwargs)</code><br>返回一个未初始化的state，此时需要主动设置入口地址，以及自己想要设置的参数</li>
+<li><code>entry_state(**kwargs)</code><br>返回程序入口地址的state，通常来说都会使用该状态</li>
+<li><code>full_init_state(**kwargs)</code><br>和<code>entry_state(**kwargs)</code>类似，但是调用在执行到达入口点之前应该调用每个初始化函数</li>
+</ol>
+<p>我们可以通过 <code>state.regs</code> 和 <code>state.mem</code> 访问寄存器和内存信息。</p>
+<p>返回的结果都是 BV 类型，并不是python 中的 int 类型，BV是位向量(bitvector)的简称，实际上就是一串比特序列，angr 使用位向量表示 CPU 数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; bv = state.solver.BVV(0x1234, 32)       # create a 32-bit-wide bitvector with value 0x1234</span><br><span class="line">&lt;BV32 0x1234&gt;                               # BVV stands for bitvector value</span><br><span class="line">&gt;&gt;&gt; state.solver.eval(bv)                # convert to python int</span><br><span class="line">0x1234</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h3 id="Simulation-Managers"><a href="#Simulation-Managers" class="headerlink" title="Simulation Managers"></a>Simulation Managers</h3><p><strong>创建Simulation Managers</strong></p>
+<p>p.factory.simulation_manager创建一个simulation_manager进行模拟执行，其中传入一个SimState</p>
+<p>SimulationManager一共有三种运行方式：</p>
+<ol>
+<li><code>step()</code><br>每次向前运行一个基本块，并返回进行分类,step()函数产生active状态，表示该分支在执行中；</li>
+<li><code>run()</code><br>运行完所有的基本块，然后会出现deadended的状态，此时我们通常访问最后一个状态来获取我们所需要的信息,run()函数产生deadended状态，表示分支结束；</li>
+<li><code>explore()</code><br>explore()可以对地址进行限制以减少符号执行遍历的路径,根据find和avoid进行基本块的执行，最后会返回found和avoid状态</li>
+</ol>
+<p>​    当explore()<strong>以find参数运行时，程序会一直运行</strong>，直到找到与查找条件相匹配的状态，该条件可以是<strong>要停止的指令的地址</strong>（地址列表），或者是一些<strong>运行时是否符合的状态</strong>。当条件存储的任何条件与find条件匹配时，他们将置于found存储中，同时也可以设置avoid，符合avoid条件时也会将其置于avoid中。和run()函数不同的是，<strong>run()函数会存储所有的路径状态，而expore()只会存储find的状态。</strong></p>
+<p>　　在路径探索中，一般使用<strong>广度优先算法</strong>进行探究，当然我们也可以自由设置使用其它方法，例如深度优先…具体可以使用angr.exploration_techniques</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">In [15]: sm</span><br><span class="line">Out[15]: &lt;SimulationManager with 1 active&gt;</span><br><span class="line"></span><br><span class="line">In [16]: sm.active</span><br><span class="line">Out[16]: [&lt;SimState @ 0x8048450&gt;]</span><br><span class="line"></span><br><span class="line">In [19]: sm.step()</span><br><span class="line">Out[19]: &lt;SimulationManager with 1 active&gt;</span><br><span class="line"></span><br><span class="line">In [20]: sm.active</span><br><span class="line">Out[20]: [&lt;SimState @ 0x8048420&gt;]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="中间语言"><a href="#中间语言" class="headerlink" title="中间语言"></a>中间语言</h2><p>由于 angr 需要处理很多不同的架构，所以它必须选择一种中间语言 (IR) 来进行它的分析，我们使用 Valgrind 的中间语言，VEX 来完成这方面的内容。VEX 中间语言抽象了几种不同架构间的区别，允许在他们之上进行统一的分析</p>
+<p> <img src="/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/zjyy-16520118757264.jpg" alt="zjyy"></p>
+<h2 id="angr架构-模块介绍"><a href="#angr架构-模块介绍" class="headerlink" title="angr架构/模块介绍"></a>angr架构/模块介绍</h2><p><img src="/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/v2-7ab77ff810027eb66b4fb1475abf73ff_720w.jpg" alt="img"> </p>
+<p> <img src="/2022/05/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.14-angr++/830671_V3ZBZVDYVEBVSTM.jpg" alt="Relationship-between-angr-modules"></p>
+<h3 id="1-CLE模块"><a href="#1-CLE模块" class="headerlink" title="1.CLE模块"></a><strong>1.CLE模块</strong></h3><p>二进制的装载组件是CLE（CLE Load Everything)，它负责装载二进制对象以及它所依赖的库（将二进制文件加载到虚拟的地址空间），把这个对象以易于操作的方式交给 angr 的其他组件，最后生成地址空间，表示该程序已加载并可以准备运行。</p>
+<p>CLE（也称为加载器）的执行结果可以使用<code>.loader</code>属性获取,loader在下面会具体介绍</p>
+<h3 id="2-ArchInfo模块"><a href="#2-ArchInfo模块" class="headerlink" title="2.ArchInfo模块"></a><strong>2.ArchInfo模块</strong></h3><p>Archinfo是包含特定于体系结构的信息的类的集合。例如，little-endian amd64、little-endian i386。</p>
+<h3 id="3-PyVex模块"><a href="#3-PyVex模块" class="headerlink" title="3.PyVex模块"></a><strong>3.PyVex模块</strong></h3><p>angr需要处理不同的架构，所以它选择一种中间语言来进行它的分析，angr使用Valgrind的中间语言——VEX来完成这方面的内容。VEX中间语言抽象了几种不同架构间的区别，允许在他们之上进行统一的分析。各种中间语言在设计理念上有很多的共通点，这里又会是一个很大的话题，所以暂且抛开，具体关于IR语言的语法规则请查阅 <a target="_blank" rel="noopener" href="https://docs.angr.io/docs/ir.html%E3%80%82">https://docs.angr.io/docs/ir.html。</a></p>
+<h3 id="4-SimuVEX模块"><a href="#4-SimuVEX模块" class="headerlink" title="4.SimuVEX模块"></a><strong>4.SimuVEX模块</strong></h3><p>SimuVEX模块是中间语言VEX执行的模拟器，它允许你控制符号执行。</p>
+<h3 id="5-Clarity模块"><a href="#5-Clarity模块" class="headerlink" title="5.Clarity模块"></a><strong>5.Clarity模块</strong></h3><p>这个模块主要专注于将变量符号化，生成约束式并求解约束式，这也是符号执行的核心所在，在Angr中主要是利用微软提供的z3库去解约束式。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/05/11/ctf/reverse/game/minil2022/no/" rel="next" title="go挖坑">
+                <i class="fa fa-chevron-left"></i> go挖坑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/05/17/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/5.17-%E5%AE%89%E5%8D%93so%E8%B0%83%E8%AF%95/" rel="prev" title="5.17-安卓so调试">
+                5.17-安卓so调试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">符号执行是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8angr%E6%9A%B4%E5%8A%9B%E6%B1%82%E8%A7%A3%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">利用angr暴力求解流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CLE%E5%8A%A0%E8%BD%BD%E6%96%87%E4%BB%B6-loader%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.</span> <span class="nav-text">CLE加载文件-loader接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B7%B2%E5%8A%A0%E8%BD%BD%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.1.</span> <span class="nav-text">已加载的二进制对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E5%92%8C%E9%87%8D%E5%AE%9A%E4%BD%8D"><span class="nav-number">3.2.</span> <span class="nav-text">符号和重定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E9%80%89%E9%A1%B9"><span class="nav-number">3.3.</span> <span class="nav-text">加载选项</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E9%80%89%E9%A1%B9"><span class="nav-number">3.3.1.</span> <span class="nav-text">&#x2F;&#x2F;基本选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Per-Binary-%E9%80%89%E9%A1%B9"><span class="nav-number">3.3.2.</span> <span class="nav-text">&#x2F;&#x2F;Per-Binary 选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E5%8F%B0%EF%BC%88Backends%EF%BC%89"><span class="nav-number">3.3.3.</span> <span class="nav-text">&#x2F;&#x2F;后台（Backends）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E5%87%BD%E6%95%B0%E6%91%98%E8%A6%81%E9%9B%86-SimProcedures"><span class="nav-number">3.3.4.</span> <span class="nav-text">符号函数摘要集 SimProcedures</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%92%A9%E5%AD%90-Hooking"><span class="nav-number">3.4.</span> <span class="nav-text">钩子(Hooking)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#factory-blocks-state-Simgr%E6%8E%A5%E5%8F%A3"><span class="nav-number">4.</span> <span class="nav-text">factory-blocks&#x2F;state&#x2F;Simgr接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#blocks"><span class="nav-number">4.1.</span> <span class="nav-text">blocks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SimState"><span class="nav-number">4.2.</span> <span class="nav-text">SimState</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Simulation-Managers"><span class="nav-number">4.3.</span> <span class="nav-text">Simulation Managers</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E8%AF%AD%E8%A8%80"><span class="nav-number">5.</span> <span class="nav-text">中间语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#angr%E6%9E%B6%E6%9E%84-%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D"><span class="nav-number">6.</span> <span class="nav-text">angr架构&#x2F;模块介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-CLE%E6%A8%A1%E5%9D%97"><span class="nav-number">6.1.</span> <span class="nav-text">1.CLE模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-ArchInfo%E6%A8%A1%E5%9D%97"><span class="nav-number">6.2.</span> <span class="nav-text">2.ArchInfo模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-PyVex%E6%A8%A1%E5%9D%97"><span class="nav-number">6.3.</span> <span class="nav-text">3.PyVex模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-SimuVEX%E6%A8%A1%E5%9D%97"><span class="nav-number">6.4.</span> <span class="nav-text">4.SimuVEX模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Clarity%E6%A8%A1%E5%9D%97"><span class="nav-number">6.5.</span> <span class="nav-text">5.Clarity模块</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="第一周re任务的困难难度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10.31-SMC">
+<meta property="og:url" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="第一周re任务的困难难度">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031124930886.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211104135927582.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031125349815.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031131452713.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031133035931.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031133023358.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211101000830413.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608372602-329047-image.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608372658-458014-image.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608372812-762428-image.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608373001-471852-image.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608373001-471852-image.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608373849-914242-image.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608374017-641481-image.png">
+<meta property="article:published_time" content="2021-10-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-10T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031124930886.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2021/10/31/ctf/reverse/每日博客/2021/10.31-SMC/"/>
+
+
+
+
+
+  <title>10.31-SMC | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">10.31-SMC</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-31T00:00:00+08:00">
+                2021-10-31
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2022-07-11T00:00:00+08:00">
+                2022-07-11
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>第一周re任务的困难难度</p>
+<span id="more"></span>
+
+<p>29，30两天用来补作业了（也有摸鱼的成分）而这周的任务还没有完成，下周的任务已经布置下来了，再加上项目组换了个方向，又马上要期中考试了，要加油干了！</p>
+<p>rx已经把SMC讲的很清楚了，copy一下</p>
+<p>ida python 脚本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from ida_bytes import *</span><br><span class="line">for i in range(0x138):</span><br><span class="line">    patch_byte(0x408b06+i, get_byte(0x408b06+i)^74)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="自己的复现"><a href="#自己的复现" class="headerlink" title="自己的复现"></a>自己的复现</h2><p>看看main函数</p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031124930886.png" alt="image-20211031124930886"> </p>
+<p>不知道这是啥，tab看看汇编</p>
+<p>发现main函数是未被定义的状态,底下一些没被定义的数据,这种情况下要不是花指令要不是SMC</p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211104135927582.png" alt="image-20211104135927582"> </p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031125349815.png" alt="image-20211031125349815">  </p>
+<p>进入古怪函数看看,cdecl的调用约定,是从右向左压栈的,pusha3,a2,a1…</p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031131452713.png" alt="image-20211031131452713"> </p>
+<p>就是运行到这个古怪函数后408B06后面的代码都要异或上74再执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from ida_bytes import *</span><br><span class="line">for i in range(0x138):</span><br><span class="line">    patch_byte(0x408b06+i, get_byte(0x408b06+i)^74)</span><br></pre></td></tr></table></figure>
+
+<p>用脚本修复之后在main0函数头按一下p，生成函数，不然f5不了</p>
+<p>00408B19那里还不是代码，按c转换成代码就变成了call j_strlen</p>
+<p>j_strlen的参数是byte_4DFEF8就是刚刚scanf的参数</p>
+<p>然后在00408B06处比较了17h和输出字符串的长度</p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031133035931.png" alt="image-20211031133035931"> </p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211031133023358.png" alt="image-20211031133023358"> </p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/image-20211101000830413.png" alt="image-20211101000830413"> </p>
+<p>把迷宫拿出来走一遍，和a77异或一遍就出了</p>
+<blockquote>
+<p>CNSS{Ea5y_SMC_&amp;_a_Ma2e}</p>
+</blockquote>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>代码自修改技术(<code>Self Modify Code</code>, 一般简称<code>SMC</code>)是许多逆向题目中很常见的一种反逆向手段. 虽然没在什么实际的软件中见过应用, 但是打CTF的时候经常能看见他的身影.</p>
+<p>代码自修改技术, 顾名思义是在<strong>运行的时候通过修改自身代码的手段来达到正确运行程序的目的</strong>. 当你静态分析此程序的时候, 被修改的部分会呈现出乱码的状态, 只有在程序运行了一段用来修正自身的代码之后这部分代码才会被改成正确的指令, 从而正确执行.</p>
+<p>简单的SMC题目可以通过分析程序未被加密部分代码, 找到用来修改自身的那一部分, 然后手动解密即可. 复杂的SMC题目需要结合动态调试的技术, 在程序完成自修改之后查看程序被加密部分的代码, 或者直接将解密后的程序dump下来继续静态分析. 本文只讲如何进行简单的静态分析.</p>
+<h2 id="例子1-点击跳转到题目0×00"><a href="#例子1-点击跳转到题目0×00" class="headerlink" title="例子1(点击跳转到题目0×00)"></a><a target="_blank" rel="noopener" href="https://bbs.xdsec.org/d/678/21">例子1(点击跳转到题目0×00)</a></h2><p>这道题目是一个很简单的算法加密, 首先我们通过<code>Strings</code>窗口尝试定位到有效函数:<br><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608372602-329047-image.png" alt="img"><br>往下翻一点可以看见函数分析失败了, 这一部分实际上是无效数据.<br><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608372658-458014-image.png" alt="img"><br>那我们就凑合着看看上半部分还能看的汇编代码, 并看看从这里调用的函数都长什么样. 比如这个:<br><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608372812-762428-image.png" alt="img"><br>看一下参数列表, 长这样的函数除了<code>printf</code>和<code>scanf</code>之外也没几个了. 结合上面的传参可以判断出这个函数就是<code>printf</code>. 重命名一下(按N):<br><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608373001-471852-image.png" alt="img"><br>嫌疑函数就只剩<code>sub_4022AC</code>这一个了.<br>跟进去看看. 从<code>sub_4022AC</code>跳转到<code>sub_4088D0</code>, 代码长这样:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">sub_4088D0</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">int</span> a2, <span class="keyword">int</span> a3)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [esp+D0h] [ebp-8h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; ; ++i )</span><br><span class="line">  &#123;</span><br><span class="line">    result = i;</span><br><span class="line">    <span class="keyword">if</span> ( i &gt;= a2 )</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    *(_BYTE *)(i + a3) = byte_4DF000 ^ *(_BYTE *)(i + a1);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拐回去看<code>main</code>函数调用的时候都传了哪三个参数:<br><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608373001-471852-image.png" alt="img"><br>上面三个push很明显就是传参.<br>这个函数的作用就是将a1所指向的a2字节大小的数据和<code>byte_4DF000</code>进行异或, 然后再覆盖掉a1(传参的时候a1与a3相同).<br>而传参的时候传进去的是<code>0x408b06</code>, 这正好就是你在main里看到的那坨乱七八糟的数据的位置.</p>
+<p>a2传进去是0×138, <code>byte_4DF000</code>存放的是数字74, 用来还原数据的IDA Python代码可以很简单的写出来:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### IDA 7.0, Python2</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x138</span>):</span><br><span class="line">    PatchByte(<span class="number">0x408b06</span>+i, Byte(<span class="number">0x408b06</span>+i)^<span class="number">74</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">### IDA 7.5, Python3</span></span><br><span class="line"><span class="keyword">from</span> ida_bytes <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0x138</span>):</span><br><span class="line">    patch_byte(<span class="number">0x408b06</span>+i, get_byte(<span class="number">0x408b06</span>+i)^<span class="number">74</span>)</span><br></pre></td></tr></table></figure>
+
+<p>以上脚本可以根据自己的IDA Python版本自行选用. 写好之后点击左上角的<code>File</code>菜单, 然后点击<code>Script Command</code>即可打开脚本执行窗口, 然后在窗口下方选择Python.</p>
+<p>执行之后的效果:</p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608373849-914242-image.png" alt="img"></p>
+<p>此时往上翻, 找到<code>0x408AB0</code>的函数头位置, 右键<code>Create Function</code>, 就可以让IDA重新分析这个函数. 紧接着F5, 你就能看见这个函数的全貌了. 是一段很简单的逻辑代码:</p>
+<p><img src="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-SMC/1608374017-641481-image.png" alt="img"></p>
+<p>剩下的逆向过程就是入门级的了.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/10/31/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.31-fuzz%E8%AE%BA%E6%96%87/" rel="next" title="10.31-fuzz论文">
+                <i class="fa fa-chevron-left"></i> 10.31-fuzz论文
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/03/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.03-%E5%8F%8C%E5%88%9B%E5%91%A8%E5%B0%BE%E5%B7%B4/" rel="prev" title="11.03-双创周尾巴-花指令/ptrace子进程调试">
+                11.03-双创周尾巴-花指令/ptrace子进程调试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%B7%B1%E7%9A%84%E5%A4%8D%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">自己的复现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%901-%E7%82%B9%E5%87%BB%E8%B7%B3%E8%BD%AC%E5%88%B0%E9%A2%98%E7%9B%AE0%C3%9700"><span class="nav-number">3.</span> <span class="nav-text">例子1(点击跳转到题目0×00)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

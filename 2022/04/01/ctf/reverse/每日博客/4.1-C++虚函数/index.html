@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re,buu,C++," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="SWPUCTF2019 easyre,包括C++虚函数 做之前不知道是98分的,是我的第一道高分题,嗯写了好几天,哈哈">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4.1-C++虚函数">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="SWPUCTF2019 easyre,包括C++虚函数 做之前不知道是98分的,是我的第一道高分题,嗯写了好几天,哈哈">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331223645957.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404141641632.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220401200745476.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331232038190.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225623691.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331231938577.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331224347547.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220403222150261.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220403222349929.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220403234757891.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225152563.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225205220.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225234761.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331235027323.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331235040619.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404000247369.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404000214418.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220401185626446.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404143427466.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404144931901.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404145454686.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404150223089.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404150416067.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404152203955.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404152813517.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220401200007508.png">
+<meta property="article:published_time" content="2022-03-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-15T13:22:26.335Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta property="article:tag" content="buu">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331223645957.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/04/01/ctf/reverse/每日博客/4.1-C++虚函数/"/>
+
+
+
+
+
+  <title>4.1-C++虚函数 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">4.1-C++虚函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-01T00:00:00+08:00">
+                2022-04-01
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2024-09-15T21:22:26+08:00">
+                2024-09-15
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SWPUCTF2019 easyre,包括C++虚函数</p>
+<p>做之前不知道是98分的,是我的第一道高分题,嗯写了好几天,哈哈</p>
+<span id="more"></span>
+
+<ol>
+<li>校验<code>flag</code>格式(swpuctf{xxxx-xxxx-xxxx-xxxx-xxxx})</li>
+<li>通过<code>-</code>分割<code>flag</code>成<code>5</code>部分，对<code>flag</code>进行<code>位移运算</code>，对flag的每个字符都得到<code>5</code>个结果(high,low,sum,enc,tar)，将其存储到内存中</li>
+<li>进行5次循环，每次循环处理4个字符，利用每个字符得到的5个结果继续进行移位和或运算，最终会生成两个结果，一个结果受字符影响，而另外一个结果是每个字符独立存在，不受其他字符的影响</li>
+<li>将得到的结果与初始化中的两个字符串进行对比</li>
+</ol>
+<h2 id="main函数（绕过反调试后）"><a href="#main函数（绕过反调试后）" class="headerlink" title="main函数（绕过反调试后）"></a>main函数（绕过反调试后）</h2><p>subEF90是反调试函数</p>
+<p>在if里面，直接把jz patch 为jmp即可（记得apply）</p>
+<img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331223645957.png" alt="image-20220331223645957" style="zoom:50%;"> 
+
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404141641632.png" alt="image-20220404141641632">   </p>
+<h2 id="sub-1FE0-构造类"><a href="#sub-1FE0-构造类" class="headerlink" title="sub_1FE0 构造类"></a>sub_1FE0 构造类</h2><p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220401200745476.png" alt="image-20220401200745476"> </p>
+<p>this+52 ~ this+71 被数字赋值</p>
+<p>this+72 ~ this+91 被字符串赋值</p>
+<p>this[26]=0 (this+104 =0)</p>
+<p>sub_30A0和2DE0还有下面的for循环 没搞懂,this变来变去的,不过和流程关系好像不大</p>
+<h2 id="↑-用到了虚函数表"><a href="#↑-用到了虚函数表" class="headerlink" title="↑ 用到了虚函数表"></a>↑ 用到了虚函数表</h2><p>vftable -&gt; virtual func table</p>
+<p>里面是一些虚函数</p>
+<p>虚函数有关笔记 ↓ </p>
+<blockquote>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331232038190.png" alt="image-20220331232038190"> </p>
+</blockquote>
+<p>虚函数逆向 ↓</p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225623691.png" alt="image-20220331225623691"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331231938577.png" alt="image-20220331231938577"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331224347547.png" alt="image-20220331224347547"> </p>
+<h2 id="sub-F360"><a href="#sub-F360" class="headerlink" title="sub_F360"></a>sub_F360</h2><p>应该是把v6的数据复制到v4</p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220403222150261.png" alt="image-20220403222150261"> </p>
+<p>不过v4长一点</p>
+<p>v4[28]=v4后</p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220403222349929.png" alt="image-20220403222349929"> </p>
+<h2 id="sub-F080-修改虚函数表"><a href="#sub-F080-修改虚函数表" class="headerlink" title="sub_F080 修改虚函数表"></a>sub_F080 修改虚函数表</h2><p>VirtualProtect function </p>
+<p>更改调用进程的虚拟地址空间中已提交页区域的保护…</p>
+<p>把虚函数表改了</p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220403234757891.png" alt="image-20220403234757891"> </p>
+<blockquote>
+<p>不过两个函数长一样…</p>
+<p>只是ida反汇编的程度不一样</p>
+<p>审计的时候可以结合着看</p>
+</blockquote>
+<h2 id="sub-F150-输入并校验"><a href="#sub-F150-输入并校验" class="headerlink" title="sub_F150 输入并校验"></a>sub_F150 输入并校验</h2><p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225152563.png" alt="image-20220331225152563"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225205220.png" alt="image-20220331225205220"> </p>
+<h2 id="sub-24B0-关键函数check"><a href="#sub-24B0-关键函数check" class="headerlink" title="sub_24B0  关键函数check"></a>sub_24B0  关键函数check</h2><p>通过虚函数表进行虚函数调用</p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331225234761.png" alt="image-20220331225234761"> </p>
+<blockquote>
+<p>这个应该是函数指针的用法?</p>
+<p>​           调用约定      返回类型?                函数地址     参数</p>
+<p>(* (int (__thiscall **)(void *))   (*(_DWORD *)this + 36))(this)</p>
+</blockquote>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331235027323.png" alt="image-20220331235027323"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220331235040619.png" alt="image-20220331235040619"> </p>
+<h2 id="sub-2500-check1-校验flag格式"><a href="#sub-2500-check1-校验flag格式" class="headerlink" title="sub_2500 check1 校验flag格式"></a>sub_2500 check1 校验flag格式</h2><p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404000247369.png" alt="image-20220404000247369"> </p>
+<p>v8是”Ncg`esdvLkLgk$mL=Lgk$mL=Lgk$mL=Lgk$mL=Lgk$mLm”</p>
+<p>每一位异或16得到”^swpuctf\{\w{4}\-\w{4}\-\w{4}\-\w{4}\-\w{4}\}”</p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404000214418.png" alt="image-20220404000214418"> </p>
+<blockquote>
+<p>v7不知道是干啥的,看里面的数据应该和虚函数啥的有关,不管了</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;Ncg`esdvLkLgk$mL=Lgk$mL=Lgk$mL=Lgk$mL=Lgk$mLm&quot;</span><br><span class="line">str = &quot;&quot;</span><br><span class="line">for i in s:</span><br><span class="line">    str += chr(ord(i) ^ 0x10)</span><br><span class="line">print(str)</span><br><span class="line"># ^swpuctf\&#123;\w&#123;4&#125;\-\w&#123;4&#125;\-\w&#123;4&#125;\-\w&#123;4&#125;\-\w&#123;4&#125;\&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="sub-26E0-check2-将flag分割-移位运算"><a href="#sub-26E0-check2-将flag分割-移位运算" class="headerlink" title="*sub_26E0 check2 将flag分割,移位运算"></a>*sub_26E0 check2 将flag分割,移位运算</h2><p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220401185626446.png" alt="image-20220401185626446"> </p>
+<p>简化一下↓</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">int __thiscall check2(void *this)</span><br><span class="line">&#123;</span><br><span class="line">  int i; // [esp+4h] [ebp-4h]</span><br><span class="line"></span><br><span class="line">  for ( i = 0; i &lt; 5; ++i )</span><br><span class="line">    sub_402730(i);</span><br><span class="line">  return sub_4028A0();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sub-2730-check2-1"><a href="#sub-2730-check2-1" class="headerlink" title="sub_2730 check2_1"></a>sub_2730 check2_1</h3><p>在静态的时候虚函数表里this+28是sub_402730,动调之后就变成了341E40,不过两函数汇编一样  </p>
+<h4 id="ida-f5会出问题-去汇编看"><a href="#ida-f5会出问题-去汇编看" class="headerlink" title="ida f5会出问题!去汇编看"></a>ida f5会出问题!去汇编看</h4><h4 id="计算左右的1的位置-第一个循环"><a href="#计算左右的1的位置-第一个循环" class="headerlink" title="计算左右的1的位置(第一个循环)"></a>计算左右的1的位置(第一个循环)</h4><blockquote>
+<p>eax和edx都是字符</p>
+<p>rcl:循环左移,左移时把操作数的最高位移入CF，而CF中原有内容移入操作数的最低位</p>
+<p>rcr:带进位的右移,就是右移时把操作数的最低位移入CF，而CF中原有内容移入操作数的最高位</p>
+<p>jb指令 无符号比较</p>
+<p>低于则跳转，适用于无符号数的比较，要求CF=1</p>
+<p>可以发现rcl下面存在一个jb指令，这个指令受CF位的影响，当CF为1时跳转指令成立，这里跟dl的值有关，当dl产生进位时CF置1，跳转成立，出循环 </p>
+</blockquote>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404143427466.png" alt="image-20220404143427466">    </p>
+<blockquote>
+<p>别看f5出来的_asm,看汇编</p>
+</blockquote>
+<h4 id="计算三个值-第二个循环"><a href="#计算三个值-第二个循环" class="headerlink" title="计算三个值(第二个循环)"></a>计算三个值(第二个循环)</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for ( j = 0; j &lt; 4; ++j )</span><br><span class="line">  &#123;</span><br><span class="line">    *((_BYTE *)&amp;v14 + j) = *((_BYTE *)&amp;v16 + j) + *((_BYTE *)&amp;v15 + j);</span><br><span class="line">    *((_BYTE *)&amp;v17 + j) = *((char *)&amp;v13 + j) &lt;&lt; *((_BYTE *)&amp;v15 + j); //反汇编错了,少了shr</span><br><span class="line">    *((_BYTE *)&amp;v18 + j) = (*((char *)&amp;v13 + j) &lt;&lt; (8 - *((_BYTE *)&amp;v16 + j))) | ((unsigned __int8)(*((char *)&amp;v13 + j) &gt;&gt; (8 - *((_BYTE *)&amp;v15 + j))) &lt;&lt; *((_BYTE *)&amp;v15 + j));</span><br><span class="line">  &#125; </span><br></pre></td></tr></table></figure>
+
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404144931901.png" alt="image-20220404144931901"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404145454686.png" alt="image-20220404145454686"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404150223089.png" alt="image-20220404150223089"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404150416067.png" alt="image-20220404150416067"> </p>
+<p><strong>ebp+var08保存 ipt&gt;&gt;(8-high))&lt;&lt;high | ipt&lt;&lt;(8-low)</strong></p>
+<p><strong>ebp+var0C保存 (ipt&lt;&lt;high&gt;&gt;high+low)</strong></p>
+<p><strong>ebp+var10保存 low</strong></p>
+<p><strong>ebp+var14保存 high</strong></p>
+<p><strong>ebp+var18保存 high+low</strong></p>
+<p><strong>ebp+var1C保存 ipt</strong></p>
+<p>ebp+var21保存 8-high</p>
+<p>ebp+var22保存 8-low</p>
+<p>ebp+var23保存 ipt&gt;&gt;(8-high)</p>
+<p>ebp+var24保存 ipt&lt;&lt;(8-low) </p>
+<h3 id="sub-28A0-check2-2"><a href="#sub-28A0-check2-2" class="headerlink" title="sub_28A0 check2_2"></a>sub_28A0 check2_2</h3><p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404152203955.png" alt="image-20220404152203955"> </p>
+<p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220404152813517.png" alt="image-20220404152813517"> </p>
+<h2 id="sub-2A00-check3"><a href="#sub-2A00-check3" class="headerlink" title="sub_2A00 check3"></a>sub_2A00 check3</h2><p><img src="/2022/04/01/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.1-C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20220401200007508.png" alt="image-20220401200007508"> </p>
+<p>this[52<del>91](已知)=this[12</del>51]</p>
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">num1</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> ipt[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> high[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> low[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> sum[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> enc[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> tar[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> v15 = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> v16[<span class="number">4</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">num1</span>(<span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> c, <span class="keyword">int</span> d)</span><br><span class="line">    &#123;</span><br><span class="line">        ipt[<span class="number">0</span>] = a;</span><br><span class="line">        ipt[<span class="number">1</span>] = b;</span><br><span class="line">        ipt[<span class="number">2</span>] = c;</span><br><span class="line">        ipt[<span class="number">3</span>] = d;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) <span class="comment">// high</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> tmp = ipt[i];</span><br><span class="line">            <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line"></span><br><span class="line">                tmp = tmp &lt;&lt; <span class="number">1</span>;</span><br><span class="line">                num += <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span> (tmp &amp; <span class="number">0x100</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    high[i] = num;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) <span class="comment">// low</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> tmp = ipt[i];</span><br><span class="line">            <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (tmp &amp; <span class="number">1</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    low[i] = num;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                num += <span class="number">1</span>;</span><br><span class="line">                tmp = tmp &gt;&gt; <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) <span class="comment">// sum</span></span><br><span class="line">            sum[i] = low[i] + high[i];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) <span class="comment">// enc</span></span><br><span class="line">        &#123;</span><br><span class="line">            enc[i] = (ipt[i] &lt;&lt; high[i]) &amp; <span class="number">0xFF</span>;</span><br><span class="line">            enc[i] &gt;&gt;= sum[i];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) <span class="comment">// tar</span></span><br><span class="line">            tar[i] = (ipt[i] &gt;&gt; (<span class="number">8</span> - high[i]) &lt;&lt; high[i]) | ((ipt[i] &lt;&lt; (<span class="number">8</span> - low[i])) &amp; <span class="number">0xFF</span>) &gt;&gt; sum[i];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> base = <span class="number">32</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) <span class="comment">// v15和v15+20</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt;= <span class="number">4</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                base -= sum[i - <span class="number">4</span>];</span><br><span class="line">                v15 |= (tar[i - <span class="number">4</span>] &lt;&lt; base);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">int</span> v13 = <span class="number">8</span> - sum[i];</span><br><span class="line">                base -= v13;</span><br><span class="line">                v15 |= enc[i] &lt;&lt; base;</span><br><span class="line">                <span class="keyword">int</span> v7 = <span class="number">16</span> * high[i];</span><br><span class="line">                v16[i] = low[i] | v7;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> s1[] = &#123;<span class="number">0x08</span>, <span class="number">0xEA</span>, <span class="number">0x58</span>, <span class="number">0xDE</span>, <span class="number">0x94</span>, <span class="number">0xD0</span>, <span class="number">0x3B</span>, <span class="number">0xBE</span>, <span class="number">0x88</span>, <span class="number">0xD4</span>,</span><br><span class="line">                <span class="number">0x32</span>, <span class="number">0xB6</span>, <span class="number">0x14</span>, <span class="number">0x82</span>, <span class="number">0xB7</span>, <span class="number">0xAF</span>, <span class="number">0x14</span>, <span class="number">0x54</span>, <span class="number">0x7F</span>, <span class="number">0xCF</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> s2[] = &#123;<span class="number">0x20</span>, <span class="number">0x20</span>, <span class="number">0x30</span>, <span class="number">0x33</span>, <span class="number">0x22</span>, <span class="number">0x33</span>, <span class="number">0x20</span>, <span class="number">0x20</span>, <span class="number">0x20</span>, <span class="number">0x30</span>,</span><br><span class="line">                <span class="number">0x20</span>, <span class="number">0x32</span>, <span class="number">0x30</span>, <span class="number">0x33</span>, <span class="number">0x22</span>, <span class="number">0x20</span>, <span class="number">0x20</span>, <span class="number">0x20</span>, <span class="number">0x24</span>, <span class="number">0x20</span>&#125;;</span><br><span class="line">    <span class="comment">// int s1[] = &#123;0x08, 0x80, 0xce, 0x8c&#125;;</span></span><br><span class="line">    <span class="comment">// num1 a = num1(49, 50, 51, 52);</span></span><br><span class="line">    <span class="comment">// printf(&quot;%x\n&quot;, a.v15);</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; <span class="number">5</span>; index++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">30</span>; i &lt; <span class="number">128</span>; i++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">30</span>; j &lt; <span class="number">128</span>; j++)</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">30</span>; k &lt; <span class="number">128</span>; k++)</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> l = <span class="number">30</span>; l &lt; <span class="number">128</span>; l++)</span><br><span class="line">                    &#123;</span><br><span class="line">                        num1 a = <span class="built_in">num1</span>(i, j, k, l);</span><br><span class="line">                        <span class="keyword">int</span> tmp = (s1[<span class="number">3</span> + <span class="number">4</span> * index] &lt;&lt; <span class="number">24</span>) + (s1[<span class="number">2</span> + <span class="number">4</span> * index] &lt;&lt; <span class="number">16</span>) + (s1[<span class="number">1</span> + <span class="number">4</span> * index] &lt;&lt; <span class="number">8</span>) + s1[<span class="number">0</span> + <span class="number">4</span> * index]; <span class="comment">//小端序</span></span><br><span class="line">                        <span class="keyword">if</span> (a.v15 == tmp)</span><br><span class="line">                        &#123;</span><br><span class="line">                            <span class="keyword">int</span> test = <span class="number">0</span>;</span><br><span class="line">                            <span class="keyword">for</span> (<span class="keyword">int</span> in = <span class="number">0</span>; in &lt; <span class="number">4</span>; in++)</span><br><span class="line">                                <span class="keyword">if</span> (a.v16[in] == s2[<span class="number">4</span> * index + in])</span><br><span class="line">                                    test++;</span><br><span class="line">                            <span class="keyword">if</span> (test == <span class="number">4</span>)</span><br><span class="line">                                <span class="built_in">printf</span>(<span class="string">&quot;%c%c%c%c-&quot;</span>, i, j, k, l);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>flag&#123;we18-l8co-m1e4-58to-swpu&#125;</code></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+            <a href="/tags/buu/" rel="tag"># buu</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/03/29/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/3.29-C++%E7%B1%BB/" rel="next" title="3.29-C++类">
+                <i class="fa fa-chevron-left"></i> 3.29-C++类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/04/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/4.6-windows%E4%B8%8B%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" rel="prev" title="4.6-windows下的异常处理">
+                4.6-windows下的异常处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#main%E5%87%BD%E6%95%B0%EF%BC%88%E7%BB%95%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E5%90%8E%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">main函数（绕过反调试后）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-1FE0-%E6%9E%84%E9%80%A0%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">sub_1FE0 构造类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%86%91-%E7%94%A8%E5%88%B0%E4%BA%86%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text">↑ 用到了虚函数表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-F360"><span class="nav-number">4.</span> <span class="nav-text">sub_F360</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-F080-%E4%BF%AE%E6%94%B9%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8"><span class="nav-number">5.</span> <span class="nav-text">sub_F080 修改虚函数表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-F150-%E8%BE%93%E5%85%A5%E5%B9%B6%E6%A0%A1%E9%AA%8C"><span class="nav-number">6.</span> <span class="nav-text">sub_F150 输入并校验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-24B0-%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0check"><span class="nav-number">7.</span> <span class="nav-text">sub_24B0  关键函数check</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-2500-check1-%E6%A0%A1%E9%AA%8Cflag%E6%A0%BC%E5%BC%8F"><span class="nav-number">8.</span> <span class="nav-text">sub_2500 check1 校验flag格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-26E0-check2-%E5%B0%86flag%E5%88%86%E5%89%B2-%E7%A7%BB%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-number">9.</span> <span class="nav-text">*sub_26E0 check2 将flag分割,移位运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sub-2730-check2-1"><span class="nav-number">9.1.</span> <span class="nav-text">sub_2730 check2_1</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ida-f5%E4%BC%9A%E5%87%BA%E9%97%AE%E9%A2%98-%E5%8E%BB%E6%B1%87%E7%BC%96%E7%9C%8B"><span class="nav-number">9.1.1.</span> <span class="nav-text">ida f5会出问题!去汇编看</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%B7%A6%E5%8F%B3%E7%9A%841%E7%9A%84%E4%BD%8D%E7%BD%AE-%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BE%AA%E7%8E%AF"><span class="nav-number">9.1.2.</span> <span class="nav-text">计算左右的1的位置(第一个循环)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E4%B8%89%E4%B8%AA%E5%80%BC-%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%BE%AA%E7%8E%AF"><span class="nav-number">9.1.3.</span> <span class="nav-text">计算三个值(第二个循环)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sub-28A0-check2-2"><span class="nav-number">9.2.</span> <span class="nav-text">sub_28A0 check2_2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sub-2A00-check3"><span class="nav-number">10.</span> <span class="nav-text">sub_2A00 check3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC"><span class="nav-number">11.</span> <span class="nav-text">脚本</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

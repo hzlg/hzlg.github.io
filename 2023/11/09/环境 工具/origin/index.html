@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="工具软件," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="学一下origin画图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Origin">
+<meta property="og:url" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="学一下origin画图">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725103313354.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725103807257.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725103941262.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104434664.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104443400.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104415139.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104522782.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104922419.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725105314446.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725105226718.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110108950.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110219916.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110512018.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110815395.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725111115281.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725111232231.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725111250860.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112221122.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112300323.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112444576.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112544495.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725170204845.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725170525691.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171103884.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171021041.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171351939.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171927268.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171733197.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725172118154.png">
+<meta property="article:published_time" content="2023-11-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-08T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="工具软件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725103313354.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2023/11/09/环境 工具/origin/"/>
+
+
+
+
+
+  <title>Origin | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Origin</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-11-09T00:00:00+08:00">
+                2023-11-09
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-11-09T00:00:00+08:00">
+                2023-11-09
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>学一下origin画图</p>
+<span id="more"></span>
+
+<h2 id="页面熟悉"><a href="#页面熟悉" class="headerlink" title="页面熟悉"></a>页面熟悉</h2><p>换中文，下载帮助文件（取消勾选在线帮助文档就需要下载）</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725103313354.png" alt="image-20230725103313354"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725103807257.png" alt="image-20230725103807257"> </p>
+</blockquote>
+<p>帮助</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725103941262.png" alt="image-20230725103941262"> </p>
+<p>用户手册，教程，快速帮助</p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104434664.png" alt="image-20230725104434664"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104443400.png" alt="image-20230725104443400">  <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104415139.png" alt="image-20230725104415139"> </p>
+<p>学习中心 f11</p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104522782.png" alt="image-20230725104522782"> </p>
+</blockquote>
+<p>窗口复位</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725104922419.png" alt="image-20230725104922419"> </p>
+</blockquote>
+<p>没有从文件导入excel的选项,就添加一下</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725105314446.png" alt="image-20230725105314446">  <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725105226718.png" alt="image-20230725105226718"> </p>
+</blockquote>
+<p>新建项目，文件夹，工作簿，矩阵，在项目管理器里能看到全部的东西，要给图/表改名,右键重命名,改不成的话可以在属性里用长名称</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110108950.png" alt="image-20230725110108950"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110219916.png" alt="image-20230725110219916"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110512018.png" alt="image-20230725110512018"> </p>
+</blockquote>
+<p>移动图表内的对象:右边的对象管理器,可以显示/隐藏,更改图层顺序</p>
+<p>合并可以把两个图合起来</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725110815395.png" alt="image-20230725110815395" style="zoom:67%;"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725111115281.png" alt="image-20230725111115281"> </p>
+</blockquote>
+<p>浮动工具栏,消失了就按shift</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725111232231.png" alt="image-20230725111232231"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725111250860.png" alt="image-20230725111250860"> </p>
+</blockquote>
+<h2 id="数据导入"><a href="#数据导入" class="headerlink" title="数据导入"></a>数据导入</h2><h3 id="复制粘贴"><a href="#复制粘贴" class="headerlink" title="复制粘贴"></a>复制粘贴</h3><p>2022版本的origin不建议拖拽导入excel(2023b好像没问题),可以复制粘贴</p>
+<p>添加单列,添加多列(菜单)</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112221122.png" alt="image-20230725112221122"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112300323.png" alt="image-20230725112300323"> </p>
+</blockquote>
+<p>设置数据上方黄色的部分</p>
+<p>将数据放到黄色部分(选中整行后右键)</p>
+<p>黄色部分添加东西（右键视图里添加想要的）</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112444576.png" alt="image-20230725112444576"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725112544495.png" alt="image-20230725112544495"> </p>
+</blockquote>
+<p>修改坐标轴单位</p>
+<blockquote>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725170204845.png" alt="image-20230725170204845"> </p>
+</blockquote>
+<h3 id="连接文件导入"><a href="#连接文件导入" class="headerlink" title="连接文件导入"></a>连接文件导入</h3><p>txt,csv,excel导入</p>
+<blockquote>
+<p>导入后如果无法编辑,就断连数据表 </p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725170525691.png" alt="image-20230725170525691"> </p>
+<p>导入数据后x轴y轴错了就更改</p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171103884.png" alt="image-20230725171103884"> </p>
+<p>导入数据后y轴没有按顺序排列(未排序)就取消设置为类别类</p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171021041.png" alt="image-20230725171021041"> </p>
+<p>y轴会找最近的x轴,要注意顺序</p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171351939.png" alt="image-20230725171351939"> </p>
+</blockquote>
+<blockquote>
+<p>单文件可以选连接到文件</p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171927268.png" alt="image-20230725171927268"> </p>
+<p>多文件导入(连接到多个文件)的话,学习版不能超过12个窗口,可以合并工作表</p>
+<p><img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725171733197.png" alt="image-20230725171733197"> <img src="/2023/11/09/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/origin/image-20230725172118154.png" alt="image-20230725172118154"> </p>
+</blockquote>
+<h3 id="从文件导入"><a href="#从文件导入" class="headerlink" title="从文件导入"></a>从文件导入</h3>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/" rel="tag"># 工具软件</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/11/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%9A%90%E7%A7%81/LLM%E4%B8%AA%E4%BA%BA%E8%BA%AB%E4%BB%BD%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E5%88%86%E6%9E%90/" rel="next" title="LM 个人身份信息泄露分析(NER命名实体识别+三种攻击)">
+                <i class="fa fa-chevron-left"></i> LM 个人身份信息泄露分析(NER命名实体识别+三种攻击)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/12/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/channel-wise%20%E5%AF%B9%E6%8A%97%E9%B2%81%E6%A3%92%E6%80%A7/" rel="prev" title="channelwise 对抗鲁棒性">
+                channelwise 对抗鲁棒性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E7%86%9F%E6%82%89"><span class="nav-number">1.</span> <span class="nav-text">页面熟悉</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">数据导入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4"><span class="nav-number">2.1.</span> <span class="nav-text">复制粘贴</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%96%87%E4%BB%B6%E5%AF%BC%E5%85%A5"><span class="nav-number">2.2.</span> <span class="nav-text">连接文件导入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E6%96%87%E4%BB%B6%E5%AF%BC%E5%85%A5"><span class="nav-number">2.3.</span> <span class="nav-text">从文件导入</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

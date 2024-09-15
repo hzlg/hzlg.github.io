@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="暨南大学的crazy_enc包括了AES,RC4,TEA RC4和TEA之前都碰见过了,重点看一下AES AES的列混淆应该是不可逆向的,吧? 看见AES特征的直接用标准py脚本应该就行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="11.26-AES">
+<meta property="og:url" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="暨南大学的crazy_enc包括了AES,RC4,TEA RC4和TEA之前都碰见过了,重点看一下AES AES的列混淆应该是不可逆向的,吧? 看见AES特征的直接用标准py脚本应该就行">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/AES1.jpg">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/image-20211126231104394.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/2173091-20210522232211774-5093761-16528006489632.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/2173091-20210522232337587-1776472855.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/image-20211127011604192.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/image-20211127011559367.png">
+<meta property="article:published_time" content="2021-11-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-11-07T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/AES1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2021/11/26/ctf/reverse/每日博客/2021/11.26-AES/"/>
+
+
+
+
+
+  <title>11.26-AES | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">11.26-AES</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-26T00:00:00+08:00">
+                2021-11-26
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2022-11-08T00:00:00+08:00">
+                2022-11-08
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>暨南大学的crazy_enc包括了AES,RC4,TEA</p>
+<p>RC4和TEA之前都碰见过了,重点看一下AES</p>
+<p>AES的列混淆应该是不可逆向的,吧?</p>
+<p>看见AES特征的直接用标准py脚本应该就行</p>
+<span id="more"></span> 
+
+<h1 id="TEA"><a href="#TEA" class="headerlink" title="TEA"></a>TEA</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    unsigned int a1[2] = &#123;0x8F0F4143, 0x8790C3D4&#125;;</span><br><span class="line">    // unsigned int a1[2] = &#123;0x2Dac3447, 0xffb80cac&#125;; //111111111得到的数据</span><br><span class="line">    // unsigned int a1[2] = &#123;0xB58A28C5, 0xCC5BCA0D&#125;; //12345678得到的数据</span><br><span class="line">    unsigned int table[4] = &#123;</span><br><span class="line">        0x06A02851,</span><br><span class="line">        0xC8A5558C,</span><br><span class="line">        0x5896F3E7,</span><br><span class="line">        0xB08E0BEF,</span><br><span class="line">    &#125;;</span><br><span class="line">    unsigned int decode[2];</span><br><span class="line">    unsigned int v2, v3;</span><br><span class="line">    int i = 0;</span><br><span class="line">    v2 = a1[i];</span><br><span class="line">    v3 = a1[i + 1];</span><br><span class="line">    printf(&quot;v2 = %x \n&quot;, v2);</span><br><span class="line">    printf(&quot;v3 = %x \n&quot;, v3);</span><br><span class="line">    int sum = 0xC6EF3720;</span><br><span class="line"></span><br><span class="line">    for (int j = 0; j &lt;= 0x1F; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        v3 -= (v2 + sum) ^ ((16 * v2) + table[2]) ^ ((v2 &gt;&gt; 5) + table[3]);</span><br><span class="line">        v2 -= (table[1] + (v3 &gt;&gt; 5)) ^ (v3 + sum) ^ (16 * v3 + table[0]);</span><br><span class="line">        sum += 0x61C88647;</span><br><span class="line">    &#125;</span><br><span class="line">    decode[i] = v2;</span><br><span class="line">    decode[i + 1] = v3;</span><br><span class="line">    printf(&quot;v2_2 = %x \n&quot;, decode[0]);</span><br><span class="line">    printf(&quot;v3_2 = %x \n&quot;, decode[1]);</span><br><span class="line">    for (int i = 0; i &lt; 2; i++)</span><br><span class="line">        printf(&quot;%c%c%c%c&quot;, *((char *)&amp;decode[i]), *((char *)&amp;decode[i] + 1), *((char *)&amp;decode[i] + 2), *((char *)&amp;decode[i] + 3));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h1><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sk2rw/p/14800011.html">你终于回来了(。・∀・)ノ (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/happyhippy/archive/2006/12/23/601353.html">对称加密和分组加密中的四种模式(ECB、CBC、CFB、OFB) - Silent Void - 博客园 (cnblogs.com)</a></p>
+<p> <img src="/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/AES1.jpg" alt="img"></p>
+<p>AES加密详解<br>简介：全称高级加密标准（英文名称：Advanced Encryption Standard），在密码学中又称 Rijndael 加密法</p>
+<p>AES是一种对称分组加密，明文长度为128位（16字节），本身只有一个密钥，即用来实现加密，也用于解密,密钥长度为16/24/32字节均可，通过置换与替换迭代加密，经过多轮操作形成密文。加密大体流程：</p>
+<ol>
+<li>扩展输入密钥</li>
+<li>通过多轮循环加密密文</li>
+</ol>
+<blockquote>
+<p>mode支持</p>
+<p>CBC，CFB，CTR，CTRGladman，ECB，OFB 等。</p>
+</blockquote>
+<blockquote>
+<p>padding支持</p>
+<p>ZeroPadding，NoPadding，AnsiX923，Iso10126，Iso97971，Pkcs7 等。</p>
+</blockquote>
+<p>加密解密基本参数<br>在对称与非对称的加密算法中，经常会用到三个参数：初始向量iv、加密模式mode以及填充方式padding，先介绍三个参数的含义和作用：</p>
+<p><strong>初始向量iv</strong><br>在密码学中，初始向量又称为初始函数，与密钥结合使用，作为加密数据的手段，它是一个固定长度的值，iv的长度取决于加密方法，通常与使用的加密密钥或密码的长度相当，一般在使用过程中会要求他是随机数或者是拟随机数，使用随机数产生的初始向量才能达到语义安全，让攻击者难以对原文一致且使用同一密钥生成的密文进行破解。</p>
+<p><strong>加密模式mode</strong><br>目前流行的加密和数字认证算法，都是采用块加密方式，意思就是说将加密的明文分成固定大小的数据块，然后对其执行密码算法。，从而得到密文。数据块通常采用与密钥一样的长度。加密模式在加密算法的基础上发展出来，同时也可以独立于加密算法而存在，加密模式定义了怎么样通过重复利用加密算法将大于一个数据块大小的明文转化为密文，描述了加密每一个数据块的过程，目前利用较多的加密模式有：CBC、ECB、PBCB、CFB、OFB、CTR。</p>
+<p><strong>填充方式padding</strong><br>块密码只能对确定长度的数据进行处理，而消息的长度通常是可变的。因此部分模式最后一块数据在加密前需要进行填充。有几种填充的方法，其中最简单的的一种就是在明文最后填充空字符以使其长度为块数据的整数倍，常见的填充方式有以下几种：PKCS7、PKCSS、ZeroPadding、ISO10126、ANSIX923。</p>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>以AES256为例 : 256字节的密钥,16字节的明文/状态数组</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">void PrintMatrix(unsigned char m[4][4])</span><br><span class="line">&#123;</span><br><span class="line">    for (int i = 0; i &lt; 4; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for (int j = 0; j &lt; 4; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;%4x&quot;, m[i][j]);</span><br><span class="line">            if (j % 4 == 3)</span><br><span class="line"></span><br><span class="line">                puts(&quot;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">unsigned char key[256] = &#123;xxx&#125;;</span><br><span class="line">unsigned char state[4][4] = &#123;</span><br><span class="line">        0x5F, 0xF6, 0xD8, 0xA4, 0x55, 0xA6, 0x90, 0xF4, 0x6E, 0xB3, 0x9F, 0x92, 0xBF, 0xF9, 0xF7, 0xC7&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="SubBytes-S盒变换"><a href="#SubBytes-S盒变换" class="headerlink" title="SubBytes S盒变换"></a>SubBytes S盒变换</h2><p>sub_bytes，本质上是查s盒，主要将数据（BYTE大小）分割成高4位与低4位，取高四位作为行地址，低四位作为列地址取s盒数据</p>
+<p>例如，加密时，输出的字节s1为0x12，则查s盒的第0x01行和0x02列，得到值0xc9，然后替换s1原有的0x12为0xc9</p>
+<p><img src="/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/image-20211126231104394.png" alt="image-20211126231104394"> </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">unsigned char sbox[] = &#123;0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,0x04,0xc7,0x23,0xc3,0x18,0x96,0x05,0x9a,0x07,0x12,0x80,0xe2,0xeb,0x27,0xb2,0x75,0x09,0x83,0x2c,0x1a,0x1b,0x6e,0x5a,0xa0,0x52,0x3b,0xd6,0xb3,0x29,0xe3,0x2f,0x84,0x53,0xd1,0x00,0xed,0x20,0xfc,0xb1,0x5b,0x6a,0xcb,0xbe,0x39,0x4a,0x4c,0x58,0xcf,0xd0,0xef,0xaa,0xfb,0x43,0x4d,0x33,0x85,0x45,0xf9,0x02,0x7f,0x50,0x3c,0x9f,0xa8,0x51,0xa3,0x40,0x8f,0x92,0x9d,0x38,0xf5,0xbc,0xb6,0xda,0x21,0x10,0xff,0xf3,0xd2,0xcd,0x0c,0x13,0xec,0x5f,0x97,0x44,0x17,0xc4,0xa7,0x7e,0x3d,0x64,0x5d,0x19,0x73,0x60,0x81,0x4f,0xdc,0x22,0x2a,0x90,0x88,0x46,0xee,0xb8,0x14,0xde,0x5e,0x0b,0xdb,0xe0,0x32,0x3a,0x0a,0x49,0x06,0x24,0x5c,0xc2,0xd3,0xac,0x62,0x91,0x95,0xe4,0x79,0xe7,0xc8,0x37,0x6d,0x8d,0xd5,0x4e,0xa9,0x6c,0x56,0xf4,0xea,0x65,0x7a,0xae,0x08,0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a,0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e,0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16&#125;;</span><br><span class="line">// void SubByte(unsigned char state[][4])</span><br><span class="line">// &#123;</span><br><span class="line">//     for (int i = 0; i &lt; 4; i++)</span><br><span class="line">//     &#123;</span><br><span class="line">//         for (int j = 0; j &lt; 4; j++)</span><br><span class="line">//         &#123;</span><br><span class="line">//             state[i][j] = sbox[state[i][j]]; //S盒查表操作</span><br><span class="line">//         &#125;</span><br><span class="line">//     &#125;</span><br><span class="line">// &#125;</span><br><span class="line">void change_input_with_box(unsigned char input[4][4])</span><br><span class="line">&#123;</span><br><span class="line">    unsigned __int8 i;</span><br><span class="line">    unsigned __int8 j;</span><br><span class="line">    unsigned __int8 m;</span><br><span class="line"></span><br><span class="line">    for (i = 0; i &lt;= 3u; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        for (j = 0; j &lt;= 3u; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            // printf(&quot;input = %x\n&quot;, input[i][j]);</span><br><span class="line">            for (m = 0; m &lt; 256; m++)</span><br><span class="line">            &#123;</span><br><span class="line">                // printf(&quot;m = %d, sbox[m] = %x, input = %x\n&quot;, m, sbox[m], input[i][j]);</span><br><span class="line">                if (sbox[m] == input[i][j])</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">            input[i][j] = m;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="ShiftRow-行移位"><a href="#ShiftRow-行移位" class="headerlink" title="ShiftRow 行移位"></a>ShiftRow 行移位</h2><p>行移位是一个简单的左循环移位操作。当密钥长度为128比特时，状态矩阵的第0行左移0字节，第1行左移1字节，第2行左移2字节，第3行左移3字节。</p>
+<p> <img src="/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/2173091-20210522232211774-5093761-16528006489632.png" alt="img"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">void ShiftRows_(unsigned char state[4][4]) //行移位变换函数</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char st[4];</span><br><span class="line">    int i, j;</span><br><span class="line">    for (i = 1; i &lt; 4; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for (j = 0; j &lt; 4; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            st[j] = state[i][(j + i) % 4];</span><br><span class="line">        &#125;</span><br><span class="line">        for (j = 0; j &lt; 4; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            state[i][j] = st[j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// void ShiftRows(unsigned char input[4][4])</span><br><span class="line">// &#123;</span><br><span class="line">//     char v1;</span><br><span class="line">//     char v2;</span><br><span class="line">//     char v3;</span><br><span class="line">//     char result;</span><br><span class="line">//     v1 = input[0][1];</span><br><span class="line">//     input[0][1] = input[1][1];</span><br><span class="line">//     input[1][1] = input[2][1];</span><br><span class="line">//     input[2][1] = input[3][1];</span><br><span class="line">//     input[3][1] = v1;</span><br><span class="line">//     v2 = input[0][2];</span><br><span class="line">//     input[0][2] = input[2][2];</span><br><span class="line">//     input[2][2] = v2;</span><br><span class="line">//     v3 = input[1][2];</span><br><span class="line">//     input[1][2] = input[3][2];</span><br><span class="line">//     input[3][2] = v3;</span><br><span class="line">//     result = input[0][3];</span><br><span class="line">//     input[0][3] = input[3][3];</span><br><span class="line">//     input[3][3] = input[2][3];</span><br><span class="line">//     input[2][3] = input[1][3];</span><br><span class="line">//     input[1][3] = result;</span><br><span class="line">// &#125;</span><br><span class="line">void ShiftRowsRe(unsigned char input[4][4])</span><br><span class="line">&#123;</span><br><span class="line">    char v1;</span><br><span class="line">    char v2;</span><br><span class="line">    char v3;</span><br><span class="line">    char result;</span><br><span class="line"></span><br><span class="line">    result = input[1][3];</span><br><span class="line">    input[1][3] = input[2][3];</span><br><span class="line">    input[2][3] = input[3][3];</span><br><span class="line">    input[3][3] = input[0][3];</span><br><span class="line">    input[0][3] = result;</span><br><span class="line">    v3 = input[3][2];</span><br><span class="line">    input[3][2] = input[1][2];</span><br><span class="line">    input[1][2] = v3;</span><br><span class="line">    v2 = input[2][2];</span><br><span class="line">    input[2][2] = input[0][2];</span><br><span class="line">    input[0][2] = v2;</span><br><span class="line">    v1 = input[3][1];</span><br><span class="line">    input[3][1] = input[2][1];</span><br><span class="line">    input[2][1] = input[1][1];</span><br><span class="line">    input[1][1] = input[0][1];</span><br><span class="line">    input[0][1] = v1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MixColumns-列混合"><a href="#MixColumns-列混合" class="headerlink" title="MixColumns 列混合"></a>MixColumns 列混合</h2><p>列混合变换是通过矩阵相乘来实现的，经行移位后的明文(状态矩阵)与固定的矩阵相乘，得到混淆后的明文(状态矩阵)。</p>
+<p> <img src="/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/2173091-20210522232337587-1776472855.png" alt="img"></p>
+<p><img src="/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/image-20211127011604192.png" alt="image-20211127011604192"> </p>
+<p><img src="/2021/11/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.26-AES/image-20211127011559367.png" alt="image-20211127011559367"> </p>
+<h2 id="Xor-轮密钥加"><a href="#Xor-轮密钥加" class="headerlink" title="Xor 轮密钥加"></a>Xor 轮密钥加</h2><p>轮密钥加是将轮密钥Key同明文(状态矩阵)中的数据进行逐位异或操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">void xor_key_input(unsigned __int8 a1, unsigned char input[4][4], unsigned char *key)</span><br><span class="line">&#123;</span><br><span class="line">    unsigned __int8 i;</span><br><span class="line">    unsigned char *result;</span><br><span class="line">    unsigned __int8 j;</span><br><span class="line"></span><br><span class="line">    for (i = 0; i &lt;= 3; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        for (j = 0; j &lt;= 3; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            result = &amp;input[i][0];</span><br><span class="line">            *(char *)(result + j) ^= *(char *)(key + j + 4 * (i + 4 * a1));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.Cipher import AES</span><br><span class="line">from Crypto.Util.number import *</span><br><span class="line">key = long_to_bytes(0x2776C4EA40C1B6D2838F3DDBFAB78FB1)</span><br><span class="line">mi = long_to_bytes(0xFAA5063FFDBF25451DC05E3F5EE4B995)</span><br><span class="line">lun = AES.new(key, mode=AES.MODE_ECB)</span><br><span class="line">flag = lun.decrypt(mi)</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.Cipher import AES</span><br><span class="line">key = bytearray(</span><br><span class="line">    b&quot;\x27\x76\xC4\xEA\x40\xC1\xB6\xD2\x83\x8F\x3D\xDB\xFA\xB7\x8F\xB1&quot;)</span><br><span class="line">text = bytearray(</span><br><span class="line">    b&quot;\xFA\xA5\x06\x3F\xFD\xBF\x25\x45\x1D\xC0\x5E\x3F\x5E\xE4\xB9\x95&quot;)</span><br><span class="line">aes = AES.new(key, AES.MODE_ECB)</span><br><span class="line">flag = aes.decrypt(text)</span><br><span class="line">print(flag)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/25/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.25-%E8%BF%99%E6%AC%A1%E8%BD%AE%E5%88%B0init%E4%BA%86/" rel="next" title="11.25-这次轮到init了(修改函数偏移地址)">
+                <i class="fa fa-chevron-left"></i> 11.25-这次轮到init了(修改函数偏移地址)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/28/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.28-py_Trad3_1s_fuNny!/" rel="prev" title="11.28-py字节码">
+                11.28-py字节码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TEA"><span class="nav-number">1.</span> <span class="nav-text">TEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AES"><span class="nav-number">2.</span> <span class="nav-text">AES</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#init"><span class="nav-number">2.1.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SubBytes-S%E7%9B%92%E5%8F%98%E6%8D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">SubBytes S盒变换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ShiftRow-%E8%A1%8C%E7%A7%BB%E4%BD%8D"><span class="nav-number">2.3.</span> <span class="nav-text">ShiftRow 行移位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MixColumns-%E5%88%97%E6%B7%B7%E5%90%88"><span class="nav-number">2.4.</span> <span class="nav-text">MixColumns 列混合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xor-%E8%BD%AE%E5%AF%86%E9%92%A5%E5%8A%A0"><span class="nav-number">2.5.</span> <span class="nav-text">Xor 轮密钥加</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC"><span class="nav-number">2.6.</span> <span class="nav-text">脚本</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

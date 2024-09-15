@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,论文," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="训练时和测试时网络的Batch Norm层行为不同，本文目标是在测试过程中使模型适配未知的域">
+<meta property="og:type" content="article">
+<meta property="og:title" content="域偏移 测试时自适应">
+<meta property="og:url" content="https://hzlg.github.ioz/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E5%9F%9F%E8%BD%AC%E7%A7%BB%20%E6%B5%8B%E8%AF%95%E6%97%B6%E9%80%82%E5%BA%94/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="训练时和测试时网络的Batch Norm层行为不同，本文目标是在测试过程中使模型适配未知的域">
+<meta property="og:locale">
+<meta property="article:published_time" content="2024-01-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-10T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="论文">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2024/01/11/机器学习/poisoning defence/域转移 测试时适应/"/>
+
+
+
+
+
+  <title>域偏移 测试时自适应 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E5%9F%9F%E8%BD%AC%E7%A7%BB%20%E6%B5%8B%E8%AF%95%E6%97%B6%E9%80%82%E5%BA%94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">域偏移 测试时自适应</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-01-11T00:00:00+08:00">
+                2024-01-11
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2024-01-11T00:00:00+08:00">
+                2024-01-11
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>训练时和测试时网络的Batch Norm层行为不同，本文目标是在测试过程中使模型适配未知的域</p>
+<span id="more"></span>
+
+<p>Batch Norm</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1PF411G7Yh/?spm_id_from=333.1007.top_right_bar_window_history.content.click&vd_source=6f0936ead220536edebc1dda72c5721a">ICS问题 &amp; Batch Norm_哔哩哔哩_bilibili</a></p>
+<p>为了解决内部协变量位移ICS问题，提出了Batch Norm</p>
+<p>机器学习是为了找到样本服从的独立同分布，而mini batch中，每一个batch输出的logits不再服从独立同分布，模型性能会下降/并且sigmoid函数包含线性和非线性,落入激活函数饱和区的时候,梯度更新会很缓慢,梯度消失</p>
+<p>解决方法是通过标准化保持数据性质的同时满足独立同分布,将数据均值变为0,方差变为1,然后通过γ和β转换为均值为β方差为1的分布</p>
+</blockquote>
+<blockquote>
+<p>在BatchNorm中，用于更新running_var时，使用<strong>无偏样本方差</strong>，但是在对batch进行归一化时，使用<strong>有偏样本方差</strong></p>
+<p>无偏样本方差/有偏样本方差</p>
+<p>[无偏样本方差和有偏样本方差 - 知乎 (zhihu.com)](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/157799814#:~:text=%E6%97%A0%E5%81%8F%E6%A0%B7%E6%9C%AC%E6%96%B9%E5%B7%AE%EF%BC%9A">https://zhuanlan.zhihu.com/p/157799814#:~:text=无偏样本方差：</a> S^ {2}%3Dfrac {1} {n-1}sum_ {i%3D1}^ {n} {,{n} { (X_ {i}-bar {X})}^ {2} 两者的区别就是一个除以的是n-1%2C而另一个除以的是n。 这里的n或n-1称之为自由度。)</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/102043269">为什么样本方差的分母是n-1？为什么它又叫做无偏估计？ - 知乎 (zhihu.com)</a></p>
+<p>![image-20231206222254310](域转移 测试时适应/image-20231206222254310.png) </p>
+</blockquote>
+<blockquote>
+<p>pytorch 中的batch norm</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1dN41197uf/?spm_id_from=333.337.search-card.all.click&vd_source=6f0936ead220536edebc1dda72c5721a">torch中batch_norm和linear全连接的底层代码复现与讲解(python)_哔哩哔哩_bilibili</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/439116200">深入理解Pytorch的BatchNorm操作（含部分源码） - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/P_LarT/article/details/122521030">PyTorch之BN核心参数详解_affine=true_有为少年的博客-CSDN博客</a> </p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39228381/article/details/107896863">pytorch BatchNorm参数详解，计算过程_batchnorm1d参数-CSDN博客</a></p>
+<p>训练时的BN和测试时不一样，有什么不一样？affine仿射变换是什么？BN里的参数γ和β是怎么更新的？</p>
+<p>前向传播:track_training_stats=True,affine=True</p>
+<p>![image-20231207100501572](域转移 测试时适应/image-20231207100501572.png) </p>
+<p>affine设置为true的时候才会学习参数γ和β，否则不包含着两个变量，变量名是weight和bias</p>
+<p>![image-20231206223549315](域转移 测试时适应/image-20231206223549315.png) </p>
+</blockquote>
+<blockquote>
+<p>Entropy Minimization(熵最小化) </p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/IRONFISHER/article/details/121528815">半监督学习笔记（四）：熵最小化、代理变量_IRONFISHER的博客-CSDN博客</a> </p>
+<p>早期的伪标签半监督学习工作。Dong-Hyun Lee说我们直接拿任务模型的预测来做伪标签，下一轮接着训练吧。这个操作相当于我们在损失函数里加了熵正则项(entropy regularization), 能迫使预测的各个类重叠程度更低。这个技巧也在后来的MixMatch中成为熵最小。但这方法坑就坑，大量引入了错误的伪标签，在迭代训练中误差被层层累积，所以效果也差强人意。</p>
+<p>![image-20231207143936666](域转移 测试时适应/image-20231207143936666.png) </p>
+<p><a target="_blank" rel="noopener" href="https://fuxi.163.com/database/970">机器学习中的模型校准-网易伏羲 (163.com)</a></p>
+<p>模型校准:将模型输出的置信度与实际观测结果相匹配,避免过度自信</p>
+<p>温度缩放是通过调整温度参数 T 来缩放 Softmax 函数中的原始输出分数。通过降低温度（通常小于 1），或者增加温度（通常大于 1），可以改变模型输出的概率分布的形状。</p>
+<ul>
+<li>如果温度 T&lt;1，则会增强模型对高分数（高置信度）类别的预测，减弱低分数类别的预测，使概率分布更加尖峭，置信度更高。</li>
+<li>如果温度 T&gt;1，则会增加所有类别的预测概率，使概率分布更加平缓，更均匀。</li>
+</ul>
+<p>![image-20231207170539900](域转移 测试时适应/image-20231207170539900.png) </p>
+<p>![image-20231207171429361](域转移 测试时适应/image-20231207171429361.png) ![image-20231207171525791](域转移 测试时适应/image-20231207171525791.png) </p>
+<p>![image-20231207171854150](域转移 测试时适应/image-20231207171854150.png) </p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/323959089">ICML高引论文，一个好的工作是怎样的 - 知乎 (zhihu.com)</a> </p>
+</blockquote>
+<p>现有方法只关注训练阶段，忽略测试阶段</p>
+<p>所以本文目标是在测试过程中使模型适配未知的域</p>
+<p>DomainAdaptor包括<code>AdaMixBN模块</code>和<code>GEM loss</code></p>
+<p>AdaMixBN 在归一化层 通过<code>动态混合系数</code>和<code>统计转换运算</code>自适应<code>融合训练统计和测试统计</code></p>
+<p>==统计转换运算是什么玩意==</p>
+<p>GEM loss拓展了EM loss 来更好地利用测试数据中的信息,有效优化AdaMixBN的参数</p>
+<p>现有方法有 1. 无监督域自适应 2. 域泛化</p>
+<p>特点:只在训练阶段设计复杂模型,学习泛化特征</p>
+<p>缺点:学不到测试集的独特特征,在测试阶段有域偏移的话性能退化</p>
+<p>现有方法 3. 测试时适应 test-time adaptation</p>
+<p>特点:在测试期间合并源数据和未标注的目标数据,提高对没见过域的适应性</p>
+<p>缺点:计算成本高,需要访问源数据</p>
+<p>现有方法 4. fully test-time adaptation</p>
+<p>特点:不需要源数据,用无监督loss微调归一化层，简单高效</p>
+<p>缺点:现实场景数据上不行</p>
+<ul>
+<li>依赖于精确的<code>归一化统计</code>,而<code>测试统计</code>不够精确</li>
+<li>使用的无监督损失(<code>EM损失</code>)通过产生<code>大梯度</code>使训练过程偏向<code>置信度较低的样本</code>，忽略了<code>高置信度样本</code></li>
+</ul>
+<p>AdaMixBN模块结合训练统计和测试统计,根据当前批次调整混合系数,克服了准确估计的问题</p>
+<p>直接微调AdaMixBN可能会导致性能下降,因为合并的源统计数据会导致==权重不匹配问题==，所以在微调前将源统计数据转换为归一化层中的==仿射参数==</p>
+<p>==由于模型预测的置信样本的概率分布很明显,传统的EM loss效果不佳,所以提出强调温度缩放的GEM loss,软化每个样本随温度的概率分布,为自信样本产生了较大的梯度,鼓励进一步学习==</p>
+<p>TTA 采用手动设计的自监督学习任务来学习测试分布，需要改变训练阶段，并微调所有层</p>
+<p>Tent 只用无监督EM损失微调归一化层</p>
+<p>后续工作 使用 一致性损失，对比损失，对数似然比损失</p>
+<p>这些方法会由于统计量估计不准，产生小梯度失败</p>
+<ol>
+<li><p>AdaMixBN获取动态混合参数α</p>
+<p>未标记数据中提取的特征的统计量（均值和方差）也可以提供数据分布的线索，考虑到有更高维信息的higher layers更好变换，提出可以动态融合训练统计和测试统计获取更准确的估计</p>
+<p>根据源统计量和测试统计量的欧式距离来动态混合统计量</p>
+<blockquote>
+<p>![image-20231206212436676](域转移 测试时适应/image-20231206212436676.png) </p>
+<p>$$d_{st}$$是源统计量和测试统计量的距离,$$d_s^i$$和$$d_t^i$$是单个图像xi的统计量到源统计量和批统计量的距离</p>
+</blockquote>
+</li>
+<li><p>变换仿射参数以避免副作用</p>
+</li>
+<li><p>利用GEM loss 微调变换后的仿射参数</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/%E8%AE%BA%E6%96%87/" rel="tag"># 论文</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/Fool%E2%80%98sGold%E9%98%B2%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E5%A5%B3%E5%B7%AB%E6%94%BB%E5%87%BB/" rel="next" title="FoolsGold防联邦学习女巫攻击">
+                <i class="fa fa-chevron-left"></i> FoolsGold防联邦学习女巫攻击
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

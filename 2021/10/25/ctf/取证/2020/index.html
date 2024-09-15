@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="取证," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="做了下2020年的长安杯，未完成，待更新 https:&#x2F;&#x2F;ks.wjx.top&#x2F;jq&#x2F;104681786.aspx 题目可以在这里看到↑ wp在这 ↓ （感觉我的更详细嘿嘿） https:&#x2F;&#x2F;forensics.xidian.edu.cn&#x2F;wiki&#x2F;imgca2020&#x2F;#97ip">
+<meta property="og:type" content="article">
+<meta property="og:title" content="长安杯2020">
+<meta property="og:url" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="做了下2020年的长安杯，未完成，待更新 https:&#x2F;&#x2F;ks.wjx.top&#x2F;jq&#x2F;104681786.aspx 题目可以在这里看到↑ wp在这 ↓ （感觉我的更详细嘿嘿） https:&#x2F;&#x2F;forensics.xidian.edu.cn&#x2F;wiki&#x2F;imgca2020&#x2F;#97ip">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017170935032.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019082213414.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019081652986.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012213932489.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012192607961.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017224030660.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017205806548.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012214903318.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012221938774.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017211152679.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017214816198.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017222125734.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012222112798.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017221053732.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012222307559.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012222916837.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017223134012.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017224510004.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018170439914.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018162320387.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018174244311.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018172243944.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018172339323.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018173513467.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018174031790.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018175322818.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018163410998.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019080400143.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019081920665.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018222819361.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019082713119.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019090153996.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019090829494.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019090927802.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019091407296.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020223029010.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020223037440.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020225002893.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020230026305.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020230555285.png">
+<meta property="article:published_time" content="2021-10-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-10-24T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="取证">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017170935032.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2021/10/25/ctf/取证/2020/"/>
+
+
+
+
+
+  <title>长安杯2020 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">长安杯2020</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-25T00:00:00+08:00">
+                2021-10-25
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-10-25T00:00:00+08:00">
+                2021-10-25
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>做了下2020年的长安杯，未完成，待更新</p>
+<p><a target="_blank" rel="noopener" href="https://ks.wjx.top/jq/104681786.aspx">https://ks.wjx.top/jq/104681786.aspx</a></p>
+<p>题目可以在这里看到↑</p>
+<p>wp在这 ↓ （感觉我的更详细嘿嘿）</p>
+<p><a target="_blank" rel="noopener" href="https://forensics.xidian.edu.cn/wiki/imgca2020/#97ip">https://forensics.xidian.edu.cn/wiki/imgca2020/#97ip</a></p>
+<span id="more"></span>
+
+<h2 id="第一部分-网站服务器的一、二级跳板"><a href="#第一部分-网站服务器的一、二级跳板" class="headerlink" title="第一部分(网站服务器的一、二级跳板)"></a>第一部分(网站服务器的一、二级跳板)</h2><p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017170935032.png" alt="image-20211017170935032"> </p>
+<h3 id="1-操作系统版本"><a href="#1-操作系统版本" class="headerlink" title="1.操作系统版本"></a>1.操作系统版本</h3><p>检材1是CentOS系统，通过后续的分析可知，检材1磁盘里包含了docker子系统，与其本身做一二级转发用。 </p>
+<blockquote>
+<p>Nginx 服务端配置文件、docker操作以及必要的计算机网络知识</p>
+</blockquote>
+<h3 id="2-内核版本"><a href="#2-内核版本" class="headerlink" title="2.内核版本"></a>2.内核版本</h3><blockquote>
+<p><code>uname -a</code></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/still-smile/p/11597620.html">https://www.cnblogs.com/still-smile/p/11597620.html</a></p>
+</blockquote>
+<h3 id="3-LVM-的LBA"><a href="#3-LVM-的LBA" class="headerlink" title="3.LVM 的LBA"></a>3.LVM 的LBA</h3><p>逻辑区块地址<code>(Logical Block Address, LBA)</code>是描述计算机存储设备上数据所在区块的通用机制，一般用在像硬盘这样的辅助记忆设备。<code>LBA</code>可以意指某个数据区块的地址或是某个地址所指向的数据区块。</p>
+<blockquote>
+<p><code>fdisk -l</code></p>
+</blockquote>
+<blockquote>
+<p>也可以查看火眼的分区详情</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019082213414.png" alt="image-20211019082213414"> </p>
+<h3 id="4-检材1中网站www-kkzjc-com对应的-Web-服务对外开放的端口"><a href="#4-检材1中网站www-kkzjc-com对应的-Web-服务对外开放的端口" class="headerlink" title="4.检材1中网站www.kkzjc.com对应的 Web 服务对外开放的端口"></a>4.检材1中网站<code>www.kkzjc.com</code>对应的 Web 服务对外开放的端口</h3><blockquote>
+<p>在nginx取证中应该先阅读总配置文件nginx.conf以及各个子目录的配置文件</p>
+</blockquote>
+<p>docker ps没有用，因为docker没有开，这里找网络服务器的根目录</p>
+<p><code>netstat -apn</code>可以查找Linux网络状态,一般前几个就是网络服务器监听端口</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019081652986.png" alt="image-20211019081652986"> </p>
+<p>通过<code>find -name /nginx</code>定位nginx根目录在/etc ?</p>
+<blockquote>
+<p><code>cd /etc/nginx/conf.d</code></p>
+<p><code>cat www.kkzjc.com |more</code></p>
+</blockquote>
+<blockquote>
+<p>发现监听的端口是32000</p>
+<p>nginx做了一个内网转发 , 端口32000代理8091端口服务器</p>
+<p>外网通过<a href="http://www.kkzjc.com:32000就能访问到www.kkzjc.com:8091">www.kkzjc.com:32000就能访问到www.kkzjc.com:8091</a></p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012213932489.png" alt="image-20211012213932489"> </p>
+<h3 id="5-服务器共绑定对外开放的域名的个数"><a href="#5-服务器共绑定对外开放的域名的个数" class="headerlink" title="5.服务器共绑定对外开放的域名的个数"></a>5.服务器共绑定对外开放的域名的个数</h3><blockquote>
+<p><code>cd /etc/nginx/conf.d</code></p>
+<p><code>ls</code> </p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012192607961.png" alt="image-20211012192607961"> </p>
+<h3 id="6-所在的服务器的原始-IP-地址"><a href="#6-所在的服务器的原始-IP-地址" class="headerlink" title="6.所在的服务器的原始 IP 地址"></a>6.所在的服务器的原始 IP 地址</h3><p>见第九题</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017224030660.png" alt="image-20211017224030660"> </p>
+<blockquote>
+<p>除了docker log,还可以分析检材2的浏览器历史记录,可以找到标题为代理登录的记录,url为192.168.99.3:8091</p>
+</blockquote>
+<blockquote>
+<p>192.168.99.3</p>
+</blockquote>
+<h3 id="7-嫌疑人登录使用的-IP-地址"><a href="#7-嫌疑人登录使用的-IP-地址" class="headerlink" title="7.嫌疑人登录使用的 IP 地址"></a>7.嫌疑人登录使用的 IP 地址</h3><p>last作用是显示近期用户或终端的登录情况。通过last命令查看该程序的log，管理员可以获知谁曾经或者企图连接系统。</p>
+<p>执行last命令时，它会读取/var/log目录下名称为wtmp的文件，并把该文件记录的登录系统或终端的用户名单全部显示出来。默认显示wtmp的记录，btmp能显示的更详细，可以显示远程登录，例如ssh登录。</p>
+<blockquote>
+<p>第一列：用户名<br>第二列：终端位置（pts/0伪终端，意味着从SSH或telnet等工具<strong>远程连接</strong>的用户，图形界面终端归于此类。tty0直接连接到计算机或本地连接的用户。后面的数字代表连接编号）<br>第三列：登录IP或内核（如果是：0.0或者什么都没有，意味着用户通过本地终端连接。除了重启活动，内核版本会显示在状态中）<br>第四列：开始时间<br>第五列：结束时间（still login in尚未退出，down直到正常关机，crash直到强制关机）<br>第六列：持续时间<br>指定显示记录的数量（显示记录中最后登录的数量）</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017205806548.png" alt="image-20211017205806548"> </p>
+<blockquote>
+<p>有两个，十月多的是后面加的</p>
+<p>192.168.99.222</p>
+</blockquote>
+<h3 id="8-www-kkzjc-com转发的后台网站所使用的-IP-地址"><a href="#8-www-kkzjc-com转发的后台网站所使用的-IP-地址" class="headerlink" title="8.www.kkzjc.com转发的后台网站所使用的 IP 地址"></a>8.<code>www.kkzjc.com</code>转发的后台网站所使用的 IP 地址</h3><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 启动docker服务</span><br><span class="line">systemctl start docker</span><br><span class="line">// 查看容器id (08f6...)</span><br><span class="line">docker ps</span><br><span class="line">// 进入容器</span><br><span class="line">docker exec -it 容器id /bin/bash</span><br><span class="line">// 查看容器镜像的历史操作记录</span><br><span class="line">history</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012214903318.png" alt="image-20211012214903318"> </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012221938774.png" alt="image-20211012221938774"> </p>
+<blockquote>
+<p>容器的80端口被映射到本机的8091端口上。访问宿主主机的8091端口就可以访问容器内的应用程序提供的Web界面：</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017211152679.png" alt="image-20211017211152679"> </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017214816198.png" alt="image-20211017214816198"> </p>
+<p>端口80反向代理<a target="_blank" rel="noopener" href="http://192.168.1.176/">http://192.168.1.176:80</a></p>
+<p>外网访问<a target="_blank" rel="noopener" href="http://www.kkzjc.com/">www.kkzjc.com:80</a> 就可以访问到<a target="_blank" rel="noopener" href="http://192.168.1.176/">http://192.168.1.176:80</a></p>
+<blockquote>
+<p>192.168.1.176</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>前面已经分析过 : web服务器开放32000端口,外网通过<a href="http://www.kkzjc.com:32000就能访问到www.kkzjc.com:8091">www.kkzjc.com:32000就能访问到www.kkzjc.com:8091</a></p>
+<p>容器的80端口被映射到本机的8091端口上。访问宿主主机的8091端口就可以访问容器内的应用程序提供的Web界面：</p>
+<p>所以外网通过<a href="http://www.kkzjc.com:32000就能访问http://192.168.1.176:80">www.kkzjc.com:32000就能访问http://192.168.1.176:80</a></p>
+<img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017222125734.png" alt="image-20211017222125734" style="zoom:200%;"> 
+
+
+</blockquote>
+<h3 id="9-题7的IP出现次数"><a href="#9-题7的IP出现次数" class="headerlink" title="9.题7的IP出现次数"></a>9.题7的IP出现次数</h3><blockquote>
+<p>正常思路是查看web服务器日志,找到http请求对象即原始IP</p>
+<p>从docker中的nginx主配置文件中可以知道nginx日志的位置</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012222112798.png" alt="image-20211012222112798"> </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017221053732.png" alt="image-20211017221053732"> </p>
+<p>尝试cat该文件但是失败了</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012222307559.png" alt="image-20211012222307559"> </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211012222916837.png" alt="image-20211012222916837"> </p>
+<p>进入康康,可以发现,这个文件无法直接打开,因为是个链接,具体看《取证概念》</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017223134012.png" alt="image-20211017223134012"> </p>
+<p>所以exit退出容器</p>
+<blockquote>
+<p>查看docker log ， 退回一级虚拟机查看日志</p>
+<p>第六题直接看docker log</p>
+<p>第九题docker logs 容器id | grep 192.168.99.222 | wc -l</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211017224510004.png" alt="image-20211017224510004">  </p>
+<blockquote>
+<p>192.168.99.222</p>
+</blockquote>
+<hr>
+<h2 id="第二部分（嫌疑人个人使用的电脑）"><a href="#第二部分（嫌疑人个人使用的电脑）" class="headerlink" title="第二部分（嫌疑人个人使用的电脑）"></a>第二部分（嫌疑人个人使用的电脑）</h2><h3 id="10-检材2的原始磁盘-SHA256-值"><a href="#10-检材2的原始磁盘-SHA256-值" class="headerlink" title="10.检材2的原始磁盘 SHA256 值"></a>10.检材2的原始磁盘 SHA256 值</h3><p>火眼证据分析软件分析就行了</p>
+<p>60GB大小要计算一会</p>
+<img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018170439914.png" alt="image-20211018170439914" style="zoom:80%;">     
+
+<blockquote>
+<p>2D926D5E1CFE27553AE59B6152E038560D64E7837ECCAD30F2FBAD5052FABF37</p>
+</blockquote>
+<h3 id="11-计算机的OS-Operating-System-内部版本号"><a href="#11-计算机的OS-Operating-System-内部版本号" class="headerlink" title="11.计算机的OS(Operating System)内部版本号"></a>11.计算机的OS(Operating System)内部版本号</h3><blockquote>
+<p>这题仿真来做比较好</p>
+</blockquote>
+<blockquote>
+<p>火眼识别出的账户信息↓</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018162320387.png" alt="image-20211018162320387"> </p>
+<blockquote>
+<p>设置→关于</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018174244311.png" alt="image-20211018174244311"> </p>
+<blockquote>
+<p>18363.1082</p>
+</blockquote>
+<h3 id="12-最后一次正常关机的时间"><a href="#12-最后一次正常关机的时间" class="headerlink" title="*12.最后一次正常关机的时间"></a>*12.最后一次正常关机的时间</h3><blockquote>
+<p>有争议,取证大师,日志6006,109答案都不一样,下面给出6006</p>
+</blockquote>
+<blockquote>
+<p>查看系统日志就行</p>
+<p>右键此电脑,点管理</p>
+</blockquote>
+<img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018172243944.png" alt="image-20211018172243944" style="zoom:80%;"> 
+
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018172339323.png" alt="image-20211018172339323"> </p>
+<blockquote>
+<p>2020-09-18 13:15:26</p>
+<p>(答案是取证大师的13:15:34)</p>
+</blockquote>
+<h3 id="13-VMware-程序的安装时间"><a href="#13-VMware-程序的安装时间" class="headerlink" title="*13.VMware 程序的安装时间"></a>*13.VMware 程序的安装时间</h3><p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018173513467.png" alt="image-20211018173513467"> </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018174031790.png" alt="image-20211018174031790">  </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018175322818.png" alt="image-20211018175322818"> </p>
+<blockquote>
+<p>2020-09-18 17:56</p>
+<p>答案是17:54?</p>
+</blockquote>
+<h3 id="14-Vmware-exe-程序启动次数"><a href="#14-Vmware-exe-程序启动次数" class="headerlink" title="*14.Vmware.exe 程序启动次数"></a>*14.Vmware.exe 程序启动次数</h3><blockquote>
+<p>不懂</p>
+</blockquote>
+<h3 id="15-嫌疑人通过-Web-方式，访问检材-1-所在的服务器上的网站时，连接的目标端口"><a href="#15-嫌疑人通过-Web-方式，访问检材-1-所在的服务器上的网站时，连接的目标端口" class="headerlink" title="15.嫌疑人通过 Web 方式，访问检材 1 所在的服务器上的网站时，连接的目标端口"></a>15.嫌疑人通过 Web 方式，访问检材 1 所在的服务器上的网站时，连接的目标端口</h3><blockquote>
+<p>前面已经分析过了,8091</p>
+<p>谷歌浏览器的历史记录</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018163410998.png" alt="image-20211018163410998"> </p>
+</blockquote>
+<h3 id="16-该端口上运行的进程的程序名称（Program-name）为"><a href="#16-该端口上运行的进程的程序名称（Program-name）为" class="headerlink" title="16.该端口上运行的进程的程序名称（Program name）为"></a>16.该端口上运行的进程的程序名称（Program name）为</h3><blockquote>
+<p>开启docker 的情况下</p>
+<p>ps aux</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019080400143.png" alt="image-20211019080400143"> </p>
+<blockquote>
+<p>或者netstat -apn 这个方便一些</p>
+<blockquote>
+<p>netstat -apn 是查看linux网络状态的命令</p>
+</blockquote>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019081920665.png" alt="image-20211019081920665"> </p>
+<blockquote>
+<p>netstat -apn | grep 8091更方便</p>
+</blockquote>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211018222819361.png" alt="image-20211018222819361"> </p>
+<blockquote>
+<p>docker-proxy</p>
+</blockquote>
+<h3 id="17-嫌疑人从检材2访问该网站时，所使用的域名"><a href="#17-嫌疑人从检材2访问该网站时，所使用的域名" class="headerlink" title="17.嫌疑人从检材2访问该网站时，所使用的域名"></a>17.嫌疑人从检材2访问该网站时，所使用的域名</h3><p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019082713119.png" alt="image-20211019082713119"> </p>
+<blockquote>
+<p>找谷歌浏览器记录就能找到</p>
+<p><a target="_blank" rel="noopener" href="http://www.sdhj.com:8091/">www.sdhj.com:8091</a></p>
+</blockquote>
+<h3 id="18-微信ID"><a href="#18-微信ID" class="headerlink" title="18.微信ID"></a>18.微信ID</h3><p>在C盘下有一个手机备份文件 my iphone .tar</p>
+<p>导出文件后添加检材</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019090153996.png" alt="image-20211019090153996"> </p>
+<blockquote>
+<p>sstt119999</p>
+</blockquote>
+<h3 id="19-分析检材2-嫌疑人为推广其网站-与广告位供应商沟通是使用的通联工具的名称为"><a href="#19-分析检材2-嫌疑人为推广其网站-与广告位供应商沟通是使用的通联工具的名称为" class="headerlink" title="19.分析检材2,嫌疑人为推广其网站,与广告位供应商沟通是使用的通联工具的名称为"></a>19.分析检材2,嫌疑人为推广其网站,与广告位供应商沟通是使用的通联工具的名称为</h3><blockquote>
+<p>先看了下微信聊天记录发现广告商不用微信</p>
+<p>看Telegram</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019090829494.png" alt="image-20211019090829494"> </p>
+<p>Telegram</p>
+</blockquote>
+<h3 id="20-嫌疑人使用虚拟货币与供应商进行交易-该虚拟货币的名称是"><a href="#20-嫌疑人使用虚拟货币与供应商进行交易-该虚拟货币的名称是" class="headerlink" title="20.嫌疑人使用虚拟货币与供应商进行交易,该虚拟货币的名称是"></a>20.嫌疑人使用虚拟货币与供应商进行交易,该虚拟货币的名称是</h3><blockquote>
+<p>聊天记录里收款是doge收款</p>
+<p>dogecoin</p>
+</blockquote>
+<h3 id="21-上述交易中-对方的收款地址是"><a href="#21-上述交易中-对方的收款地址是" class="headerlink" title="21.上述交易中,对方的收款地址是"></a>21.上述交易中,对方的收款地址是</h3><blockquote>
+<p>就在聊天记录里</p>
+<img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019090927802.png" alt="image-20211019090927802" style="zoom:67%;"> 
+</blockquote>
+<h3 id="22-交易时间"><a href="#22-交易时间" class="headerlink" title="22.交易时间"></a>22.交易时间</h3><blockquote>
+<p> <img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211019091407296.png" alt="image-20211019091407296"> </p>
+</blockquote>
+<h3 id="23-支付货币的数量"><a href="#23-支付货币的数量" class="headerlink" title="23.支付货币的数量"></a>23.支付货币的数量</h3><blockquote>
+<p>4000</p>
+</blockquote>
+<h3 id="24-虚拟机磁盘密码"><a href="#24-虚拟机磁盘密码" class="headerlink" title="*24.虚拟机磁盘密码"></a>*24.虚拟机磁盘密码</h3><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/RpaJbenlkrygP5XBaMz2nA">https://mp.weixin.qq.com/s/RpaJbenlkrygP5XBaMz2nA</a></p>
+<h3 id="25-邮件附件中的图片附件SHA256"><a href="#25-邮件附件中的图片附件SHA256" class="headerlink" title="*25.邮件附件中的图片附件SHA256"></a>*25.邮件附件中的图片附件SHA256</h3><h3 id="26-发送时间"><a href="#26-发送时间" class="headerlink" title="*26.发送时间"></a>*26.发送时间</h3><h3 id="27-邮箱密码"><a href="#27-邮箱密码" class="headerlink" title="*27.邮箱密码"></a>*27.邮箱密码</h3><h3 id="28-检材2中嫌疑人使用了什么远程管理工具登陆了检材1所在的服务器"><a href="#28-检材2中嫌疑人使用了什么远程管理工具登陆了检材1所在的服务器" class="headerlink" title="*28.检材2中嫌疑人使用了什么远程管理工具登陆了检材1所在的服务器"></a>*28.检材2中嫌疑人使用了什么远程管理工具登陆了检材1所在的服务器</h3><blockquote>
+<p>Xshell?</p>
+</blockquote>
+<h3 id="29-上述工具的密码"><a href="#29-上述工具的密码" class="headerlink" title="*29.上述工具的密码"></a>*29.上述工具的密码</h3><hr>
+<h2 id="第三部分-服务器-难点"><a href="#第三部分-服务器-难点" class="headerlink" title="第三部分(服务器-难点)"></a>第三部分(服务器-难点)</h2><p>网探:想用工具去连接服务器的话(不管是网探还是xshell啥的)一般都是连22端口,因为这些工具的基本逻辑即使去连ssh的服务,ssh的服务默认在22端口上</p>
+<p>有些时候会设个门槛,至少让你扫到ssh在哪</p>
+<p>这一题里netstst -anpt看linux网络状态,看到ssh的端口是7001</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020223029010.png" alt="image-20211020223029010"> </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020223037440.png" alt="image-20211020223037440"> </p>
+<p>题目里有网站设置,刚刚找ssh的时候看到了nginx</p>
+<p>vim /etc/nginx/nginx.conf</p>
+<p>看nginx的配置文件:配置了虚拟主机目录,主配置文件里面没有配置网站,加了一个include …路径</p>
+<p>进入这个路径之后ls,看到这个路径下配了三个网站,因为配置文件里是.com的配置文件,所以default.conf是不算的,三个.com结尾的才算 </p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020225002893.png" alt="image-20211020225002893"> </p>
+<p>仅允许域名访问,不能ip访问</p>
+<p>下面的proxypass是关键,把请求转发给本地的8091端口,其他就没啥了,这就是一个纯跳板,纯转发用的</p>
+<p>netstat -anpt看一下8091端口但是没有,因为docker服务没有启动</p>
+<p>设计的时候想:首先history要看,今年的history没删,火眼,网探,命令,都能看</p>
+<p>把history遍历一遍,就会发现docker</p>
+<p>然后systemctl start docker </p>
+<p>docker ps ,再netstat -anpt</p>
+<p>8091端口就出来了</p>
+<p>docker出来之后进入容器,第一步还是history,看到里面还有nginx,所以vim /etc/nginx/nginx.conf</p>
+<p>主配置文件也是缺省的,include了一个路径,进入这个路径hl.conf</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020230026305.png" alt="image-20211020230026305"> </p>
+<p>监听着docker内部的80端口,转发到192.168.1.176:80</p>
+<p>看谷歌能看到第六题</p>
+<p><img src="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2020/image-20211020230555285.png" alt="image-20211020230555285"> </p>
+<p>找到windows的hosts:windows/system32/drivers/etc/hosts</p>
+<p>就是管理员配了个域名,拿域名去管理网站</p>
+<p>一定想要在检材1里找到的话,首先跟<a target="_blank" rel="noopener" href="http://www.kkzjc.com没关系,管理员直接访问8091,就是直接访问第二级代理/">www.kkzjc.com没关系,管理员直接访问8091,就是直接访问第二级代理</a></p>
+<p>docker里的nginx配置文件里有一个access log </p>
+<p>先看下hl.conf,这里面的accesslog 是没有开的,是注释掉的,这个没有配就以主配置文件为主</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%8F%96%E8%AF%81/" rel="tag"># 取证</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/10/25/ctf/%E5%8F%96%E8%AF%81/2019/" rel="next" title="长安杯2019">
+                <i class="fa fa-chevron-left"></i> 长安杯2019
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/10/26/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/10.26-Rex%E8%AE%BA%E6%96%87/" rel="prev" title="10.26-Rex论文">
+                10.26-Rex论文 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86-%E7%BD%91%E7%AB%99%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%B8%80%E3%80%81%E4%BA%8C%E7%BA%A7%E8%B7%B3%E6%9D%BF"><span class="nav-number">1.</span> <span class="nav-text">第一部分(网站服务器的一、二级跳板)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC"><span class="nav-number">1.1.</span> <span class="nav-text">1.操作系统版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC"><span class="nav-number">1.2.</span> <span class="nav-text">2.内核版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-LVM-%E7%9A%84LBA"><span class="nav-number">1.3.</span> <span class="nav-text">3.LVM 的LBA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%A3%80%E6%9D%901%E4%B8%AD%E7%BD%91%E7%AB%99www-kkzjc-com%E5%AF%B9%E5%BA%94%E7%9A%84-Web-%E6%9C%8D%E5%8A%A1%E5%AF%B9%E5%A4%96%E5%BC%80%E6%94%BE%E7%9A%84%E7%AB%AF%E5%8F%A3"><span class="nav-number">1.4.</span> <span class="nav-text">4.检材1中网站www.kkzjc.com对应的 Web 服务对外开放的端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%85%B1%E7%BB%91%E5%AE%9A%E5%AF%B9%E5%A4%96%E5%BC%80%E6%94%BE%E7%9A%84%E5%9F%9F%E5%90%8D%E7%9A%84%E4%B8%AA%E6%95%B0"><span class="nav-number">1.5.</span> <span class="nav-text">5.服务器共绑定对外开放的域名的个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%89%80%E5%9C%A8%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%8E%9F%E5%A7%8B-IP-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.6.</span> <span class="nav-text">6.所在的服务器的原始 IP 地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%AB%8C%E7%96%91%E4%BA%BA%E7%99%BB%E5%BD%95%E4%BD%BF%E7%94%A8%E7%9A%84-IP-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.7.</span> <span class="nav-text">7.嫌疑人登录使用的 IP 地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-www-kkzjc-com%E8%BD%AC%E5%8F%91%E7%9A%84%E5%90%8E%E5%8F%B0%E7%BD%91%E7%AB%99%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84-IP-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.8.</span> <span class="nav-text">8.www.kkzjc.com转发的后台网站所使用的 IP 地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E9%A2%987%E7%9A%84IP%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0"><span class="nav-number">1.9.</span> <span class="nav-text">9.题7的IP出现次数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%88%E5%AB%8C%E7%96%91%E4%BA%BA%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%9A%84%E7%94%B5%E8%84%91%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">第二部分（嫌疑人个人使用的电脑）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E6%A3%80%E6%9D%902%E7%9A%84%E5%8E%9F%E5%A7%8B%E7%A3%81%E7%9B%98-SHA256-%E5%80%BC"><span class="nav-number">2.1.</span> <span class="nav-text">10.检材2的原始磁盘 SHA256 值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84OS-Operating-System-%E5%86%85%E9%83%A8%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="nav-number">2.2.</span> <span class="nav-text">11.计算机的OS(Operating System)内部版本号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E6%AD%A3%E5%B8%B8%E5%85%B3%E6%9C%BA%E7%9A%84%E6%97%B6%E9%97%B4"><span class="nav-number">2.3.</span> <span class="nav-text">*12.最后一次正常关机的时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-VMware-%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%AE%89%E8%A3%85%E6%97%B6%E9%97%B4"><span class="nav-number">2.4.</span> <span class="nav-text">*13.VMware 程序的安装时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-Vmware-exe-%E7%A8%8B%E5%BA%8F%E5%90%AF%E5%8A%A8%E6%AC%A1%E6%95%B0"><span class="nav-number">2.5.</span> <span class="nav-text">*14.Vmware.exe 程序启动次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-%E5%AB%8C%E7%96%91%E4%BA%BA%E9%80%9A%E8%BF%87-Web-%E6%96%B9%E5%BC%8F%EF%BC%8C%E8%AE%BF%E9%97%AE%E6%A3%80%E6%9D%90-1-%E6%89%80%E5%9C%A8%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E7%9A%84%E7%BD%91%E7%AB%99%E6%97%B6%EF%BC%8C%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%9B%AE%E6%A0%87%E7%AB%AF%E5%8F%A3"><span class="nav-number">2.6.</span> <span class="nav-text">15.嫌疑人通过 Web 方式，访问检材 1 所在的服务器上的网站时，连接的目标端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-%E8%AF%A5%E7%AB%AF%E5%8F%A3%E4%B8%8A%E8%BF%90%E8%A1%8C%E7%9A%84%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%90%8D%E7%A7%B0%EF%BC%88Program-name%EF%BC%89%E4%B8%BA"><span class="nav-number">2.7.</span> <span class="nav-text">16.该端口上运行的进程的程序名称（Program name）为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#17-%E5%AB%8C%E7%96%91%E4%BA%BA%E4%BB%8E%E6%A3%80%E6%9D%902%E8%AE%BF%E9%97%AE%E8%AF%A5%E7%BD%91%E7%AB%99%E6%97%B6%EF%BC%8C%E6%89%80%E4%BD%BF%E7%94%A8%E7%9A%84%E5%9F%9F%E5%90%8D"><span class="nav-number">2.8.</span> <span class="nav-text">17.嫌疑人从检材2访问该网站时，所使用的域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#18-%E5%BE%AE%E4%BF%A1ID"><span class="nav-number">2.9.</span> <span class="nav-text">18.微信ID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#19-%E5%88%86%E6%9E%90%E6%A3%80%E6%9D%902-%E5%AB%8C%E7%96%91%E4%BA%BA%E4%B8%BA%E6%8E%A8%E5%B9%BF%E5%85%B6%E7%BD%91%E7%AB%99-%E4%B8%8E%E5%B9%BF%E5%91%8A%E4%BD%8D%E4%BE%9B%E5%BA%94%E5%95%86%E6%B2%9F%E9%80%9A%E6%98%AF%E4%BD%BF%E7%94%A8%E7%9A%84%E9%80%9A%E8%81%94%E5%B7%A5%E5%85%B7%E7%9A%84%E5%90%8D%E7%A7%B0%E4%B8%BA"><span class="nav-number">2.10.</span> <span class="nav-text">19.分析检材2,嫌疑人为推广其网站,与广告位供应商沟通是使用的通联工具的名称为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#20-%E5%AB%8C%E7%96%91%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%99%9A%E6%8B%9F%E8%B4%A7%E5%B8%81%E4%B8%8E%E4%BE%9B%E5%BA%94%E5%95%86%E8%BF%9B%E8%A1%8C%E4%BA%A4%E6%98%93-%E8%AF%A5%E8%99%9A%E6%8B%9F%E8%B4%A7%E5%B8%81%E7%9A%84%E5%90%8D%E7%A7%B0%E6%98%AF"><span class="nav-number">2.11.</span> <span class="nav-text">20.嫌疑人使用虚拟货币与供应商进行交易,该虚拟货币的名称是</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#21-%E4%B8%8A%E8%BF%B0%E4%BA%A4%E6%98%93%E4%B8%AD-%E5%AF%B9%E6%96%B9%E7%9A%84%E6%94%B6%E6%AC%BE%E5%9C%B0%E5%9D%80%E6%98%AF"><span class="nav-number">2.12.</span> <span class="nav-text">21.上述交易中,对方的收款地址是</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4"><span class="nav-number">2.13.</span> <span class="nav-text">22.交易时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#23-%E6%94%AF%E4%BB%98%E8%B4%A7%E5%B8%81%E7%9A%84%E6%95%B0%E9%87%8F"><span class="nav-number">2.14.</span> <span class="nav-text">23.支付货币的数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#24-%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%A3%81%E7%9B%98%E5%AF%86%E7%A0%81"><span class="nav-number">2.15.</span> <span class="nav-text">*24.虚拟机磁盘密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#25-%E9%82%AE%E4%BB%B6%E9%99%84%E4%BB%B6%E4%B8%AD%E7%9A%84%E5%9B%BE%E7%89%87%E9%99%84%E4%BB%B6SHA256"><span class="nav-number">2.16.</span> <span class="nav-text">*25.邮件附件中的图片附件SHA256</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#26-%E5%8F%91%E9%80%81%E6%97%B6%E9%97%B4"><span class="nav-number">2.17.</span> <span class="nav-text">*26.发送时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#27-%E9%82%AE%E7%AE%B1%E5%AF%86%E7%A0%81"><span class="nav-number">2.18.</span> <span class="nav-text">*27.邮箱密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#28-%E6%A3%80%E6%9D%902%E4%B8%AD%E5%AB%8C%E7%96%91%E4%BA%BA%E4%BD%BF%E7%94%A8%E4%BA%86%E4%BB%80%E4%B9%88%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E7%99%BB%E9%99%86%E4%BA%86%E6%A3%80%E6%9D%901%E6%89%80%E5%9C%A8%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">2.19.</span> <span class="nav-text">*28.检材2中嫌疑人使用了什么远程管理工具登陆了检材1所在的服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#29-%E4%B8%8A%E8%BF%B0%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AF%86%E7%A0%81"><span class="nav-number">2.20.</span> <span class="nav-text">*29.上述工具的密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86-%E6%9C%8D%E5%8A%A1%E5%99%A8-%E9%9A%BE%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">第三部分(服务器-难点)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="汇总表格">
+<meta property="og:type" content="article">
+<meta property="og:title" content="联邦学习鲁棒性攻防汇总">
+<meta property="og:url" content="https://hzlg.github.ioz/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%89%E5%85%A8%E8%81%9A%E5%90%88/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="汇总表格">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%89%E5%85%A8%E8%81%9A%E5%90%88/image-20231217193946746.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%89%E5%85%A8%E8%81%9A%E5%90%88/image-20231217201048866.png">
+<meta property="article:published_time" content="2024-01-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-10T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%89%E5%85%A8%E8%81%9A%E5%90%88/image-20231217193946746.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2024/01/11/机器学习/poisoning defence/拜占庭安全聚合/"/>
+
+
+
+
+
+  <title>联邦学习鲁棒性攻防汇总 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%89%E5%85%A8%E8%81%9A%E5%90%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">联邦学习鲁棒性攻防汇总</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-01-11T00:00:00+08:00">
+                2024-01-11
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2024-01-11T00:00:00+08:00">
+                2024-01-11
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>汇总表格</p>
+<span id="more"></span>
+
+<table>
+<thead>
+<tr>
+<th>论文</th>
+<th>年份</th>
+<th>方法</th>
+<th>贡献</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Auror</td>
+<td>2016 ACSAC</td>
+<td>kmeans对前10个epoch的样本特征进行二分类，类间距离大于阈值α(由训练集分布决定)的被认为是指示性特征，指示性特征下类元素多的认为是良性,元素少的认为是可疑,可疑τ(自动选择,取决于指示性特征的总数)次就认为是恶意 co-training 协作训练</td>
+<td></td>
+<td></td>
+<td>要自己定类间距离阈值,需要个数</td>
+</tr>
+<tr>
+<td><strong>Krum</strong></td>
+<td>2017 NIPS</td>
+<td>欧氏距离找离所有梯度距离最小的</td>
+<td></td>
+<td></td>
+<td>需要恶意客户端个数</td>
+</tr>
+<tr>
+<td><strong>Trmean/Median</strong></td>
+<td>2018 ICML</td>
+<td>去除极值后求平均</td>
+<td></td>
+<td></td>
+<td>需要恶意客户端个数</td>
+</tr>
+<tr>
+<td>Bulyan</td>
+<td>2018 ICML</td>
+<td>结合Krum和trmean</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Kardam</td>
+<td>2018 ICML</td>
+<td>用empirical Lipschitz coefficient判断良性</td>
+<td>异步</td>
+<td></td>
+<td>zenopp里说会把良性也过滤</td>
+</tr>
+<tr>
+<td>Byzantine SGD</td>
+<td>2018 NIPS</td>
+<td>利用历史信息</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>signSGD</td>
+<td>2018 ICML</td>
+<td>只用<strong>sign</strong>(梯度)去更新模型也能收敛,而且能提供一定容错性,在梯度比曲率密集的时候,signSGD≥SGD/在分布式场景,参数服务器多数投票聚合梯度方向,</td>
+<td>通信瓶颈</td>
+<td>又能压缩梯度，又有和SGD一样的收敛率</td>
+<td></td>
+</tr>
+<tr>
+<td>DRACO</td>
+<td>2018 ICML</td>
+<td><strong>冗余编码投票</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>DETOX</td>
+<td>2019 NIPS</td>
+<td><strong>冗余编码投票</strong>+鲁棒聚合</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>2019 NIPS</td>
+<td>利用预训练的异常检测模型（自编码器）产生异常评分</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>选举编码signSGD</td>
+<td>2020 NIPS</td>
+<td><strong>冗余编码投票</strong>+梯度符号</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>FoolsGold</strong></td>
+<td>2020 RAID</td>
+<td><strong>特征过滤</strong>（模型输出层参数大小）后算<strong>历史梯度</strong>的<strong>重加权余弦</strong>,相近的降权</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ZENO++</td>
+<td>2020 ICML</td>
+<td>用服务器验证集计算<strong>模型loss变化</strong>, 变化大说明贡献大, 用梯度大小惩罚保证参数更新不会过大, 用阈值确定良性还是恶意 $$Score_{γ,ρ}(g,x) = f_s(x) − f_s(x − γg) − ρ\Vert g \Vert^2$$</td>
+<td>完全异步, 不限制数量, 证明了收敛</td>
+<td></td>
+<td>阈值</td>
+</tr>
+<tr>
+<td>SafeguardSGD</td>
+<td>2021 ICLR</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>FLTrust</strong></td>
+<td>2021 NDSS</td>
+<td>计算客户端梯度与<strong>服务器梯度</strong>的 ReLU-clipped 余弦, 归一化, 重加权</td>
+<td>引入信任根基</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>DnC</td>
+<td>2021 NDSS</td>
+<td><strong>谱分析</strong>：梯度随机采样降维后，计算右上奇异向量，再计算梯度在奇异向量上的投影作为奇异分数，丢弃分数高的梯度</td>
+<td>引入Spectral method</td>
+<td></td>
+<td>FPD说：noniid不好，对向量大小敏感，需要恶意个数</td>
+</tr>
+<tr>
+<td>Contra</td>
+<td>2021 ESORICS</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Romoa</td>
+<td>2021 ESORICS</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>FLOD</td>
+<td>2021 ESORICS</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>FLAME</td>
+<td>2022 USENIX</td>
+<td>异常检测+裁剪+噪声:HDBSCAN聚类余弦，设置最小簇大小为$$\frac{n}{2}+1$$去除离群值 多方安全计算MPC保护梯度</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SignGuard</td>
+<td>2022 ICDCS</td>
+<td>范数过滤+<strong>符号</strong>过滤(提取梯度符号特征,meanshift聚类选个数最多的簇)取交集</td>
+<td>利用梯度符号,提供LIE分析(很小的z就能改变很多梯度方向),提供收敛证明</td>
+<td></td>
+<td>聚类后选个数更多的</td>
+</tr>
+<tr>
+<td>FLARE</td>
+<td>2022 ASIACCS</td>
+<td>计算<strong>PLR</strong>的MMD找<strong>最近邻</strong>作为信任分数来重加权</td>
+<td>利用PLR区分,提供理论证明</td>
+<td>利用潜在空间特征代替参数空间特征</td>
+<td></td>
+</tr>
+<tr>
+<td>EIFFel</td>
+<td>2022 CCS</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>MUDGUARD</td>
+<td>2022</td>
+<td>余弦会导致信息冗余并模糊明显特征，pairwise调整余弦做特征提取+pairwiseL2度量DBSCAN聚类+<strong>模型分割</strong>+DP</td>
+<td>提出模型分割/调整余弦来提升 noniid/加密组件&amp;同态哈希安全聚合&amp;性能优化/UC 通用组合模型安全证明</td>
+<td>恶意客户端数量大于 50%/noniid 也能防, 不需要服务器数据</td>
+<td></td>
+</tr>
+<tr>
+<td>FPD</td>
+<td>2023 ACM MM</td>
+<td><strong>客户端选择</strong>：记录客户端最近表现和总体表现，客户端被选中的概率遵循beta分布/绝对余弦相似度过滤,超过0.8的被拒/<strong>加入动量的谱分析</strong>：计算归一化动量向量，将右奇异向量上的投影作为异常分数，kmeans二分类分数，两类的余弦相似度不高就删除异常值大的簇/无监督<strong>自编码器</strong>算最后两层参数的重构误差,kmeans二分类重构误差,误差大的用自编码器降噪</td>
+<td>能同时防共谋和非共谋</td>
+<td>抛弃不实际假设，不需要训练集大小，不需要攻击者数量，不需要辅助数据集，只有梯度，能防共谋攻击和非共谋攻击</td>
+<td>没有理论分析</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>MPC-friendly 里提到的防御</p>
+<p><img src="/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%89%E5%85%A8%E8%81%9A%E5%90%88/image-20231217193946746.png" alt="image-20231217193946746"></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>论文</th>
+<th>年份</th>
+<th>方法</th>
+<th>优点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LabelFlipping</td>
+<td>2012 ICML</td>
+<td>标签 y-&gt; L(总类数)-1-y</td>
+<td></td>
+</tr>
+<tr>
+<td>sign-flipping attack</td>
+<td>2018 ICMl</td>
+<td>恶意梯度g=-10良性梯度g</td>
+<td></td>
+</tr>
+<tr>
+<td>LIE</td>
+<td>2019 NIPS</td>
+<td>恶意梯度g=均值μ-攻击因子z*标准差σ</td>
+<td></td>
+</tr>
+<tr>
+<td>交替最小化后门</td>
+<td>2019 ICML</td>
+<td><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_50609661/article/details/124480959">链接1</a> <a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv8922584/">2</a> 攻击优化和隐身优化交替进行</td>
+<td>能躲acc检测和权值分布检测</td>
+</tr>
+<tr>
+<td><strong>Fang/Gaussian(作为 baseline) Attack</strong></td>
+<td>2020 USENIX</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>AGR-tailored attack/Min-Max/Min-Sum</strong></td>
+<td>2021 NDSS</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>强化学习攻击</td>
+<td>2022 NIPS</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>旋转攻击</td>
+<td>2022 SPE</td>
+<td>高维向量绕轴旋转</td>
+<td>速度很快</td>
+</tr>
+<tr>
+<td>层替换+余弦攻击</td>
+<td>2022 CISS</td>
+<td>用任意值替换某几个中间层/锥形找余弦相同的向量</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Eiffel 里提到的攻击</p>
+<p><img src="/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%AE%89%E5%85%A8%E8%81%9A%E5%90%88/image-20231217201048866.png" alt="image-20231217201048866"> </p>
+</blockquote>
+<blockquote>
+<p>参考文献：</p>
+<p>[1]. Bhagoji A N, Chakraborty S, Mittal P, et al. Analyzing federated learning through an adversarial lens[C]//International Conference on Machine Learning. PMLR, 2019: 634-643.</p>
+<p>[2]. Bagdasaryan E, Veit A, Hua Y, et al. How to backdoor federated learning[C]//International conference on artificial intelligence and statistics. PMLR, 2020: 2938-2948.</p>
+<p>[3]. Wang H, Sreenivasan K, Rajput S, et al. Attack of the tails: Yes, you really can backdoor federated learning[J]. Advances in Neural Information Processing Systems, 2020, 33: 16070-16084.</p>
+<p>[4]. Baruch G, Baruch M, Goldberg Y. A little is enough: Circumventing defenses for distributed learning[J]. Advances in Neural Information Processing Systems, 2019, 32.</p>
+<p>[5]. Fang M, Cao X, Jia J, et al. Local model poisoning attacks to {Byzantine-Robust} federated learning[C]//29th USENIX security symposium (USENIX Security 20). 2020: 1605-1622.</p>
+<p>[6]. Shejwalkar V, Houmansadr A. Manipulating the byzantine: Optimizing model poisoning attacks and defenses for federated learning[C]//NDSS. 2021.</p>
+<p>[7]. Blanchard P, El Mhamdi E M, Guerraoui R, et al. Machine learning with adversaries: Byzantine tolerant gradient descent[J]. Advances in neural information processing systems, 2017, 30.</p>
+<p>[8]. Yin D, Chen Y, Kannan R, et al. Byzantine-robust distributed learning: Towards optimal statistical rates[C]//International Conference on Machine Learning. PMLR, 2018: 5650-5659.</p>
+<p>[9]. Fung C, Yoon C J M, Beschastnikh I. The limitations of federated learning in sybil settings[C]//23rd International Symposium on Research in Attacks, Intrusions and Defenses (RAID 2020). 2020: 301-316.</p>
+<p>[10]. Chen L, Wang H, Charles Z, et al. Draco: Byzantine-resilient distributed training via redundant gradients[C]//International Conference on Machine Learning. PMLR, 2018: 903-912.</p>
+<p>[11]. Rajput S, Wang H, Charles Z, et al. DETOX: A redundancy-based framework for faster and more robust gradient aggregation[J]. Advances in Neural Information Processing Systems, 2019, 32.</p>
+<p>[12]. Sohn J, Han D J, Choi B, et al. Election coding for distributed learning: Protecting signsgd against byzantine attacks[J]. Advances in Neural Information Processing Systems, 2020, 33: 14615-14625.</p>
+<p>[13]. Xie C, Koyejo S, Gupta I. Zeno++: Robust fully asynchronous SGD[C]//International Conference on Machine Learning. PMLR, 2020: 10495-10503.</p>
+<p>[14]. X. Cao, M. Fang, J. Liu, and N. Z. Gong, “FLTrust: Byzantine-robust Federated Learning via Trust Bootstrapping,” in NDSS, 2021, <a target="_blank" rel="noopener" href="https://people.duke.edu/%E2%88%BCzg70/code/fltrust.zip">https://people.duke.edu/∼zg70/code/fltrust.zip</a>.</p>
+<p>[15]. Shen S, Tople S, Saxena P. Auror: Defending against poisoning attacks in collaborative deep learning systems[C]//Proceedings of the 32nd Annual Conference on Computer Security Applications. 2016: 508-519.</p>
+<p>[16]. Xu J, Huang S L, Song L, et al. Byzantine-robust federated learning through collaborative malicious gradient filtering[C]//2022 IEEE 42nd International Conference on Distributed Computing Systems (ICDCS). IEEE, 2022: 1223-1235.</p>
+<p>[17]. Nguyen T D, Rieger P, De Viti R, et al. {FLAME}: Taming backdoors in federated learning[C]//31st USENIX Security Symposium (USENIX Security 22). 2022: 1415-1432.</p>
+<p>[18]. Wang N, Xiao Y, Chen Y, et al. FLARE: defending federated learning against model poisoning attacks via latent space representations[C]//Proceedings of the 2022 ACM on Asia Conference on Computer and Communications Security. 2022: 946-958.</p>
+<p>[19]. Wan W, Hu S, Li M, et al. A four-pronged defense against Byzantine attacks in federated learning[C]//Proceedings of the 31st ACM International Conference on Multimedia. 2023: 7394-7402.</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/12/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/channel/FLIS%20noniid%E4%B8%8B%E8%81%9A%E7%B1%BB%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0/" rel="next" title="FLIS 推理相似度聚类FL">
+                <i class="fa fa-chevron-left"></i> FLIS 推理相似度聚类FL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/01/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/poisoning%20defence/Fool%E2%80%98sGold%E9%98%B2%E8%81%94%E9%82%A6%E5%AD%A6%E4%B9%A0%E5%A5%B3%E5%B7%AB%E6%94%BB%E5%87%BB/" rel="prev" title="FoolsGold防联邦学习女巫攻击">
+                FoolsGold防联邦学习女巫攻击 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

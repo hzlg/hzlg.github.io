@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="pwn," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="pwn组会，继续昨天的ex0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.6-pwn3找变量实操">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="pwn组会，继续昨天的ex0">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107213758704.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107214012967.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107214227130.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107221502240.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220106201935019.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224236278.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224548923.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224648354.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224715416.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107231158908.png">
+<meta property="article:published_time" content="2022-01-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-16T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107213758704.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/01/06/ctf/reverse/每日博客/1.6-pwn3找变量实操/"/>
+
+
+
+
+
+  <title>1.6-pwn3找变量实操 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">1.6-pwn3找变量实操</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-06T00:00:00+08:00">
+                2022-01-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2022-01-17T00:00:00+08:00">
+                2022-01-17
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>pwn组会，继续昨天的ex0</p>
+<span id="more"></span>
+
+<h2 id="调用运算符"><a href="#调用运算符" class="headerlink" title="调用运算符"></a>调用运算符</h2><p>函数名可以认为是个常量函数指针</p>
+<p>调用printf实际上是打印printf保存的值</p>
+<p>括号是调用运算符，调用</p>
+<p>ex1定义了函数指针变量</p>
+<p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107213758704.png" alt="image-20220107213758704"> </p>
+<p>playground是mmap的返回值，保存一个地址</p>
+<p>变量pf = playground</p>
+<p>变量能加括号是因为括号是函数调用运算符</p>
+<p>编译原理也有</p>
+<p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107214012967.png" alt="image-20220107214012967"> </p>
+<p>所以printf不用加&amp;</p>
+<p>在内存中有保存位置的东西的才能加&amp;，否则取不了地址</p>
+<p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107214227130.png" alt="image-20220107214227130"> </p>
+<p>双引号也是运算符,返回引号内字符串地址</p>
+<p>p！=“hello”不是strcmp的意思，是p和hello地址作比较</p>
+<p>所有运算符都有返回值</p>
+<p>逗号也是运算符</p>
+<h2 id="脚本tips"><a href="#脚本tips" class="headerlink" title="脚本tips"></a>脚本tips</h2><p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107221502240.png" alt="image-20220107221502240"> </p>
+<p>前面最好加./  在本地放了libc,不加./可能就会加你电脑里环境变量里的libc</p>
+<p>要在最后加上interactive,python执行到最后没有interactive的话会停止,程序虽然没停止,但是不能交互了</p>
+<p>先用recvuntil把输出拿出来</p>
+<p>通过动态调试看hello的偏移地址</p>
+<p>gdb.attach</p>
+<p>fini一路返回到fun</p>
+<p>到了cmp,拿到这次的hello</p>
+<p>和这次的global_A算偏移</p>
+<blockquote>
+<p>p &amp;global_A</p>
+</blockquote>
+<p>还可以以开头为基准</p>
+<h2 id="重映射"><a href="#重映射" class="headerlink" title="重映射"></a>重映射</h2><p>helloworld在x(code)里,也在p(data)里,跟链接有关 </p>
+<p>两个页面中会有相同的内容,</p>
+<p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220106201935019.png" alt="image-20220106201935019"> </p>
+<p>应该是重映射了</p>
+<p>红色的不够,要对齐,白色就补上去了导致重叠,白色的重映射到红色,红色的在代码段,就</p>
+<h2 id="缓冲区"><a href="#缓冲区" class="headerlink" title="缓冲区"></a>缓冲区</h2><p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224236278.png" alt="image-20220107224236278"> </p>
+<blockquote>
+<p>没有\n刷新缓冲区,暂时不会过来</p>
+<p>后面有\n的时候才会发送</p>
+</blockquote>
+<p>经常会用setbuf 把缓冲区设为null</p>
+<h2 id="rebase"><a href="#rebase" class="headerlink" title="rebase"></a>rebase</h2><p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224548923.png" alt="image-20220107224548923"> </p>
+<p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224648354.png" alt="image-20220107224648354"> </p>
+<p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107224715416.png" alt="image-20220107224715416"> </p>
+<blockquote>
+<p>c是继续运行,r是从头开始运行</p>
+</blockquote>
+<p>rebase可以取随机化后的基址,通过代码段的偏移,就能精准的下到断点上了</p>
+<h2 id="正数限制7fffffff"><a href="#正数限制7fffffff" class="headerlink" title="正数限制7fffffff"></a>正数限制7fffffff</h2><p>输进去的居然是0x7fffffff</p>
+<p>输入的是正数的话,不会转换成负数</p>
+<p>00000000-ffffffff</p>
+<p>00000001-7fffffff都是整数</p>
+<p>00000000是0</p>
+<p>其他都是负数</p>
+<p>发送了一个正数,但是超过了7fffffff,只能7fffffff</p>
+<p>就要发送负数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">def to_neg_32(n):</span><br><span class="line">    return (0xffffffff-n+1)*-1</span><br><span class="line">p.sendline(str(to_neg_32(addr_stack_local_A)))</span><br></pre></td></tr></table></figure>
+
+<h2 id="变量的值"><a href="#变量的值" class="headerlink" title="变量的值"></a>变量的值</h2><p><img src="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn3%E6%89%BE%E5%8F%98%E9%87%8F%E5%AE%9E%E6%93%8D/image-20220107231158908.png" alt="image-20220107231158908"> </p>
+<blockquote>
+<p>ebp-0x44的地址在内存中的值</p>
+<p>x/xw查看内存,查出来还是一个地址,因为有地址随机化,取偏移量</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">from pwn import *</span><br><span class="line">def to_neg_32(n):</span><br><span class="line">    return (0xffffffff-n+1)*-1</span><br><span class="line"></span><br><span class="line">#context.log_level = &#x27;debug&#x27;</span><br><span class="line">p = process(&quot;./ex0&quot;)</span><br><span class="line"></span><br><span class="line">p.recvuntil(&quot;global_A : &quot;)</span><br><span class="line">recv = p.recvuntil(&quot;\n&quot;)</span><br><span class="line">addr_global_A = int(recv,16)</span><br><span class="line"></span><br><span class="line">p.recvuntil(&quot;ret : &quot;)</span><br><span class="line">recv = p.recvuntil(&quot;\n&quot;)</span><br><span class="line">addr_ret = int(recv,16)</span><br><span class="line"></span><br><span class="line">p.recvuntil(&quot;printf : &quot;)</span><br><span class="line">recv = p.recvuntil(&quot;\n&quot;)</span><br><span class="line">addr_printf = int(recv,16)</span><br><span class="line"></span><br><span class="line">log.success(&quot;addr_global_A :0x%x&quot; % addr_global_A)</span><br><span class="line">log.success(&quot;addr_ret : 0x%x&quot; % addr_ret)</span><br><span class="line">log.success(&quot;addr_printf : 0x%x&quot; % addr_printf)</span><br><span class="line"></span><br><span class="line">#gdb.attach(p, &quot;b *($rebase(+0x66d))\nc &quot;)</span><br><span class="line">addr_elf_base = addr_global_A - 0x200c</span><br><span class="line">addr_elf_hello = addr_elf_base + 0x95b</span><br><span class="line">p.sendline(str(addr_elf_hello))</span><br><span class="line"></span><br><span class="line">#gdb.attach(p, &quot;b *($rebase(+0x705))\nc &quot;)</span><br><span class="line">addr_stack_base = addr_ret - +0x1ecc4</span><br><span class="line">addr_stack_local_A = addr_stack_base + +0x1ec6c</span><br><span class="line"></span><br><span class="line">p.sendline(str(to_neg_32(addr_stack_local_A)))</span><br><span class="line"></span><br><span class="line">#gdb.attach(p, &quot;b *($rebase(+0x750))\nc &quot;)</span><br><span class="line">p.sendline(str(addr_elf_base+0x940))</span><br><span class="line"></span><br><span class="line">#gdb.attach(p)</span><br><span class="line">addr_libc_base = addr_printf - +0x51430</span><br><span class="line">addr_scanf = addr_libc_base + +0x63d10</span><br><span class="line">p.sendline(str(to_neg_32(addr_scanf)))</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">#include&lt;stdlib.h&gt;</span><br><span class="line">int global_A;</span><br><span class="line"></span><br><span class="line">void func1()</span><br><span class="line">&#123;</span><br><span class="line">	int p;</span><br><span class="line"></span><br><span class="line">	printf(&quot;addr of \&quot;hello world\&quot;&gt;&gt;&quot;);</span><br><span class="line">	scanf(&quot;%d&quot;, &amp;p);</span><br><span class="line">	if(p != &quot;hello world&quot;)</span><br><span class="line">	&#123;</span><br><span class="line">		puts(&quot;sorry&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int func2()</span><br><span class="line">&#123;</span><br><span class="line">	return 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int func3()</span><br><span class="line">&#123;</span><br><span class="line">	int local_A;</span><br><span class="line">	int local_B;</span><br><span class="line">	char buf[0x31];</span><br><span class="line">	int local_C;</span><br><span class="line">	int local_D;</span><br><span class="line">	int p;</span><br><span class="line"></span><br><span class="line">	printf(&quot;addr of local_A &gt;&gt;&quot;);</span><br><span class="line">	scanf(&quot;%d&quot;, &amp;p);</span><br><span class="line">	if(p != &amp;local_A)</span><br><span class="line">	&#123;</span><br><span class="line">		puts(&quot;sorry&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	printf(&quot;content of  local_C &gt;&gt;&quot;);</span><br><span class="line">	scanf(&quot;%d&quot;, &amp;p);</span><br><span class="line">	if(p != local_C)</span><br><span class="line">	&#123;</span><br><span class="line">		puts(&quot;sorry&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	int ret = func2();	</span><br><span class="line">	int p;</span><br><span class="line"></span><br><span class="line">	printf(&quot;addr of global_A : %p\n&quot;, &amp;global_A);</span><br><span class="line">	printf(&quot;addr of ret : %p\n&quot;, &amp;ret);</span><br><span class="line">	printf(&quot;addr of printf : %p\n&quot;, printf);</span><br><span class="line"></span><br><span class="line">	func1();</span><br><span class="line">	func3();</span><br><span class="line"></span><br><span class="line">	printf(&quot;addr of scanf &gt;&gt;&quot;);</span><br><span class="line">	scanf(&quot;%d&quot;, &amp;p);</span><br><span class="line">	if(p != scanf)</span><br><span class="line">	&#123;</span><br><span class="line">		puts(&quot;sorry&quot;);</span><br><span class="line">		exit(0);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	puts(&quot;flag&#123;I_have_know_how_to_find_vars&#125;&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/05/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.5-pwn1%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA/" rel="next" title="1.5-pwn1整数溢出">
+                <i class="fa fa-chevron-left"></i> 1.5-pwn1整数溢出
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/06/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/1.6-pwn2%E6%89%BE%E5%8F%98%E9%87%8F/" rel="prev" title="1.6-pwn2找变量">
+                1.6-pwn2找变量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.</span> <span class="nav-text">调用运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%84%9A%E6%9C%ACtips"><span class="nav-number">2.</span> <span class="nav-text">脚本tips</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E6%98%A0%E5%B0%84"><span class="nav-number">3.</span> <span class="nav-text">重映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="nav-number">4.</span> <span class="nav-text">缓冲区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rebase"><span class="nav-number">5.</span> <span class="nav-text">rebase</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E6%95%B0%E9%99%90%E5%88%B67fffffff"><span class="nav-number">6.</span> <span class="nav-text">正数限制7fffffff</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%9A%84%E5%80%BC"><span class="nav-number">7.</span> <span class="nav-text">变量的值</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
