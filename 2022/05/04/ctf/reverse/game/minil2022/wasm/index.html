@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re,game," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="minil2022">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wasm初探">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/05/04/ctf/reverse/game/minil2022/wasm/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="minil2022">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-05-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-06T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta property="article:tag" content="game">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/05/04/ctf/reverse/game/minil2022/wasm/"/>
+
+
+
+
+
+  <title>wasm初探 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/05/04/ctf/reverse/game/minil2022/wasm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">wasm初探</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-04T00:00:00+08:00">
+                2022-05-04
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2022-05-07T00:00:00+08:00">
+                2022-05-07
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>minil2022</p>
+<span id="more"></span>
+
+<h2 id="WhatAssembly"><a href="#WhatAssembly" class="headerlink" title="WhatAssembly"></a>WhatAssembly</h2><p>wasm逆向</p>
+<p>先f12把wasm文件和js文件dump下来</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/wabt">wabt - github</a>提供了多种格式的转换，其中wasm2c（在github-realease里）较为常用，将wasm文件转化为C源码和标头，在gcc编译（所需头文件在github-code里）使用方法如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wasm2c.exe -v xxx.wasm -o test.c <span class="comment">//-v 是多次使用使得分析更准确 -o是输出文件 会生成test.c 和test.h</span></span><br><span class="line">gcc -c -m32 test.c -o test <span class="comment">//无链接进行编译 需要wasm-rt.h和wasm-rt-impl.h头文件</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>首先观察init模块，记住重要的地址和偏移</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  init_func_types();</span><br><span class="line">  init_globals(); <span class="comment">//初始化全局数据</span></span><br><span class="line">  init_memory();  <span class="comment">//内存</span></span><br><span class="line">  init_table(); <span class="comment">// 引入的函数 fxx f开头</span></span><br><span class="line">  <span class="keyword">return</span> init_exports(); <span class="comment">//导出函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>init_memory</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">init_memory</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  wasm_rt_allocate_memory(&amp;w2c_memory, <span class="number">256</span>, <span class="number">256</span>);</span><br><span class="line">  load_data((<span class="keyword">void</span> *)(w2c_memory + <span class="number">1024</span>), <span class="string">&quot;0123456789abcdefunsigned short&quot;</span>, <span class="number">0x92C</span>u);</span><br><span class="line">  load_data((<span class="keyword">void</span> *)(w2c_memory + <span class="number">3372</span>), &amp;data_segment_data_1, <span class="number">4u</span>);</span><br><span class="line">  <span class="keyword">return</span> load_data((<span class="keyword">void</span> *)(w2c_memory + <span class="number">3376</span>), &amp;data_segment_data_2, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可见在memory的<strong>1024,3372和3376</strong>处copy了三处数据块。</p>
+<p>wasm文件中函数有点多,观察js文件能找到关键函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// in html</span><br><span class="line">enc = &#x27;05779c24d9249e693fa7ac4a10c68dfbd3520083b33f56e90fd84978b6a15c970b976779a8fefe91fb87d2221c9a1f87ed7eaddb8ae6370f9de69e3a7a5c5c488cde79756b0b9f1713e749edd41cff04&#x27;</span><br><span class="line">table = &#x27;0123456789abcdef&#x27;</span><br><span class="line">key = &#x27;D33.B4T0&#x27;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in js</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setupTag</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> convertToCArray = <span class="function">(<span class="params">s</span>) =&gt;</span> &#123; <span class="keyword">let</span> ptr = Module.allocate(Module.intArrayFromString(s), Module.ALLOC_STACK); <span class="keyword">return</span> ptr; &#125;;</span><br><span class="line">  <span class="keyword">let</span> flag = <span class="built_in">document</span>.getElementById(<span class="string">&quot;miniL&quot;</span>);</span><br><span class="line">  <span class="keyword">let</span> enc = flag.getAttribute(<span class="string">&quot;enc&quot;</span>).trim();</span><br><span class="line">  <span class="keyword">let</span> key = flag.getAttribute(<span class="string">&quot;key&quot;</span>).trim();</span><br><span class="line">  <span class="keyword">if</span> (enc &amp;&amp; key) &#123;</span><br><span class="line">    <span class="keyword">let</span> button = <span class="built_in">document</span>.getElementById(<span class="string">&quot;check&quot;</span>);</span><br><span class="line">    button.onclick = <span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> stack = Module.stackSave();</span><br><span class="line">      flag_arr = convertToCArray(flag.value);</span><br><span class="line">      enc_arr = convertToCArray(enc);</span><br><span class="line">      key_arr = convertToCArray(key);</span><br><span class="line">      <span class="keyword">if</span> (Module._check(flag_arr, key_arr, enc_arr)) &#123; <span class="built_in">eval</span>(flag.getAttribute(<span class="string">&quot;onerror&quot;</span>)); &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123; <span class="built_in">eval</span>(flag.getAttribute(<span class="string">&quot;onsuccess&quot;</span>)); &#125;</span><br><span class="line">      Module.stackRestore(stack);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到,button.onclick时把flag,key和enc作为参数<code>调用了check模块</code></p>
+<h2 id="check函数"><a href="#check函数" class="headerlink" title="check函数:"></a>check函数:</h2><p>从memory中读了16位数据(table)</p>
+<p>参数入栈</p>
+<p>取key,拼接 每8字节的flag</p>
+<p>42轮加密</p>
+<p>enc每32字节数据的第0,2,4,6…30字节数据</p>
+<p>key+flag的前16位数据/16作为索引,取table中的值</p>
+<p>二者比较</p>
+<p>enc每32字节数据的第1,3,5,7…31字节数据</p>
+<p>key+flag的前16位数据%16作为索引,取table中的值</p>
+<p>二者比较</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">w2c_check</span><span class="params">(<span class="keyword">int</span> a1, <span class="keyword">int</span> a2, <span class="keyword">int</span> a3)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> v3; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="keyword">int</span> v5; <span class="comment">// [esp+34h] [ebp-484h]</span></span><br><span class="line">  __int64 v6; <span class="comment">// [esp+38h] [ebp-480h]</span></span><br><span class="line">  <span class="keyword">int</span> v7; <span class="comment">// [esp+48h] [ebp-470h]</span></span><br><span class="line">  <span class="keyword">int</span> v8; <span class="comment">// [esp+48h] [ebp-470h]</span></span><br><span class="line">  <span class="keyword">int</span> v9; <span class="comment">// [esp+48h] [ebp-470h]</span></span><br><span class="line">  <span class="keyword">int</span> v10; <span class="comment">// [esp+48h] [ebp-470h]</span></span><br><span class="line">  <span class="keyword">int</span> v11; <span class="comment">// [esp+48h] [ebp-470h]</span></span><br><span class="line">  <span class="keyword">int</span> v12; <span class="comment">// [esp+48h] [ebp-470h]</span></span><br><span class="line">  <span class="keyword">int</span> v13; <span class="comment">// [esp+4Ch] [ebp-46Ch]</span></span><br><span class="line">  __int64 v14; <span class="comment">// [esp+58h] [ebp-460h]</span></span><br><span class="line">  <span class="keyword">int</span> v15; <span class="comment">// [esp+70h] [ebp-448h]</span></span><br><span class="line">  <span class="keyword">int</span> v16; <span class="comment">// [esp+8Ch] [ebp-42Ch]</span></span><br><span class="line">  <span class="keyword">char</span> v17; <span class="comment">// [esp+B4h] [ebp-404h]</span></span><br><span class="line">  <span class="keyword">int</span> v18; <span class="comment">// [esp+DCh] [ebp-3DCh]</span></span><br><span class="line">  <span class="keyword">char</span> v19; <span class="comment">// [esp+FCh] [ebp-3BCh]</span></span><br><span class="line">  <span class="keyword">int</span> v20; <span class="comment">// [esp+10Ch] [ebp-3ACh]</span></span><br><span class="line">  <span class="keyword">int</span> v21; <span class="comment">// [esp+11Ch] [ebp-39Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v22; <span class="comment">// [esp+128h] [ebp-390h]</span></span><br><span class="line">  <span class="keyword">int</span> v23; <span class="comment">// [esp+12Ch] [ebp-38Ch]</span></span><br><span class="line">  <span class="keyword">char</span> v24; <span class="comment">// [esp+154h] [ebp-364h]</span></span><br><span class="line">  <span class="keyword">int</span> v25; <span class="comment">// [esp+17Ch] [ebp-33Ch]</span></span><br><span class="line">  <span class="keyword">char</span> v26; <span class="comment">// [esp+19Ch] [ebp-31Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v27; <span class="comment">// [esp+1A0h] [ebp-318h]</span></span><br><span class="line">  <span class="keyword">int</span> v28; <span class="comment">// [esp+1BCh] [ebp-2FCh]</span></span><br><span class="line">  <span class="keyword">int</span> v29; <span class="comment">// [esp+1C8h] [ebp-2F0h]</span></span><br><span class="line">  <span class="keyword">int</span> v30; <span class="comment">// [esp+304h] [ebp-1B4h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 v31; <span class="comment">// [esp+320h] [ebp-198h]</span></span><br><span class="line">  <span class="keyword">int</span> v32; <span class="comment">// [esp+324h] [ebp-194h]</span></span><br><span class="line">  <span class="keyword">int</span> v33; <span class="comment">// [esp+330h] [ebp-188h]</span></span><br><span class="line">  <span class="keyword">int</span> v34; <span class="comment">// [esp+334h] [ebp-184h]</span></span><br><span class="line">  <span class="keyword">int</span> v35; <span class="comment">// [esp+368h] [ebp-150h]</span></span><br><span class="line">  <span class="keyword">int</span> v36; <span class="comment">// [esp+388h] [ebp-130h]</span></span><br><span class="line">  <span class="keyword">unsigned</span> __int8 v37; <span class="comment">// [esp+39Ch] [ebp-11Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v38; <span class="comment">// [esp+3A0h] [ebp-118h]</span></span><br><span class="line">  <span class="keyword">int</span> v39; <span class="comment">// [esp+3A8h] [ebp-110h]</span></span><br><span class="line">  <span class="keyword">int</span> v40; <span class="comment">// [esp+3D0h] [ebp-E8h]</span></span><br><span class="line">  <span class="keyword">int</span> v41; <span class="comment">// [esp+3D4h] [ebp-E4h]</span></span><br><span class="line">  <span class="keyword">int</span> v42; <span class="comment">// [esp+3DCh] [ebp-DCh]</span></span><br><span class="line">  <span class="keyword">int</span> v43; <span class="comment">// [esp+3E0h] [ebp-D8h]</span></span><br><span class="line">  <span class="keyword">int</span> v44; <span class="comment">// [esp+3E4h] [ebp-D4h]</span></span><br><span class="line">  <span class="keyword">int</span> v45; <span class="comment">// [esp+3E8h] [ebp-D0h]</span></span><br><span class="line">  <span class="keyword">int</span> v46; <span class="comment">// [esp+3ECh] [ebp-CCh]</span></span><br><span class="line">  <span class="keyword">int</span> v47; <span class="comment">// [esp+414h] [ebp-A4h]</span></span><br><span class="line">  <span class="keyword">int</span> v48; <span class="comment">// [esp+438h] [ebp-80h]</span></span><br><span class="line">  <span class="keyword">int</span> v49; <span class="comment">// [esp+474h] [ebp-44h]</span></span><br><span class="line">  <span class="keyword">int</span> v50; <span class="comment">// [esp+478h] [ebp-40h]</span></span><br><span class="line">  <span class="keyword">int</span> v51; <span class="comment">// [esp+47Ch] [ebp-3Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v52; <span class="comment">// [esp+480h] [ebp-38h]</span></span><br><span class="line">  <span class="keyword">int</span> v53; <span class="comment">// [esp+484h] [ebp-34h]</span></span><br><span class="line">  <span class="keyword">int</span> v54; <span class="comment">// [esp+488h] [ebp-30h]</span></span><br><span class="line">  <span class="keyword">int</span> v55; <span class="comment">// [esp+4A4h] [ebp-14h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( ++wasm_rt_call_stack_depth &gt; <span class="number">0x1F4</span>u )</span><br><span class="line">    wasm_rt_trap(<span class="number">7</span>);</span><br><span class="line">  stack_ptr -= <span class="number">112</span>;                             <span class="comment">// 开栈</span></span><br><span class="line">  v55 = stack_ptr;</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)stack_ptr + <span class="number">104LL</span>, a1);<span class="comment">// 参数a1,a2,a3入栈</span></span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">100LL</span>, a2);</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">96LL</span>, a3);</span><br><span class="line">  v14 = i64_load(&amp;memory, <span class="number">1032LL</span>);</span><br><span class="line">  i64_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(v55 + <span class="number">88</span>), v14, SHIDWORD(v14));<span class="comment">// 从mem+1032处读8字节,存到esp+88</span></span><br><span class="line">  v6 = i64_load(&amp;memory, <span class="number">1024LL</span>);</span><br><span class="line">  i64_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(v55 + <span class="number">80</span>), v6, SHIDWORD(v6));<span class="comment">// 从mem+1024处读8字节,存到esp+80</span></span><br><span class="line">  v54 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">104LL</span>);</span><br><span class="line">  v53 = w2c_strlen(v54);</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">76LL</span>, v53);<span class="comment">// esp+76存a1长度</span></span><br><span class="line">  v52 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">100LL</span>);</span><br><span class="line">  v51 = w2c_strlen(v52);</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">72LL</span>, v51);<span class="comment">// esp+72存a2长度</span></span><br><span class="line">  v50 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">96LL</span>);</span><br><span class="line">  v49 = w2c_strlen(v50);</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">68LL</span>, v49);<span class="comment">// esp+68存a3长度</span></span><br><span class="line">  <span class="keyword">if</span> ( i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">72LL</span>) &gt;= <span class="number">8</span></span><br><span class="line">    &amp;&amp; (v48 = <span class="number">4</span> * i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">76LL</span>), v48 &gt; i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">68LL</span>) - <span class="number">32</span>)</span><br><span class="line">    &amp;&amp; (v47 = <span class="number">4</span> * i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">76LL</span>), v47 &lt;= i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">68LL</span>)) )</span><br><span class="line">  &#123;                                             <span class="comment">// len(a2)&gt;8,4len(a1)&gt;len(a3)-32,4len(a1)≤len(a3)</span></span><br><span class="line">                                                <span class="comment">// 否则return = -1</span></span><br><span class="line">    v46 = (i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">76LL</span>) + <span class="number">15</span>) &amp; <span class="number">0xFFFFFFF0</span>;</span><br><span class="line">    i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">64LL</span>, v46);</span><br><span class="line">    v45 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">64LL</span>);</span><br><span class="line">    v44 = w2c_dlmalloc(v45);                    <span class="comment">// 为a1开空间,长度为16的倍数,栈对齐吧</span></span><br><span class="line">    i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">60LL</span>, v44);</span><br><span class="line">    v43 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">60LL</span>);</span><br><span class="line">    v42 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">64LL</span>);</span><br><span class="line">    w2c_memset(v43, <span class="number">0</span>, v42);                    <span class="comment">// 空间清零</span></span><br><span class="line">    v41 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">60LL</span>);</span><br><span class="line">    v40 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">104LL</span>);</span><br><span class="line">    v5 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">76LL</span>);</span><br><span class="line">    w2c___memcpy(v41, v40, v5);                 <span class="comment">// 移入a1</span></span><br><span class="line">    i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">28LL</span>, <span class="number">0</span>);<span class="comment">// i=0</span></span><br><span class="line">    <span class="keyword">while</span> ( i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">28LL</span>) &lt; <span class="number">8</span> )<span class="comment">// i&lt;8</span></span><br><span class="line">    &#123;</span><br><span class="line">      v39 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">100LL</span>);</span><br><span class="line">      v38 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">28LL</span>) + v39;<span class="comment">// a2+i</span></span><br><span class="line">      v37 = i32_load8_u(&amp;memory, v38, <span class="number">0</span>);</span><br><span class="line">      v36 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">28LL</span>) + v55 + <span class="number">32</span>;<span class="comment">// esp+32+i</span></span><br><span class="line">      i32_store8(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v36, v37);</span><br><span class="line">      v7 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">28LL</span>) + <span class="number">1</span>;<span class="comment">// i++</span></span><br><span class="line">      i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">28LL</span>, v7);</span><br><span class="line">    &#125;                                           <span class="comment">// esp+32开始存a2前8位</span></span><br><span class="line">    i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">24LL</span>, <span class="number">0</span>);</span><br><span class="line">    i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">20LL</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v35 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">20LL</span>);<span class="comment">// i=0</span></span><br><span class="line">      <span class="keyword">if</span> ( v35 &gt;= i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">76LL</span>) )<span class="comment">// i&gt;len(a1)-&gt;break</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">16LL</span>, <span class="number">0</span>);<span class="comment">// j=0</span></span><br><span class="line">      <span class="keyword">while</span> ( i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">16LL</span>) &lt; <span class="number">8</span> )<span class="comment">// j&lt;8</span></span><br><span class="line">      &#123;</span><br><span class="line">        v34 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">60LL</span>);<span class="comment">// a1</span></span><br><span class="line">        v33 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">20LL</span>);</span><br><span class="line">        v32 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">16LL</span>) + v33 + v34;<span class="comment">// a1+i+j</span></span><br><span class="line">        v31 = i32_load8_u(&amp;memory, v32, <span class="number">0</span>);</span><br><span class="line">        v30 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">16LL</span>) + <span class="number">8</span> + v55 + <span class="number">32</span>;<span class="comment">// a2+j+8</span></span><br><span class="line">        i32_store8(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v30, v31);<span class="comment">// 把a1每八位存到a2前八位的后面</span></span><br><span class="line">        v8 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">16LL</span>) + <span class="number">1</span>;<span class="comment">// j++</span></span><br><span class="line">        i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">16LL</span>, v8);</span><br><span class="line">      &#125;</span><br><span class="line">      i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">12LL</span>, <span class="number">0</span>);<span class="comment">// loop=0</span></span><br><span class="line">      <span class="keyword">while</span> ( i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">12LL</span>) &lt; <span class="number">42</span> )<span class="comment">// loop&lt;42</span></span><br><span class="line">      &#123;</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">12</span>, <span class="number">8</span>, <span class="number">4</span>, <span class="number">0</span>);</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">13</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">1</span>);</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">14</span>, <span class="number">10</span>, <span class="number">6</span>, <span class="number">2</span>);</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">15</span>, <span class="number">11</span>, <span class="number">7</span>, <span class="number">3</span>);</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">15</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">0</span>);</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">12</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">1</span>);</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">13</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">2</span>);</span><br><span class="line">        w2c_qua_rou(v55 + <span class="number">32</span>, <span class="number">14</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">3</span>);</span><br><span class="line">        v9 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">12LL</span>) + <span class="number">1</span>;<span class="comment">// loop++</span></span><br><span class="line">        i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">12LL</span>, v9);</span><br><span class="line">      &#125;</span><br><span class="line">      i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>, <span class="number">0</span>);</span><br><span class="line">      <span class="keyword">while</span> ( i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>) &lt; <span class="number">16</span> )<span class="comment">// k&lt;16</span></span><br><span class="line">      &#123;</span><br><span class="line">        v29 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">96LL</span>);</span><br><span class="line">        v28 = <span class="number">4</span> * i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">20LL</span>);<span class="comment">// 4i</span></span><br><span class="line">        v27 = <span class="number">2</span> * i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>) + v28 + v29;<span class="comment">// (a3+4*i+2*k)</span></span><br><span class="line">        v26 = i32_load8_u(&amp;memory, v27, <span class="number">0</span>);</span><br><span class="line">        v25 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>) + v55 + <span class="number">32</span>;</span><br><span class="line">        v13 = (<span class="keyword">unsigned</span> __int8)i32_load8_u(&amp;memory, v25, <span class="number">0</span>);<span class="comment">// a2+k</span></span><br><span class="line">        v24 = i32_load8_u(&amp;memory, v13 / <span class="number">16</span> + v55 + <span class="number">80</span>, <span class="number">0</span>);<span class="comment">// data0+(a2+k)/16</span></span><br><span class="line">        v23 = (v26 != v24) | i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">24LL</span>);<span class="comment">// (a3+4*i+2*k) ≠ data0+(a2+k)/16) | flag</span></span><br><span class="line">        i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">24LL</span>, v23);</span><br><span class="line">        v22 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">96LL</span>);<span class="comment">// a3</span></span><br><span class="line">        v21 = <span class="number">4</span> * i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">20LL</span>);<span class="comment">// 4i</span></span><br><span class="line">        v20 = <span class="number">2</span> * i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>) + v21;<span class="comment">// (4i+2k)</span></span><br><span class="line">        v19 = i32_load8_u(&amp;memory, v20 + <span class="number">1</span> + v22, <span class="number">0</span>);<span class="comment">// a3+4i+2k+1</span></span><br><span class="line">        v18 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>) + v55 + <span class="number">32</span>;<span class="comment">// a2+k</span></span><br><span class="line">        v3 = (<span class="keyword">unsigned</span> __int8)i32_load8_u(&amp;memory, v18, <span class="number">0</span>) % <span class="number">16</span>;<span class="comment">// (a2+k)%16</span></span><br><span class="line">        v17 = i32_load8_u(&amp;memory, v3 + v55 + <span class="number">80</span>, <span class="number">0</span>);<span class="comment">// data0+(a2+k)%16</span></span><br><span class="line">        v16 = (v19 != v17) | i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">24LL</span>);<span class="comment">// (a3+4i+2k+1) ≠ data+(a2+k)%16) | flag</span></span><br><span class="line">        i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">24LL</span>, v16);</span><br><span class="line">        v10 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>) + <span class="number">1</span>;<span class="comment">// k++</span></span><br><span class="line">        i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">8LL</span>, v10);</span><br><span class="line">      &#125;</span><br><span class="line">      v11 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">20LL</span>) + <span class="number">8</span>;<span class="comment">// i+=8</span></span><br><span class="line">      i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">20LL</span>, v11);</span><br><span class="line">    &#125;</span><br><span class="line">    v15 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">60LL</span>);</span><br><span class="line">    w2c_dlfree(v15);                            <span class="comment">// free空间</span></span><br><span class="line">    v12 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">24LL</span>);<span class="comment">// flag</span></span><br><span class="line">    i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">108LL</span>, v12);<span class="comment">// result = flag</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">108LL</span>, <span class="number">-1</span>);<span class="comment">// result = -1</span></span><br><span class="line">  &#125;</span><br><span class="line">  result = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v55 + <span class="number">108LL</span>);</span><br><span class="line">  stack_ptr = v55 + <span class="number">112</span>;</span><br><span class="line">  --wasm_rt_call_stack_depth;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="qua-rou函数"><a href="#qua-rou函数" class="headerlink" title="qua_rou函数:"></a>qua_rou函数:</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">w2c_qua_rou</span><span class="params">(<span class="keyword">int</span> addr, <span class="keyword">int</span> a2, <span class="keyword">int</span> a3, <span class="keyword">int</span> a4, <span class="keyword">int</span> a5)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> v6; <span class="comment">// [esp+30h] [ebp-2A8h]</span></span><br><span class="line">  <span class="keyword">int</span> v7; <span class="comment">// [esp+34h] [ebp-2A4h]</span></span><br><span class="line">  <span class="keyword">int</span> v8; <span class="comment">// [esp+3Ch] [ebp-29Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v9; <span class="comment">// [esp+40h] [ebp-298h]</span></span><br><span class="line">  <span class="keyword">int</span> v10; <span class="comment">// [esp+64h] [ebp-274h]</span></span><br><span class="line">  <span class="keyword">int</span> v11; <span class="comment">// [esp+6Ch] [ebp-26Ch]</span></span><br><span class="line">  <span class="keyword">char</span> v12; <span class="comment">// [esp+70h] [ebp-268h]</span></span><br><span class="line">  <span class="keyword">int</span> v13; <span class="comment">// [esp+7Ch] [ebp-25Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v14; <span class="comment">// [esp+84h] [ebp-254h]</span></span><br><span class="line">  <span class="keyword">char</span> v15; <span class="comment">// [esp+A4h] [ebp-234h]</span></span><br><span class="line">  <span class="keyword">int</span> v16; <span class="comment">// [esp+A8h] [ebp-230h]</span></span><br><span class="line">  <span class="keyword">int</span> v17; <span class="comment">// [esp+B0h] [ebp-228h]</span></span><br><span class="line">  <span class="keyword">char</span> v18; <span class="comment">// [esp+B4h] [ebp-224h]</span></span><br><span class="line">  <span class="keyword">int</span> v19; <span class="comment">// [esp+C0h] [ebp-218h]</span></span><br><span class="line">  <span class="keyword">int</span> v20; <span class="comment">// [esp+C8h] [ebp-210h]</span></span><br><span class="line">  <span class="keyword">char</span> v21; <span class="comment">// [esp+D8h] [ebp-200h]</span></span><br><span class="line">  <span class="keyword">int</span> v22; <span class="comment">// [esp+DCh] [ebp-1FCh]</span></span><br><span class="line">  <span class="keyword">int</span> v23; <span class="comment">// [esp+E4h] [ebp-1F4h]</span></span><br><span class="line">  <span class="keyword">int</span> v24; <span class="comment">// [esp+E8h] [ebp-1F0h]</span></span><br><span class="line">  <span class="keyword">int</span> v25; <span class="comment">// [esp+10Ch] [ebp-1CCh]</span></span><br><span class="line">  <span class="keyword">int</span> v26; <span class="comment">// [esp+114h] [ebp-1C4h]</span></span><br><span class="line">  <span class="keyword">char</span> v27; <span class="comment">// [esp+118h] [ebp-1C0h]</span></span><br><span class="line">  <span class="keyword">int</span> v28; <span class="comment">// [esp+124h] [ebp-1B4h]</span></span><br><span class="line">  <span class="keyword">int</span> v29; <span class="comment">// [esp+12Ch] [ebp-1ACh]</span></span><br><span class="line">  <span class="keyword">char</span> v30; <span class="comment">// [esp+14Ch] [ebp-18Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v31; <span class="comment">// [esp+150h] [ebp-188h]</span></span><br><span class="line">  <span class="keyword">int</span> v32; <span class="comment">// [esp+158h] [ebp-180h]</span></span><br><span class="line">  <span class="keyword">char</span> v33; <span class="comment">// [esp+15Ch] [ebp-17Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v34; <span class="comment">// [esp+168h] [ebp-170h]</span></span><br><span class="line">  <span class="keyword">int</span> v35; <span class="comment">// [esp+170h] [ebp-168h]</span></span><br><span class="line">  <span class="keyword">char</span> v36; <span class="comment">// [esp+180h] [ebp-158h]</span></span><br><span class="line">  <span class="keyword">int</span> v37; <span class="comment">// [esp+184h] [ebp-154h]</span></span><br><span class="line">  <span class="keyword">int</span> v38; <span class="comment">// [esp+18Ch] [ebp-14Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v39; <span class="comment">// [esp+190h] [ebp-148h]</span></span><br><span class="line">  <span class="keyword">int</span> v40; <span class="comment">// [esp+1B4h] [ebp-124h]</span></span><br><span class="line">  <span class="keyword">int</span> v41; <span class="comment">// [esp+1BCh] [ebp-11Ch]</span></span><br><span class="line">  <span class="keyword">char</span> v42; <span class="comment">// [esp+1C0h] [ebp-118h]</span></span><br><span class="line">  <span class="keyword">int</span> v43; <span class="comment">// [esp+1CCh] [ebp-10Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v44; <span class="comment">// [esp+1D4h] [ebp-104h]</span></span><br><span class="line">  <span class="keyword">char</span> v45; <span class="comment">// [esp+1F4h] [ebp-E4h]</span></span><br><span class="line">  <span class="keyword">int</span> v46; <span class="comment">// [esp+1F8h] [ebp-E0h]</span></span><br><span class="line">  <span class="keyword">int</span> v47; <span class="comment">// [esp+200h] [ebp-D8h]</span></span><br><span class="line">  <span class="keyword">char</span> v48; <span class="comment">// [esp+204h] [ebp-D4h]</span></span><br><span class="line">  <span class="keyword">int</span> v49; <span class="comment">// [esp+210h] [ebp-C8h]</span></span><br><span class="line">  <span class="keyword">int</span> v50; <span class="comment">// [esp+218h] [ebp-C0h]</span></span><br><span class="line">  <span class="keyword">char</span> v51; <span class="comment">// [esp+228h] [ebp-B0h]</span></span><br><span class="line">  <span class="keyword">int</span> v52; <span class="comment">// [esp+22Ch] [ebp-ACh]</span></span><br><span class="line">  <span class="keyword">int</span> v53; <span class="comment">// [esp+234h] [ebp-A4h]</span></span><br><span class="line">  <span class="keyword">int</span> v54; <span class="comment">// [esp+238h] [ebp-A0h]</span></span><br><span class="line">  <span class="keyword">int</span> v55; <span class="comment">// [esp+25Ch] [ebp-7Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v56; <span class="comment">// [esp+264h] [ebp-74h]</span></span><br><span class="line">  <span class="keyword">char</span> v57; <span class="comment">// [esp+268h] [ebp-70h]</span></span><br><span class="line">  <span class="keyword">int</span> v58; <span class="comment">// [esp+274h] [ebp-64h]</span></span><br><span class="line">  <span class="keyword">int</span> v59; <span class="comment">// [esp+27Ch] [ebp-5Ch]</span></span><br><span class="line">  <span class="keyword">char</span> v60; <span class="comment">// [esp+29Ch] [ebp-3Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v61; <span class="comment">// [esp+2A0h] [ebp-38h]</span></span><br><span class="line">  <span class="keyword">int</span> v62; <span class="comment">// [esp+2A8h] [ebp-30h]</span></span><br><span class="line">  <span class="keyword">char</span> v63; <span class="comment">// [esp+2ACh] [ebp-2Ch]</span></span><br><span class="line">  <span class="keyword">int</span> v64; <span class="comment">// [esp+2B8h] [ebp-20h]</span></span><br><span class="line">  <span class="keyword">int</span> v65; <span class="comment">// [esp+2C0h] [ebp-18h]</span></span><br><span class="line">  <span class="keyword">int</span> v66; <span class="comment">// [esp+2C4h] [ebp-14h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( ++wasm_rt_call_stack_depth &gt; <span class="number">0x1F4</span>u )</span><br><span class="line">    wasm_rt_trap(<span class="number">7</span>);</span><br><span class="line">  v66 = stack_ptr - <span class="number">32</span>;                         <span class="comment">// 开空间</span></span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(stack_ptr - <span class="number">32</span>) + <span class="number">28LL</span>, addr);<span class="comment">// 存参数</span></span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">24LL</span>, a2);</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">20LL</span>, a3);</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">16LL</span>, a4);</span><br><span class="line">  i32_store(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">12LL</span>, a5);</span><br><span class="line">  v65 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v64 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">24LL</span>) + v65;</span><br><span class="line">  v63 = i32_load8_u(&amp;memory, v64, <span class="number">0</span>);           <span class="comment">// addr+a2</span></span><br><span class="line">  v62 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v61 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">12LL</span>) + v62;</span><br><span class="line">  v60 = i32_load8_u(&amp;memory, v61, <span class="number">0</span>);           <span class="comment">// addr +a5</span></span><br><span class="line">  v59 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v58 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">24LL</span>) + v59;</span><br><span class="line">  v57 = i32_load8_u(&amp;memory, v58, <span class="number">0</span>);           <span class="comment">// addr+a2</span></span><br><span class="line">  v56 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v55 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">12LL</span>) + v56;<span class="comment">// addr+a5</span></span><br><span class="line">  v54 = ((<span class="keyword">int</span>)(<span class="keyword">unsigned</span> __int8)(i32_load8_u(&amp;memory, v55, <span class="number">0</span>) + v57) &gt;&gt; <span class="number">4</span>) | (<span class="number">16</span> * (<span class="keyword">unsigned</span> __int8)(v60 + v63));<span class="comment">// (a[a5]+a[a2])&gt;&gt;4 | (a[a5]+a[a2])&lt;&lt;4</span></span><br><span class="line">  v53 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v52 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">20LL</span>) + v53;</span><br><span class="line">  v51 = i32_load8_u(&amp;memory, v52, <span class="number">0</span>);           <span class="comment">// addr+a3</span></span><br><span class="line">  i32_store8(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v52, v54 ^ v51);<span class="comment">// a[a3] ^= xxx </span></span><br><span class="line">  v50 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v49 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">16LL</span>) + v50;</span><br><span class="line">  v48 = i32_load8_u(&amp;memory, v49, <span class="number">0</span>);           <span class="comment">// addr+a4</span></span><br><span class="line">  v47 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v46 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">20LL</span>) + v47;</span><br><span class="line">  v45 = i32_load8_u(&amp;memory, v46, <span class="number">0</span>);           <span class="comment">// addr+a3</span></span><br><span class="line">  v44 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v43 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">16LL</span>) + v44;</span><br><span class="line">  v42 = i32_load8_u(&amp;memory, v43, <span class="number">0</span>);           <span class="comment">// addr+a4</span></span><br><span class="line">  v41 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v40 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">20LL</span>) + v41;</span><br><span class="line">  v39 = ((<span class="keyword">int</span>)(<span class="keyword">unsigned</span> __int8)(i32_load8_u(&amp;memory, v40, <span class="number">0</span>) + v42) &gt;&gt; <span class="number">6</span>) | (<span class="number">4</span> * (<span class="keyword">unsigned</span> __int8)(v45 + v48));<span class="comment">// (a[a3]+a[a4])&gt;&gt;6 | (a[a3]+a[a4])&lt;&lt;2</span></span><br><span class="line">  v38 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v37 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">12LL</span>) + v38;</span><br><span class="line">  v36 = i32_load8_u(&amp;memory, v37, <span class="number">0</span>);           <span class="comment">// a[a5]^=xxxx</span></span><br><span class="line">  i32_store8(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v37, v39 ^ v36);</span><br><span class="line">  v35 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v34 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">20LL</span>) + v35;<span class="comment">// a3</span></span><br><span class="line">  v33 = i32_load8_u(&amp;memory, v34, <span class="number">0</span>);</span><br><span class="line">  v32 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v31 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">24LL</span>) + v32;<span class="comment">// a2</span></span><br><span class="line">  v30 = i32_load8_u(&amp;memory, v31, <span class="number">0</span>);</span><br><span class="line">  v29 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v28 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">20LL</span>) + v29;<span class="comment">// a3</span></span><br><span class="line">  v27 = i32_load8_u(&amp;memory, v28, <span class="number">0</span>);</span><br><span class="line">  v26 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v25 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">24LL</span>) + v26;</span><br><span class="line">  v24 = ((<span class="keyword">int</span>)(<span class="keyword">unsigned</span> __int8)(i32_load8_u(&amp;memory, v25, <span class="number">0</span>) + v27) &gt;&gt; <span class="number">5</span>) | (<span class="number">8</span> * (<span class="keyword">unsigned</span> __int8)(v30 + v33));<span class="comment">// (a[a3]+a[a2])&gt;&gt;5 | (a[a3]+a[a2])&lt;&lt;3</span></span><br><span class="line">  v23 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v22 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">16LL</span>) + v23;</span><br><span class="line">  v21 = i32_load8_u(&amp;memory, v22, <span class="number">0</span>);</span><br><span class="line">  i32_store8(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v22, v24 ^ v21);<span class="comment">// a4^=</span></span><br><span class="line">  v20 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v19 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">12LL</span>) + v20;<span class="comment">// a5</span></span><br><span class="line">  v18 = i32_load8_u(&amp;memory, v19, <span class="number">0</span>);</span><br><span class="line">  v17 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v16 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">16LL</span>) + v17;<span class="comment">// a4</span></span><br><span class="line">  v15 = i32_load8_u(&amp;memory, v16, <span class="number">0</span>);</span><br><span class="line">  v14 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v13 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">12LL</span>) + v14;</span><br><span class="line">  v12 = i32_load8_u(&amp;memory, v13, <span class="number">0</span>);</span><br><span class="line">  v11 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v10 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">16LL</span>) + v11;</span><br><span class="line">  v9 = ((<span class="keyword">int</span>)(<span class="keyword">unsigned</span> __int8)(i32_load8_u(&amp;memory, v10, <span class="number">0</span>) + v12) &gt;&gt; <span class="number">7</span>) | (<span class="number">2</span> * (<span class="keyword">unsigned</span> __int8)(v15 + v18));<span class="comment">// (a[a5]+a[a4])&gt;&gt;7 | (a[a5]+a[a4])&lt;&lt;1</span></span><br><span class="line">  v8 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">28LL</span>);</span><br><span class="line">  v7 = i32_load(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v66 + <span class="number">24LL</span>) + v8;<span class="comment">// a2^=</span></span><br><span class="line">  v6 = i32_load8_u(&amp;memory, v7, <span class="number">0</span>);</span><br><span class="line">  i32_store8(&amp;memory, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)v7, v9 ^ v6);</span><br><span class="line">  <span class="keyword">return</span> --wasm_rt_call_stack_depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">enc = <span class="string">&quot;05779c24d9249e693fa7ac4a10c68dfbd3520083b33f56e90fd84978b6a15c970b976779a8fefe91fb87d2221c9a1f87ed7eaddb8ae6370f9de69e3a7a5c5c488cde79756b0b9f1713e749edd41cff04&quot;</span></span><br><span class="line">key = <span class="string">&#x27;D33.B4T0&#x27;</span></span><br><span class="line">data = <span class="string">&#x27;0123456789abcdef&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">enc1 = [[], [], [], [], []]  <span class="comment"># 5组32字节数据</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">32</span>):</span><br><span class="line">        enc1[i].append(<span class="built_in">int</span>(enc[<span class="number">32</span>*i+j], <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line">table = []  <span class="comment"># 索引表</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">    table.append(<span class="built_in">int</span>(data[i], <span class="number">16</span>))</span><br><span class="line"></span><br><span class="line">key_flag = [[], [], [], [], []]  <span class="comment"># 5组16字节数据key+flag</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">        key_flag[i].append(<span class="number">16</span>*table.index(enc1[i][<span class="number">2</span>*j]) +  <span class="comment"># 奇数字节在table中的位置乘16+偶数字节在table中的位置</span></span><br><span class="line">                           table.index(enc1[i][<span class="number">2</span>*j+<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decode</span>(<span class="params">a, a2, a3, a4, a5</span>):</span></span><br><span class="line">    a[a2] ^= (((a[a5]+a[a4] &amp; <span class="number">0xFF</span>) &gt;&gt; <span class="number">7</span>) | ((a[a5]+a[a4]) &lt;&lt; <span class="number">1</span>)) &amp; <span class="number">0xFF</span></span><br><span class="line">    a[a4] ^= (((a[a3]+a[a2] &amp; <span class="number">0xFF</span>) &gt;&gt; <span class="number">5</span>) | ((a[a3]+a[a2]) &lt;&lt; <span class="number">3</span>)) &amp; <span class="number">0xFF</span></span><br><span class="line">    a[a5] ^= (((a[a3]+a[a4] &amp; <span class="number">0xFF</span>) &gt;&gt; <span class="number">6</span>) | ((a[a3]+a[a4]) &lt;&lt; <span class="number">2</span>)) &amp; <span class="number">0xFF</span></span><br><span class="line">    a[a3] ^= (((a[a5]+a[a2] &amp; <span class="number">0xFF</span>) &gt;&gt; <span class="number">4</span>) | ((a[a5]+a[a2]) &lt;&lt; <span class="number">4</span>)) &amp; <span class="number">0xFF</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">42</span>):</span><br><span class="line">        decode(key_flag[i], <span class="number">14</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">3</span>)</span><br><span class="line">        decode(key_flag[i], <span class="number">13</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">2</span>)</span><br><span class="line">        decode(key_flag[i], <span class="number">12</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">1</span>)</span><br><span class="line">        decode(key_flag[i], <span class="number">15</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">0</span>)</span><br><span class="line">        decode(key_flag[i], <span class="number">15</span>, <span class="number">11</span>, <span class="number">7</span>, <span class="number">3</span>)</span><br><span class="line">        decode(key_flag[i], <span class="number">14</span>, <span class="number">10</span>, <span class="number">6</span>, <span class="number">2</span>)</span><br><span class="line">        decode(key_flag[i], <span class="number">13</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">1</span>)</span><br><span class="line">        decode(key_flag[i], <span class="number">12</span>, <span class="number">8</span>, <span class="number">4</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="built_in">str</span> = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> ch <span class="keyword">in</span> key_flag[i]:</span><br><span class="line">        <span class="built_in">str</span> += <span class="built_in">chr</span>(ch)</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">str</span>[<span class="number">8</span>:], end=<span class="string">&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">miniLctf&#123;0ooo00oh!h3ll0_WASM_h4ck3r!&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+            <a href="/tags/game/" rel="tag"># game</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/05/03/ctf/reverse/game/minil2022/twin/" rel="next" title="TLS回调,Hook,子进程保护，xxtea">
+                <i class="fa fa-chevron-left"></i> TLS回调,Hook,子进程保护，xxtea
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/05/04/ctf/reverse/game/minil2022/risc-v/" rel="prev" title="risc-v初探">
+                risc-v初探 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WhatAssembly"><span class="nav-number">1.</span> <span class="nav-text">WhatAssembly</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#check%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">check函数:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#qua-rou%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">qua_rou函数:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC"><span class="nav-number">4.</span> <span class="nav-text">脚本</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

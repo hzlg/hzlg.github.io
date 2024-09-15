@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="环境," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="装了双系统,美化了一下桌面,装了一些方便的工具,把踩的坑记录一下 我好傻，微信qq没整明白，重装了一遍 ubuntu分区，花了大概（20-30min） 我好傻，上面那个不是deepin wine的问题，配置啥的没错，是qq更新了，舍友的也打不开了，我大概是不用重装的，不过第一遍没有计时，就当做熟练流程了吧（恨">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux美化指南(Ubuntu)">
+<meta property="og:url" content="https://hzlg.github.ioz/2021/11/10/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/linux%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="装了双系统,美化了一下桌面,装了一些方便的工具,把踩的坑记录一下 我好傻，微信qq没整明白，重装了一遍 ubuntu分区，花了大概（20-30min） 我好傻，上面那个不是deepin wine的问题，配置啥的没错，是qq更新了，舍友的也打不开了，我大概是不用重装的，不过第一遍没有计时，就当做熟练流程了吧（恨">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/10/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/linux%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96/image-20211102075846895.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/10/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/linux%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96/image-20211102080049012.png">
+<meta property="article:published_time" content="2021-11-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-16T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="环境">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/11/10/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/linux%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96/image-20211102075846895.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2021/11/10/环境 工具/linux桌面美化/"/>
+
+
+
+
+
+  <title>linux美化指南(Ubuntu) | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/10/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/linux%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">linux美化指南(Ubuntu)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-10T00:00:00+08:00">
+                2021-11-10
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2022-01-17T00:00:00+08:00">
+                2022-01-17
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>装了双系统,美化了一下桌面,装了一些方便的工具,把踩的坑记录一下</p>
+<p>我好傻，微信qq没整明白，重装了一遍 ubuntu分区，花了大概（20-30min）</p>
+<p>我好傻，上面那个不是deepin wine的问题，配置啥的没错，是qq更新了，舍友的也打不开了，我大概是不用重装的，不过第一遍没有计时，就当做熟练流程了吧（恨</p>
+<span id="more"></span>
+
+<h4 id="谷歌浏览器-3min"><a href="#谷歌浏览器-3min" class="headerlink" title="谷歌浏览器(3min)"></a>谷歌浏览器(3min)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45579994/article/details/114421877">https://blog.csdn.net/weixin_45579994/article/details/114421877</a><br>cd /tmp &amp;&amp; wget -c <a target="_blank" rel="noopener" href="https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb">https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb</a><br>sudo dpkg -i google-chrome-stable_current_amd64.deb<br>缺依赖就sudo apt install –fix-broken</p>
+</blockquote>
+<h4 id="谷歌浏览器插件-10min"><a href="#谷歌浏览器插件-10min" class="headerlink" title="谷歌浏览器插件(10min)"></a>谷歌浏览器插件(10min)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tangbohu2008/p/12607502.html">https://www.cnblogs.com/tangbohu2008/p/12607502.html</a><br>下一个tempoermonkey<br>chrome://extensions<br>打开开发者模式,点加载已经解压的扩展,选中加压后的文件夹<br>在greasyfork自己找想要的脚本安装(建议装一个html5视频播放工具)</p>
+</blockquote>
+<h4 id="搜狗输入法-15min"><a href="#搜狗输入法-15min" class="headerlink" title="搜狗输入法(15min)"></a>搜狗输入法(15min)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.mlzhilu.com/archives/ubuntu2004%E5%AE%89%E8%A3%85%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95">https://www.mlzhilu.com/archives/ubuntu2004%E5%AE%89%E8%A3%85%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95</a><br>sudo apt install fcitx-bin<br>sudo apt-get install fcitx-table</p>
+<p>sudo apt-get install -f</p>
+<p>放在第一个貌似也可以，我放第二个死活不行，放第一个就行了</p>
+</blockquote>
+<h4 id="在终端中打开资源管理器"><a href="#在终端中打开资源管理器" class="headerlink" title="在终端中打开资源管理器"></a>在终端中打开资源管理器</h4><blockquote>
+<p>xdg-open path</p>
+</blockquote>
+<h4 id="设定别名简化长命令"><a href="#设定别名简化长命令" class="headerlink" title="设定别名简化长命令"></a>设定别名简化长命令</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34310369/article/details/88726602">https://blog.csdn.net/weixin_34310369/article/details/88726602</a></p>
+</blockquote>
+<h4 id="WPS（5min）"><a href="#WPS（5min）" class="headerlink" title="WPS（5min）"></a>WPS（5min）</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.wps.cn/product/wpslinux">https://www.wps.cn/product/wpslinux</a></p>
+<p>sudo dpkg -i wps-office_xxxxxxxx_amd64.deb</p>
+</blockquote>
+<h4 id="终端个性化-figlet-3min"><a href="#终端个性化-figlet-3min" class="headerlink" title="终端个性化(figlet)(3min)"></a>终端个性化(figlet)(3min)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/120414164">https://zhuanlan.zhihu.com/p/120414164</a></p>
+<p>介绍一下bash的配置文件<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/f-ck-need-u/p/7417651.html">https://www.cnblogs.com/f-ck-need-u/p/7417651.html</a><br>figlet的字体预览<br><a target="_blank" rel="noopener" href="https://blog.windrunner.me/linux/figlet-toilet.html">https://blog.windrunner.me/linux/figlet-toilet.html</a><br>其他有意思的终端装饰<br><a target="_blank" rel="noopener" href="https://sspai.com/post/59297">https://sspai.com/post/59297</a></p>
+<p>sudo apt-get install figlet<br>vim ~/.bashrc , 在最后一行加上命令(figlet xxx)就行</p>
+</blockquote>
+<blockquote>
+<p>在终端右上角点那个三条杠-&gt;preference-&gt;Unamed 可以调整大小和颜色,透明度等</p>
+</blockquote>
+<h4 id="linux有趣命令"><a href="#linux有趣命令" class="headerlink" title="linux有趣命令"></a>linux有趣命令</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/405393469?utm_source=wechat_session&amp;utm_medium=social&amp;utm_oi=1025058149354471424&amp;utm_campaign=shareopn">https://zhuanlan.zhihu.com/p/405393469?utm_source=wechat_session&amp;utm_medium=social&amp;utm_oi=1025058149354471424&amp;utm_campaign=shareopn</a></p>
+<p>sudo apt-get install sl 跑火车啥的挺有意思</p>
+</blockquote>
+<h4 id="typora-amp-vscode-10min"><a href="#typora-amp-vscode-10min" class="headerlink" title="typora &amp; vscode(10min)"></a>typora &amp; vscode(10min)</h4><p>ubuntu的软件商店就能下载typora &amp; vscode,可能有个snap问题</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/L_jessica7227/article/details/120454744">https://blog.csdn.net/L_jessica7227/article/details/120454744</a></p>
+</blockquote>
+<h4 id="网易云-1min"><a href="#网易云-1min" class="headerlink" title="网易云(1min)"></a>网易云(1min)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42475861/article/details/105910479">https://blog.csdn.net/weixin_42475861/article/details/105910479</a></p>
+</blockquote>
+<h4 id="software-amp-updates紫色的那个，换源（5min）"><a href="#software-amp-updates紫色的那个，换源（5min）" class="headerlink" title="software&amp;updates紫色的那个，换源（5min）"></a>software&amp;updates紫色的那个，换源（5min）</h4><blockquote>
+<p>我换的是阿里源</p>
+</blockquote>
+<h4 id="gnome桌面美化-加上选一选大概50分钟"><a href="#gnome桌面美化-加上选一选大概50分钟" class="headerlink" title="gnome桌面美化(加上选一选大概50分钟)"></a>gnome桌面美化(加上选一选大概50分钟)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1iK4y1v7Vo?spm_id_from=333.1007.top_right_bar_window_history.content.click">https://www.bilibili.com/video/BV1iK4y1v7Vo?spm_id_from=333.1007.top_right_bar_window_history.content.click</a></p>
+<p>sudo apt install gnome-tweaks chrome-gnome-shell</p>
+<p>sudo apt install gtk2-engines-murrine gtk2-engines-pixbuf</p>
+<p>sudo apt install sassc optipng libcanberra-gtk-module libglib2.0-dev libxml2-utils</p>
+<p><a target="_blank" rel="noopener" href="https://extensions.gnome.org/">https://extensions.gnome.org</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.gnome-look.org/">https://www.gnome-look.org</a></p>
+<p>sudo apt install plank</p>
+</blockquote>
+<h4 id="自动挂载win硬盘"><a href="#自动挂载win硬盘" class="headerlink" title="自动挂载win硬盘"></a>自动挂载win硬盘</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yaoxingshuai/article/details/50563245">https://blog.csdn.net/yaoxingshuai/article/details/50563245</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/stlinax/article/details/80235757">https://blog.csdn.net/stlinax/article/details/80235757</a></p>
+</blockquote>
+<h4 id="vscode-c-c-环境配置"><a href="#vscode-c-c-环境配置" class="headerlink" title="vscode c/c++环境配置"></a>vscode c/c++环境配置</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jizishang/p/15412309.html">https://www.cnblogs.com/jizishang/p/15412309.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7e3d89584c35">https://www.jianshu.com/p/7e3d89584c35</a></p>
+</blockquote>
+<h4 id="deepin-wine-qq-微信-腾讯会议-（qq不行了，自动更新就报错）"><a href="#deepin-wine-qq-微信-腾讯会议-（qq不行了，自动更新就报错）" class="headerlink" title="deepin wine(qq/微信/腾讯会议)（qq不行了，自动更新就报错）"></a>deepin wine(qq/微信/腾讯会议)（qq不行了，自动更新就报错）</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_55523675/article/details/114383209">https://blog.csdn.net/weixin_55523675/article/details/114383209</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/chy555chy/article/details/109195315">https://blog.csdn.net/chy555chy/article/details/109195315</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30015835/article/details/112246782">https://blog.csdn.net/weixin_30015835/article/details/112246782</a></p>
+<blockquote>
+<p>qq安装完打中文显示方框</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_35976717/article/details/116863949">https://blog.csdn.net/weixin_35976717/article/details/116863949</a></p>
+</blockquote>
+<p>这样装的微信输入框不显示文字,还未解决</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43943298/article/details/111145895">https://blog.csdn.net/weixin_43943298/article/details/111145895</a></p>
+</blockquote>
+<p><img src="/2021/11/10/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/linux%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96/image-20211102075846895.png" alt="image-20211102075846895"> </p>
+<p>出现图中的问题就看下面这个链接</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lluohuih/article/details/68485979">https://blog.csdn.net/lluohuih/article/details/68485979</a></p>
+<p><img src="/2021/11/10/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/linux%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96/image-20211102080049012.png" alt="image-20211102080049012"> </p>
+</blockquote>
+<h4 id="截图工具-flameshot"><a href="#截图工具-flameshot" class="headerlink" title="截图工具:flameshot"></a>截图工具:flameshot</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/166559142">https://zhuanlan.zhihu.com/p/166559142</a></p>
+</blockquote>
+<h4 id="blog-还未搞定"><a href="#blog-还未搞定" class="headerlink" title="blog(还未搞定)"></a>blog(还未搞定)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_19734597/article/details/106716677">https://blog.csdn.net/qq_19734597/article/details/106716677</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f2285d63b3a8">https://www.jianshu.com/p/f2285d63b3a8</a> </p>
+</blockquote>
+<h4 id="ida"><a href="#ida" class="headerlink" title="ida"></a>ida</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av882749438/">https://www.bilibili.com/video/av882749438/</a></p>
+</blockquote>
+<h4 id="宽带连接"><a href="#宽带连接" class="headerlink" title="宽带连接"></a>宽带连接</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wasua/p/8992706.html">https://www.cnblogs.com/wasua/p/8992706.html</a><br>apt install pppoeconf</p>
+<blockquote>
+<p>我这里没整明白,不知道怎么看连上没,反正能上网,就没管了</p>
+</blockquote>
+</blockquote>
+<h4 id="b站-firefox不能播放-谷歌可以-先装谷歌的话这一步没必要"><a href="#b站-firefox不能播放-谷歌可以-先装谷歌的话这一步没必要" class="headerlink" title="b站(firefox不能播放,谷歌可以,先装谷歌的话这一步没必要)"></a>b站(firefox不能播放,谷歌可以,先装谷歌的话这一步没必要)</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.ubuntu-server.com/ubuntu/how-to-install-h-264-decoder-on-ubuntu/">https://www.ubuntu-server.com/ubuntu/how-to-install-h-264-decoder-on-ubuntu/</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45701501/article/details/106220898">https://blog.csdn.net/qq_45701501/article/details/106220898</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/27591931/answer/1079918643">https://www.zhihu.com/question/27591931/answer/1079918643</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%8E%AF%E5%A2%83/" rel="tag"># 环境</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/03/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.03-%E5%8F%8C%E5%88%9B%E5%91%A8%E5%B0%BE%E5%B7%B4/" rel="next" title="11.03-双创周尾巴-花指令/ptrace子进程调试">
+                <i class="fa fa-chevron-left"></i> 11.03-双创周尾巴-花指令/ptrace子进程调试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/14/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.14-ddl/" rel="prev" title="11.14-鸽子">
+                11.14-鸽子 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8-3min"><span class="nav-number">1.</span> <span class="nav-text">谷歌浏览器(3min)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%B7%E6%AD%8C%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6-10min"><span class="nav-number">2.</span> <span class="nav-text">谷歌浏览器插件(10min)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95-15min"><span class="nav-number">3.</span> <span class="nav-text">搜狗输入法(15min)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%AD%E6%89%93%E5%BC%80%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">在终端中打开资源管理器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E5%AE%9A%E5%88%AB%E5%90%8D%E7%AE%80%E5%8C%96%E9%95%BF%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">设定别名简化长命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WPS%EF%BC%885min%EF%BC%89"><span class="nav-number">6.</span> <span class="nav-text">WPS（5min）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E4%B8%AA%E6%80%A7%E5%8C%96-figlet-3min"><span class="nav-number">7.</span> <span class="nav-text">终端个性化(figlet)(3min)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E6%9C%89%E8%B6%A3%E5%91%BD%E4%BB%A4"><span class="nav-number">8.</span> <span class="nav-text">linux有趣命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#typora-amp-vscode-10min"><span class="nav-number">9.</span> <span class="nav-text">typora &amp; vscode(10min)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E6%98%93%E4%BA%91-1min"><span class="nav-number">10.</span> <span class="nav-text">网易云(1min)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#software-amp-updates%E7%B4%AB%E8%89%B2%E7%9A%84%E9%82%A3%E4%B8%AA%EF%BC%8C%E6%8D%A2%E6%BA%90%EF%BC%885min%EF%BC%89"><span class="nav-number">11.</span> <span class="nav-text">software&amp;updates紫色的那个，换源（5min）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gnome%E6%A1%8C%E9%9D%A2%E7%BE%8E%E5%8C%96-%E5%8A%A0%E4%B8%8A%E9%80%89%E4%B8%80%E9%80%89%E5%A4%A7%E6%A6%8250%E5%88%86%E9%92%9F"><span class="nav-number">12.</span> <span class="nav-text">gnome桌面美化(加上选一选大概50分钟)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BDwin%E7%A1%AC%E7%9B%98"><span class="nav-number">13.</span> <span class="nav-text">自动挂载win硬盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vscode-c-c-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">14.</span> <span class="nav-text">vscode c&#x2F;c++环境配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deepin-wine-qq-%E5%BE%AE%E4%BF%A1-%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE-%EF%BC%88qq%E4%B8%8D%E8%A1%8C%E4%BA%86%EF%BC%8C%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0%E5%B0%B1%E6%8A%A5%E9%94%99%EF%BC%89"><span class="nav-number">15.</span> <span class="nav-text">deepin wine(qq&#x2F;微信&#x2F;腾讯会议)（qq不行了，自动更新就报错）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%88%AA%E5%9B%BE%E5%B7%A5%E5%85%B7-flameshot"><span class="nav-number">16.</span> <span class="nav-text">截图工具:flameshot</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#blog-%E8%BF%98%E6%9C%AA%E6%90%9E%E5%AE%9A"><span class="nav-number">17.</span> <span class="nav-text">blog(还未搞定)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ida"><span class="nav-number">18.</span> <span class="nav-text">ida</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%BD%E5%B8%A6%E8%BF%9E%E6%8E%A5"><span class="nav-number">19.</span> <span class="nav-text">宽带连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#b%E7%AB%99-firefox%E4%B8%8D%E8%83%BD%E6%92%AD%E6%94%BE-%E8%B0%B7%E6%AD%8C%E5%8F%AF%E4%BB%A5-%E5%85%88%E8%A3%85%E8%B0%B7%E6%AD%8C%E7%9A%84%E8%AF%9D%E8%BF%99%E4%B8%80%E6%AD%A5%E6%B2%A1%E5%BF%85%E8%A6%81"><span class="nav-number">20.</span> <span class="nav-text">b站(firefox不能播放,谷歌可以,先装谷歌的话这一步没必要)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

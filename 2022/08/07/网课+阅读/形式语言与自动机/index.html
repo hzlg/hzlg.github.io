@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编译原理,网课," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="《程序员的自我修养》的编译部分提到了有限状态机，上下文无关文法等，遂学习一番 形式语言与自动机+哈工大_哔哩哔哩_bilibili">
+<meta property="og:type" content="article">
+<meta property="og:title" content="形式语言与自动机">
+<meta property="og:url" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="《程序员的自我修养》的编译部分提到了有限状态机，上下文无关文法等，遂学习一番 形式语言与自动机+哈工大_哔哩哔哩_bilibili">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220809114235680.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828234037244.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220809120456996.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220809120712233.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003165304236.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828233411868.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828233442266.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828234013968.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135325224.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810120914015.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810132920800.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810133537375.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810134827952.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135058978.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135423560.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135947545.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810140410529.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810141402697.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810141806428.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810142427670.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810143039840.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810143556196.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810143727932.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810144609313.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810145341070.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810145931662.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810150306951.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220827115808358.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220827120126251.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220827120640712.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828161440378.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828162702674.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828163012549.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828164530948.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828165509805.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828165732832.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828165911529.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828170001079.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828230750889.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828231241830.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828235231406.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828235532130.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003165407134.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003165551512.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003170845569.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003171017131.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172833038.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003171025606.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003171135425.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172058817.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172334665.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172524109.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172927214.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173149957.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173428322.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173510737.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173638666.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173721095.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173833045.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174051149.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174215667.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174327963.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174408910.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174433742.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174522830.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174600222.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174914281.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003175234208.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003175304322.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003175318960.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003210100968.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003212342149.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003212515755.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003213249676.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003214605655.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003215315828.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003215536917.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003215716901.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220007642.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220053656.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220230192.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220525815.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220802872.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220933023.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003221250043.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003221515938.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003221758882.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222130859.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222227810.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222411808.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222551460.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223215270.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223240379.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223613954.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223909737.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003224247566.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003224356799.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003224657709.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003230818214.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003225037864.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003225232076.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003225830076.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003231948167.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003232358070.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004085713351.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004085808911.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004085929315.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090048927.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090221846.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090501838.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090628190.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090851081.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090717404.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091113596.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091238664.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091433560.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091609534.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091723492.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092049150.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092438693.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092556788.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092655139.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093100056.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093217931.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093246274.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093344011.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093446227.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093838035.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093949872.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094533238.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094558716.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100641666.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094738231.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094927890.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004095319906.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004095642637.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100105850.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100038405.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100258658.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100457210.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100607677.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100838669.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004101145448.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004101341691.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004101617489.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004102142025.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004102440977.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004102720777.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103017950.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103103999.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103213917.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103949340.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004104038612.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004135252759.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004135341682.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004140636148.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004141108863.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004141504065.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004142032604.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004142612131.png">
+<meta property="article:published_time" content="2022-08-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-10-25T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="编译原理">
+<meta property="article:tag" content="网课">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220809114235680.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2022/08/07/网课+阅读/形式语言与自动机/"/>
+
+
+
+
+
+  <title>形式语言与自动机 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">形式语言与自动机</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-07T00:00:00+08:00">
+                2022-08-07
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2022-10-26T00:00:00+08:00">
+                2022-10-26
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>《程序员的自我修养》的编译部分提到了有限状态机，上下文无关文法等，遂学习一番</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1oE4116794?p=1&vd_source=6f0936ead220536edebc1dda72c5721a">形式语言与自动机+哈工大_哔哩哔哩_bilibili</a> </p>
+<span id="more"></span>
+
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="课程简介"><a href="#课程简介" class="headerlink" title="课程简介"></a>课程简介</h2><p><strong>计算理论</strong>是关于计算知识的有系统的整体，本是数学的一个研究领域，诞生于数理逻辑学家对计算本质的探索。这里的计算 (Computation) 并不是指纯粹的算术 (Calculation)，而是指一种以 “机械而有效的” 方式获取问题答案的过程。随着计算理论的发展最终促使了计算机的发明，计算理论的重心也从数学转到了计算机科学，而计算理论关心的核心问题是：</p>
+<p><strong>计算机的基本能力和限制究竟是什么?</strong></p>
+<blockquote>
+<p>这个问题中包含了两个内容，分别对应计算理论的两个研究方向：<code>可计算性理论</code>和<code>计算复杂性理论</code></p>
+<ul>
+<li><p><code>可计算性理论</code>:是否问题都能通过计算解决,哪些问题可以通过计算解决,为什么能,为什么不能</p>
+<p>需要有严格定义的概念(<code>算法</code>)来<strong>描述</strong>计算过程,如欧几里得算法</p>
+<p>需要严谨的模型(<code>形式语言与自动机</code>)去<strong>分析</strong>计算过程     </p>
+</li>
+<li><p><code>计算复杂性理论</code>:解决可计算的问题需要多少资源(时间和空间),如果不管用什么算法,都需要很多资源,是什么造成了问题很难计算(本次课程不涉及)</p>
+</li>
+</ul>
+</blockquote>
+<p><strong>自动机理论</strong>:包括<code>有穷自动机</code>、<code>下推自动机</code>和<code>图灵机</code>等几种自动机装置，还包括一些与自动机形式上不相似但能力上却完全相同的模型，如<code>正则表达式</code>和<code>文法</code>等。</p>
+<p>下推自动机和文法在语言设计和编译器实现上有重大作用</p>
+<p><strong>形式语言</strong>:经数学定义的语言,需要用数学方法来描述问题,这种描述就是形式语言（正规式？）</p>
+<p>自动机是描述规则的</p>
+<p>自动机以语言为处理对象,语言是以自动机为形式定义的</p>
+<blockquote>
+<p>语言包括字符,单词,句子,语法(描述)</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220809114235680.png" alt="image-20220809114235680"> </p>
+</blockquote>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>字母表∑，字符串，空串ε，字符串的长度|abc|</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828234037244.png" alt="image-20220828234037244"> </p>
+</blockquote>
+<p>字符串的连接x·y  字符串的n次幂</p>
+<p>集合的连接(笛卡尔积)   {a，b}·{cd，e} = {acd,bcd,ae,be}</p>
+<p>集合的n次幂 ∑的n次方为∑上长度为n的字符串集合</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220809120456996.png" alt="image-20220809120456996"> </p>
+</blockquote>
+<p>克林闭包 ∑* ∑的任意次幂,<strong>包括0次幂</strong>,即∑中的字符组成的任意长的字符串</p>
+<p>正闭包  不包括0次幂(空字符串)</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220809120712233.png" alt="image-20220809120712233"> </p>
+</blockquote>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003165304236.png" alt="image-20221003165304236"> </p>
+</blockquote>
+<p>测验</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828233411868.png" alt="image-20220828233411868"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828233442266.png" alt="image-20220828233442266"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828234013968.png" alt="image-20220828234013968"> </p>
+</blockquote>
+<h2 id="语言与问题"><a href="#语言与问题" class="headerlink" title="语言与问题"></a>语言与问题</h2><p>语言唯一重要的约束是所有字母表要是有穷的</p>
+<p>典型问题:<strong>成员性问题</strong>,即字符串是否属于语言</p>
+<p>语言和问题其实是相同的东西</p>
+<p>w是某个参数,L是全体素数(用素数的规则描述的语言),问题就变成了能否用某种模型来判断某个数字是否是素数(是否满足素数语言的语法规则)</p>
+<p>w是C语言程序源码,L以C语言的语法规则来描述,问题就是能否用某种模型来判断程序w是否符合C语言的语法规则,或者说是否能被正确的编译</p>
+<p>有些问题是不可判定的,如图灵停机问题</p>
+<blockquote>
+<p>图灵停机问题(计算机里的理发师悖论):是否存在判断程序能够提前预报死循环是否会在要执行的程序中出现</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/142473069">如何通俗地解释图灵停机问题？ - 知乎 (zhihu.com)</a></p>
+<p><code>f</code>停机,<code>halts</code>返回<code>true</code>,否则<code>false</code>,用<code>halts</code>的返回值写一个<code>modified_halts</code>,<code>f</code>停机,<code>modified_halts</code>不停机,否则停机</p>
+<p>将<code>modified_halts</code>作为<code>f</code>,<code>f</code>会停机,则<code>modified_halts</code>不会停机,<code>f</code>不会停机,则<code>modified_halts</code>会停机,悖论</p>
+</blockquote>
+<h1 id="正则语言"><a href="#正则语言" class="headerlink" title="正则语言"></a>正则语言</h1><h2 id="有穷自动机-有限状态机"><a href="#有穷自动机-有限状态机" class="headerlink" title="有穷自动机(有限状态机)"></a>有穷自动机(有限状态机)</h2><p>有穷自动机是有穷状态系统的抽象模型,实际应用中最多的是摩尔机(Moore Machine)和米里机(Mealy Machine),如电灯开关,自动售货机,ATM</p>
+<blockquote>
+<p>数电回顾:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135325224.png" alt="image-20220810135325224"> </p>
+</blockquote>
+<blockquote>
+<p>有穷自动机可以应用到数字电路设计(时序电路)…</p>
+<p>在计算机中就用作文本搜索,词法分析,这里我们学习的由有穷自动机用作<code>语言识别装置</code></p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810120914015.png" alt="image-20220810120914015"> </p>
+</blockquote>
+<h3 id="确定的有穷自动机DFA"><a href="#确定的有穷自动机DFA" class="headerlink" title="确定的有穷自动机DFA"></a>确定的有穷自动机DFA</h3><p>输入带中有字符串,一个读头,一个有穷控制器能记录有限个状态</p>
+<p><code>读头</code>不断读入,根据<strong>读入的字符</strong>和<strong>当前状态</strong>来改变状态(时序电路类似,时序逻辑电路由<strong>组合逻辑电路</strong>和<strong>存储电路</strong>组成)</p>
+<p>扫描完后根据<code>有穷控制器</code>状态来回答接受或拒绝</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810132920800.png" alt="image-20220810132920800"> </p>
+</blockquote>
+<p>用五步就能将抽象装置变成数学上的问题</p>
+<ul>
+<li><p>有穷控制器中能存储的状态(状态集)</p>
+</li>
+<li><p>输入带中的字符(符号表)</p>
+</li>
+<li><p>状态改变规则（转移规则）</p>
+</li>
+<li><p>初状态</p>
+</li>
+<li><p>接受状态</p>
+</li>
+</ul>
+<hr>
+<p>确定有穷自动机的形式定义：</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810133537375.png" alt="image-20220810133537375"> </p>
+</blockquote>
+<p>通过定义设计DFA举例:</p>
+<blockquote>
+<p>接受含有01子串的全部串,要读两个字符,需要三个状态</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810134827952.png" alt="image-20220810134827952"> </p>
+</blockquote>
+<hr>
+<p>状态转移图&amp;表(数电时序电路类似):</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135058978.png" alt="image-20220810135058978"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135423560.png" alt="image-20220810135423560"> </p>
+</blockquote>
+<p>通过状态转移图来设计DFA举例:</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810135947545.png" alt="image-20220810135947545"> </p>
+<p>分别设计偶数0的DFA和偶数1的DFA,同时执行两种DFA,最终都在接受状态就接受,做<code>笛卡尔积</code>,有四种情况(<code>状态之间怎么连线我不太清楚</code>)</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810140410529.png" alt="image-20220810140410529"> </p>
+</blockquote>
+<hr>
+<p>δ现在能处理字符,处理字符串不太方便,进行一下扩展(其实就是递归)</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810141402697.png" alt="image-20220810141402697"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810141806428.png" alt="image-20220810141806428"> </p>
+</blockquote>
+<p>DFA语言:</p>
+<p>语言的字符串属于字符集,且从开始状态输入字符串后能到达结束状态,则该语言是DFA接受的原因</p>
+<p>形式语言能通过DFA来定义,不同DFA能定义不同的形式语言,DFA作为语言的识别器,也可以定义语言</p>
+<p>任何DFA所识别的语言叫做<code>正则语言</code></p>
+<p>所有DFA定义的语言放在一起,是一个语言类,叫做<code>正则语言</code>类</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810142427670.png" alt="image-20220810142427670"> </p>
+</blockquote>
+<p>DFA设计举例</p>
+<blockquote>
+<p>现在除3余数是0,再来个0相当于乘2加0,除3余数还是0,来个1余数就是1…</p>
+<p>还要有一个起始状态,若开头是0就结束,再来一个就死循环,若开头是1,则进入正常循环</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810143039840.png" alt="image-20220810143039840"> </p>
+</blockquote>
+<h3 id="非确定有穷自动机NFA"><a href="#非确定有穷自动机NFA" class="headerlink" title="非确定有穷自动机NFA"></a>非确定有穷自动机NFA</h3><blockquote>
+<p>同个状态在相同的输入下，可以有多个转移状态</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810143556196.png" alt="image-20220810143556196"> </p>
+</blockquote>
+<p>引入NFA例子</p>
+<blockquote>
+<p>q0可能转向q0.也可能转向q1，只有末尾的01才会转向接受状态</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810143727932.png" alt="image-20220810143727932">  </p>
+</blockquote>
+<hr>
+<p>NFA形式定义:</p>
+<blockquote>
+<p>幂集：Q的子集的集合，包括全集和空集</p>
+<p>Q中任意状态q经过δ函数后会转移至Q的幂集中,而不是某个确定的状态</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810144609313.png" alt="image-20220810144609313"> </p>
+</blockquote>
+<p>用定义设计NFA举例:</p>
+<blockquote>
+<p>q1的时候0的动作是未定义的,执行到这种情况就会卡住,认为不接受</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810145341070.png" alt="image-20220810145341070"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810145931662.png" alt="image-20220810145931662"> </p>
+<p>不知道是否是01结尾,就把每次输入都当做最后一次输入,在可能的状态中看是否有接受状态</p>
+<p>在最终状态里<strong>有</strong>接受状态,就接受(DFA是:最终状态<strong>是</strong>接受状态)</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220810150306951.png" alt="image-20220810150306951"> </p>
+</blockquote>
+<hr>
+<p>从字符扩展成字符串</p>
+<p>还是递归</p>
+<p>从q0的开始状态在δ的函数下经过w字符串<code>获得的状态</code>在终态集F中，就是DFA的语言</p>
+<p>从q0的开始状态在δ的函数下经过w字符串<code>获得的状态集</code>，和终态集F的交集非空，即状态集中有终结状态,就是NFA的语言</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220827115808358.png" alt="image-20220827115808358"> </p>
+</blockquote>
+<p>NFA设计举例</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220827120126251.png" alt="image-20220827120126251"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220827120640712.png" alt="image-20220827120640712"> </p>
+</blockquote>
+<h3 id="DFA和NFA的等价性"><a href="#DFA和NFA的等价性" class="headerlink" title="DFA和NFA的等价性"></a>DFA和NFA的等价性</h3><p>已经知道DFA能接受的NFA也能接受,不使用非确定性就可以了</p>
+<p><strong>语言能被NFA接受,当且仅当能被DFA接受</strong></p>
+<p>对于有穷自动机来说,增加非确定的能力并没有改变它识别语言的能力</p>
+<p>不过对有穷自动机修改一下,比如加一个栈,确定的版本和非确定的版本就不一样了,或者使得读头能够读,写,左右两侧移动,就变成了图灵机,识别语言的能力是相同的,不过识别语言的效率目前是不知道的,即p是否等于np的问题(是计算复杂性理论的问题)</p>
+<blockquote>
+<p>使用<code>子集构造法</code>来证明对于有穷自动机DFA和NFA等价</p>
+<p>通过NFA五元组<code>构造</code>DFA五元组,再<code>证明</code>识别的是相同的语言</p>
+<p>构造:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828161440378.png" alt="image-20220828161440378"> </p>
+<p>QD=QN的幂集(Q的子集的集合，包括全集和空集)</p>
+<p>FD=含有NFA的接受状态的状态集合</p>
+<p>DFA下初<code>状态</code>S经过字符a后会到达的<code>状态</code>=NFA下<code>状态集</code>S中的每个状态经过字符a后得到的<code>状态集</code></p>
+<p>证明:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828162702674.png" alt="image-20220828162702674"> </p>
+<p>q0经过空串还是q0</p>
+<p>假设q0经过长度为n的串w时DFA与NFA等价</p>
+<p>当w长度为n+1时,w=xa,δN(q0,xa)=δN( {δN(q0,x)状态集} ,a)  (q0先经过x再经过a)</p>
+<p>=δN( δD({q0},x)状态 ,a)</p>
+<p>=δD( δD({q0},x)状态 ,a)??????</p>
+<p>=δD({q0},w)</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828163012549.png" alt="image-20220828163012549"> </p>
+<p>已证明了δD({q0},w) = δN(q0,w)</p>
+<p>若能推出L(D)∈L(N),L(N)∈L(D),就能证明两种语言等价</p>
+<p>若w∈NFA语言,NFA从q0经过w得到的状态集会包含接受状态,即DFA从q0经过w得到的状态在接受状态中,满足DFA语言,反向推理也一样</p>
+</blockquote>
+<p>NFA-&gt;DFA举例:子集构造法</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828164530948.png" alt="image-20220828164530948"> </p>
+</blockquote>
+<h3 id="带有空转移的非确定有穷自动机ε-NFA"><a href="#带有空转移的非确定有穷自动机ε-NFA" class="headerlink" title="带有空转移的非确定有穷自动机ε-NFA"></a>带有空转移的非确定有穷自动机ε-NFA</h3><p>ε-NFA引入例子</p>
+<blockquote>
+<p>NFA</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828165509805.png" alt="image-20220828165509805"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828165732832.png" alt="image-20220828165732832"> </p>
+</blockquote>
+<blockquote>
+<p>状态的空转移:在空串ε的作用下也能跳转</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828165911529.png" alt="image-20220828165911529"> </p>
+</blockquote>
+<blockquote>
+<p>例子ε-NFA简化:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828170001079.png" alt="image-20220828170001079"> </p>
+<p>倒数第三个是1,q0-&gt;q1之后两个空串到q3</p>
+<p>倒数第二个是1,q0-&gt;q1之后任意字符跳到q2,一个空串到q3</p>
+<p>倒数第一个是1,q0-&gt;q1之后跳两个任意字符到q3</p>
+</blockquote>
+<p>形式定义</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828230750889.png" alt="image-20220828230750889"> </p>
+</blockquote>
+<p>区别</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828231241830.png" alt="image-20220828231241830"> </p>
+</blockquote>
+<p>ε-闭包引入例子</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828235231406.png" alt="image-20220828235231406"> </p>
+<p>qo–1-&gt;qo/q1后还要经过空字符串的补充,扩展</p>
+<p>补充和扩展就是闭包的概念</p>
+</blockquote>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20220828235532130.png" alt="image-20220828235532130"> </p>
+</blockquote>
+<p><code>状态</code>的ε-闭包:状态q经过空串能到达的状态集合</p>
+<p><code>集合</code>的ε-闭包</p>
+<p>扩展转移函数</p>
+<p>ε-NFA与DFA的等价性…</p>
+<h2 id="正则表达式-正规式"><a href="#正则表达式-正规式" class="headerlink" title="正则表达式(正规式?)"></a>正则表达式(正规式?)</h2><p>有穷自动机描述正则语言</p>
+<p>正则表达式是表示语言的代数式,以模式匹配的方式去表示或产生正则语言中的字符串</p>
+<p>正则表达式和有限自动机有等价性,在<code>匹配或过滤特定模式文本</code>的任务中非常有用</p>
+<p>正则表达式的递归定义:</p>
+<blockquote>
+<p>先看四则运算的递归定义</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003165407134.png" alt="image-20221003165407134"> </p>
+<p>正则表达式的递归定义</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003165551512.png" alt="image-20221003165551512"> </p>
+</blockquote>
+<h3 id="DFA转正则表达式"><a href="#DFA转正则表达式" class="headerlink" title="DFA转正则表达式"></a>DFA转正则表达式</h3><p>状态消除法 直观,递归表达式 适合计算机</p>
+<blockquote>
+<p>递归表达式</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003170845569.png" alt="image-20221003170845569"> </p>
+<p>有中间节点的话就把路径拆成-&gt;O-&gt;的形式,没有中间节点的话就直接用转移转移函数的结果</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003171017131.png" alt="image-20221003171017131"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172833038.png" alt="image-20221003172833038">  <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003171025606.png" alt="image-20221003171025606"> </p>
+<p>证明递归式正确:</p>
+<p>几种情况下都正确:有两个结点,其中没有中间节点/有一个结点,没有中间结点/有两个结点,其中有中间结点</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003171135425.png" alt="image-20221003171135425" style="zoom:50%;"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172058817.png" alt="image-20221003172058817" style="zoom:50%;"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172334665.png" alt="image-20221003172334665" style="zoom:50%;"> </p>
+<p>例子:k=2</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172524109.png" alt="image-20221003172524109"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003172927214.png" alt="image-20221003172927214"> </p>
+<p>正则表达式可以化简,需要用到正则表达式的性质,后面会讲</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173149957.png" alt="image-20221003173149957"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173428322.png" alt="image-20221003173428322"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173510737.png" alt="image-20221003173510737"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173638666.png" alt="image-20221003173638666"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173721095.png" alt="image-20221003173721095"> </p>
+<p>例子:k=3</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003173833045.png" alt="image-20221003173833045"> </p>
+</blockquote>
+<p>状态消除法:消除状态,根据状态结点的入度和出度计算要增加的路径数,路径上用正则表达式表示</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174051149.png" alt="image-20221003174051149"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174215667.png" alt="image-20221003174215667"> </p>
+<p>例子:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174327963.png" alt="image-20221003174327963"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174408910.png" alt="image-20221003174408910"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174433742.png" alt="image-20221003174433742"> </p>
+</blockquote>
+<h3 id="正则表达式到NFA"><a href="#正则表达式到NFA" class="headerlink" title="*正则表达式到NFA"></a>*正则表达式到NFA</h3><blockquote>
+<p>正则表达式可以表示成一个初始状态只能进,接受状态只能出的NFA形式</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174522830.png" alt="image-20221003174522830"> </p>
+<p>Thompson算法:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174600222.png" alt="image-20221003174600222"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003174914281.png" alt="image-20221003174914281"> </p>
+</blockquote>
+<p>正则表达式的代数定律与检验方法</p>
+<blockquote>
+<p>并运算/连接运算/闭包运算</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003175234208.png" alt="image-20221003175234208"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003175304322.png" alt="image-20221003175304322"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003175318960.png" alt="image-20221003175318960"> </p>
+<p>对含有变量的表达式判断是否相等的方法:将变量替换成具体的实例,注意用实例判断成立的条件是只能有正则表达式里的几种运算,并,连接,闭包等</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003210100968.png" alt="image-20221003210100968"> </p>
+</blockquote>
+<h2 id="正则语言的性质"><a href="#正则语言的性质" class="headerlink" title="正则语言的性质"></a>正则语言的性质</h2><p>使用泵引理来证明一个语言不是正则的,正则在一些特定运算下仍保持为正则的封闭性,正则语言的判定性质,自动机的最小化</p>
+<h3 id="泵引理"><a href="#泵引理" class="headerlink" title="泵引理"></a>泵引理</h3><blockquote>
+<p>如果语言是正则的,那么一定存在一个正整数N,在前N的字符里就会出现y,在大于N的语言中y可以一直循环,循环的结果都在语言内</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003212342149.png" alt="image-20221003212342149"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003212515755.png" alt="image-20221003212515755"> </p>
+<p>证明:</p>
+<p>若n个状态的DFA每次跳转都没有重复的状态,经过n个输入后,会从q0跳到qn,一共出现n+1个状态,超出了DFA的最大状态数</p>
+<p>所以经过n个输入后,一定会有两个状态转移的结果相同,就能写成-&gt;O-&gt;的形式,中间的部分可以重复很多次</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003213249676.png" alt="image-20221003213249676"> </p>
+<p>泵引理的利用:</p>
+<p>假设语言是正则的,那就存在N,再任取长度大于N的一个串,泵一个特殊的y,泵完不在语言中即可</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003214605655.png" alt="image-20221003214605655"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003215315828.png" alt="image-20221003215315828"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003215536917.png" alt="image-20221003215536917"> </p>
+<p>有限的语言是否违背泵引理? 泵引理要求长度大于N的串能泵,而有限语言字符串的长度不会大于N</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003215716901.png" alt="image-20221003215716901"> </p>
+</blockquote>
+<p>泵引理是正则语言的必要条件,是正则必须满足泵引理,而满足泵引理的不一定是正则语言</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220007642.png" alt="image-20221003220007642"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220053656.png" alt="image-20221003220053656"> </p>
+</blockquote>
+<p>思考(不会)</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220230192.png" alt="image-20221003220230192"> </p>
+</blockquote>
+<h3 id="封闭性"><a href="#封闭性" class="headerlink" title="封闭性"></a>封闭性</h3><p>正则在<code>并/连接/闭包运算</code>后仍是正则</p>
+<p>正则的<code>补</code>也是正则(要求补的话可以先把正则表达式转NFA,确定化为DFA,再求DFA的补,再状态消除/递归表示变为正则)</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220525815.png" alt="image-20221003220525815"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220802872.png" alt="image-20221003220802872"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003220933023.png" alt="image-20221003220933023"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003221250043.png" alt="image-20221003221250043"> </p>
+</blockquote>
+<p>剩下的不想听</p>
+<h3 id="正则语言的判定性质"><a href="#正则语言的判定性质" class="headerlink" title="正则语言的判定性质"></a>正则语言的判定性质</h3><p>给一个正则语言,它是有穷的还是无穷的?如何判断串是否满足语言?语言的等价性?</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003221515938.png" alt="image-20221003221515938"> </p>
+</blockquote>
+<p>空性,有穷性,无穷性</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003221758882.png" alt="image-20221003221758882"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222130859.png" alt="image-20221003222130859"> </p>
+</blockquote>
+<p>等价性</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222227810.png" alt="image-20221003222227810"> </p>
+</blockquote>
+<h3 id="自动机的最小化"><a href="#自动机的最小化" class="headerlink" title="*自动机的最小化"></a>*自动机的最小化</h3><blockquote>
+<p>等价:转移的结果都在同一个组中(不一定要相同状态),就不可区分,即等价,可以合并</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222411808.png" alt="image-20221003222411808"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003222551460.png" alt="image-20221003222551460"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223215270.png" alt="image-20221003223215270"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223240379.png" alt="image-20221003223240379"> </p>
+</blockquote>
+<h1 id="上下文无关语言"><a href="#上下文无关语言" class="headerlink" title="上下文无关语言"></a>上下文无关语言</h1><h2 id="上下文无关文法"><a href="#上下文无关文法" class="headerlink" title="上下文无关文法"></a>上下文无关文法</h2><blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223613954.png" alt="image-20221003223613954"> </p>
+<p>文法可以表示语言的语法结构,英语和语文对句子进行语法结构划分的工具就是文法</p>
+<p>名词短语-&gt;冠词+名词|冠词+形容词+名词</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003223909737.png" alt="image-20221003223909737"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003224247566.png" alt="image-20221003224247566"> </p>
+<p>自然语言比较复杂,用回文来介绍文法</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003224356799.png" alt="image-20221003224356799"> </p>
+<p>回文语言可以用泵引理证明不是正则语言,而文法可以用来描述回文语言</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003224657709.png" alt="image-20221003224657709"> </p>
+</blockquote>
+<h3 id="文法的形式定义"><a href="#文法的形式定义" class="headerlink" title="文法的形式定义"></a>文法的形式定义</h3><p>四元组G=(变元(非终结符)有穷集V,终结符有穷集T,产生式有穷集P,初始符号S)</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40147863/article/details/88770715">《编译原理》文法 - 终结符和非终结符</a></p>
+<p>终结符:没有规则能把终结符变为别的符号,不能把终结符分解成更小的单位,终结符是形式语言的基本符号</p>
+<p>初始符号(识别符号):从识别符号开始，把当前产生的符号串中的非终结符号替换为相应规则右部的符号串，直到<br>最终全由终结符号组成。这种替换过程称为推导或产生句子的过程，每一步成为直接推导或直接产生。</p>
+<blockquote>
+<p>终结符例子:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003230818214.png" alt="image-20221003230818214"> </p>
+<p>该文法能得到以a和[开始的字符串,说明a和[是基本的元素</p>
+</blockquote>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003225037864.png" alt="image-20221003225037864"> </p>
+<p>回文语言和算数表达式的文法形式定义</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003225232076.png" alt="image-20221003225232076"><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003225830076.png" alt="image-20221003225830076">   </p>
+</blockquote>
+<h3 id="规约和派生"><a href="#规约和派生" class="headerlink" title="规约和派生"></a>规约和派生</h3><p>想知道字符串w是否在语言L中,可以用<code>规约</code>(递归推理),推导(<code>派生</code>)两种方法</p>
+<blockquote>
+<p>规约从字符串w开始分析,看是否能被开始符号所表示,<code>自底向上</code>,体向头</p>
+<p>派生是从变元开始,利用产生式的定义,看是否生成字符串w,<code>自顶向下</code>,头向体</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003231948167.png" alt="image-20221003231948167"> </p>
+<p>规约的例子:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221003232358070.png" alt="image-20221003232358070"> </p>
+<p>后面主要讲<code>派生</code></p>
+<p><code>派生</code>的形式定义:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004085713351.png" alt="image-20221004085713351"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004085808911.png" alt="image-20221004085808911"> </p>
+<p>例子:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004085929315.png" alt="image-20221004085929315"> </p>
+</blockquote>
+<p><strong>最左派生和最右派生</strong>:</p>
+<p>派生可以根据产生式随便派生任意变元,太随意了</p>
+<p>任何一个派生都有等价的最左派生和最右派生,可以限制派生过程</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090048927.png" alt="image-20221004090048927"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090221846.png" alt="image-20221004090221846"> </p>
+</blockquote>
+<h3 id="文法的语言-上下文无关语言"><a href="#文法的语言-上下文无关语言" class="headerlink" title="文法的语言-上下文无关语言"></a>文法的语言-上下文无关语言</h3><p>文法的语言里的字符串:由文法的开始符号<code>S能派生</code>出的<code>由终结符构成</code>的字符串w</p>
+<p>上下文无关语言就是文法G全部的句子(S派生出的句型且只含有终结符)</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090501838.png" alt="image-20221004090501838"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090628190.png" alt="image-20221004090628190"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090851081.png" alt="image-20221004090851081"> </p>
+<p>文法的等价性</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004090717404.png" alt="image-20221004090717404"> </p>
+<p>例子:</p>
+<p>语言推文法,文法推语言</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091113596.png" alt="image-20221004091113596"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091238664.png" alt="image-20221004091238664"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091433560.png" alt="image-20221004091433560"><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091609534.png" alt="image-20221004091609534"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004091723492.png" alt="image-20221004091723492"> </p>
+</blockquote>
+<hr>
+<h2 id="语法分析树"><a href="#语法分析树" class="headerlink" title="语法分析树"></a>语法分析树</h2><p>规约或派生的过程能用树形结构来表示</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092049150.png" alt="image-20221004092049150"> </p>
+</blockquote>
+<h3 id="语法树形式定义"><a href="#语法树形式定义" class="headerlink" title="语法树形式定义"></a>语法树形式定义</h3><blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092438693.png" alt="image-20221004092438693"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092556788.png" alt="image-20221004092556788"> </p>
+</blockquote>
+<h3 id="语法树和派生的等价性"><a href="#语法树和派生的等价性" class="headerlink" title="语法树和派生的等价性"></a>语法树和派生的等价性</h3><blockquote>
+<p>能派生说明存在树,存在树说明能派生</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004092655139.png" alt="image-20221004092655139"> </p>
+<p>证明:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093100056.png" alt="image-20221004093100056"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093217931.png" alt="image-20221004093217931"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093246274.png" alt="image-20221004093246274"> </p>
+</blockquote>
+<h2 id="文法和语言的歧义性"><a href="#文法和语言的歧义性" class="headerlink" title="文法和语言的歧义性"></a>文法和语言的歧义性</h2><blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093344011.png" alt="image-20221004093344011"> </p>
+<p>文法有<code>歧义性</code>,因为有<code>语义</code>的存在,虽然两个语法树的产物都是算术表达式,但乘法的优先级更高,所以左边的才是正确的</p>
+<p>编译器无法辨别歧义性,就可能搞错运算</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093446227.png" alt="image-20221004093446227"> </p>
+</blockquote>
+<p><strong>文法歧义性的消除:</strong></p>
+<p>部分文法可以通过重新设计文法来消除歧义性</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093838035.png" alt="image-20221004093838035"> </p>
+</blockquote>
+<p><strong>语言的固有歧义性:</strong></p>
+<blockquote>
+<p>一些文法的歧义性不可消除,且无法判断文法是否是有歧义的</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004093949872.png" alt="image-20221004093949872"> </p>
+</blockquote>
+<h2 id="文法的化简与范式"><a href="#文法的化简与范式" class="headerlink" title="文法的化简与范式"></a>文法的化简与范式</h2><h3 id="3步化简"><a href="#3步化简" class="headerlink" title="3步化简"></a>3步化简</h3><p>w是源程序,G是语法规则,需要判断w是否满足G的规则,是G的上下文无关语言</p>
+<p>把文法G化简有利于编译器分析</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094533238.png" alt="image-20221004094533238"> </p>
+<p>化简分三步:<br><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094558716.png" alt="image-20221004094558716"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100641666.png" alt="image-20221004100641666"> </p>
+</blockquote>
+<p><strong>消除无用符号:</strong></p>
+<blockquote>
+<p>有用符号:能被开始符号派生得到,也能派生得到终结符串</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094738231.png" alt="image-20221004094738231"> </p>
+</blockquote>
+<p>先消除非产生的(不能派生出终结符串的),再消除非可达的(不能被派生得到的)</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004094927890.png" alt="image-20221004094927890"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004095319906.png" alt="image-20221004095319906"> </p>
+</blockquote>
+<p><strong>消除ε-产生式</strong>:</p>
+<blockquote>
+<p>消除ε-产生式得到的语言并不完全与原来的语言等价,不过除了特定的空串,语言的性质没有改变</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004095642637.png" alt="image-20221004095642637"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100105850.png" alt="image-20221004100105850"> </p>
+</blockquote>
+<p>找到可空变元,用自身或空串来替换</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100038405.png" alt="image-20221004100038405"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100258658.png" alt="image-20221004100258658"> </p>
+</blockquote>
+<p><strong>消除单元产生式：</strong></p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100457210.png" alt="image-20221004100457210"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100607677.png" alt="image-20221004100607677"> </p>
+</blockquote>
+<h3 id="范式"><a href="#范式" class="headerlink" title="范式"></a>范式</h3><p>化简是去除无用的,但是还是很乱,还要用范式限制文法的格式</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004100838669.png" alt="image-20221004100838669">     </p>
+</blockquote>
+<h4 id="乔姆斯基范式"><a href="#乔姆斯基范式" class="headerlink" title="乔姆斯基范式"></a>乔姆斯基范式</h4><p>产生式只推出<strong>双变元</strong>或<strong>终结符</strong></p>
+<p>派生树的内节点都是二叉树,派生长度为n的字符串需要2n-1步,n-1步产生二叉树,n步派生出终结符</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004101145448.png" alt="image-20221004101145448"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004101341691.png" alt="image-20221004101341691"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004101617489.png" alt="image-20221004101617489"> </p>
+</blockquote>
+<h4 id="格雷巴赫范式"><a href="#格雷巴赫范式" class="headerlink" title="格雷巴赫范式"></a>格雷巴赫范式</h4><p>产生式必推出终结符+n个变元</p>
+<p>派生长度为n的字符串需要n步</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004102142025.png" alt="image-20221004102142025"> </p>
+<p>无左递归:左边是变元就把左边是终结符的<code>变元代入</code></p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004102440977.png" alt="image-20221004102440977"> </p>
+<p>直接左递归:左边是变元本身,无法代入,就把<code>变元拆成两个</code>,A-&gt;α|αB,B-&gt;β|βB</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004102720777.png" alt="image-20221004102720777"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103017950.png" alt="image-20221004103017950"> </p>
+<p>间接左递归:多个变元之间递归了,就先<code>重命名</code>,<code>替换</code>左变元使得产生式中i小于j,最后看是否有<code>直接左递归</code></p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103103999.png" alt="image-20221004103103999"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103213917.png" alt="image-20221004103213917"> </p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004103949340.png" alt="image-20221004103949340"> </p>
+<p>这张图最后还要把B1中的A1替换了,不过板书写不下了,答案如下</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004104038612.png" alt="image-20221004104038612"> </p>
+</blockquote>
+<h1 id="下推自动机"><a href="#下推自动机" class="headerlink" title="下推自动机"></a>下推自动机</h1><h2 id="下推自动机PDA"><a href="#下推自动机PDA" class="headerlink" title="下推自动机PDA"></a>下推自动机PDA</h2><p>下推自动机和NFA一样，都具有非确定和空转移的能力，都有输入带，不过多了一个<strong>符号栈</strong>，具有一个可以压栈和出栈的读写头，压栈的时候能压一个符号串，出栈的时候只能弹出一个符号</p>
+<p>输入带读写头读入一个字符并向后移动一个单元格，控制符号栈的读写头弹出一个字符，有穷控制器利用读写头<code>读的字符</code>，当前的<code>状态</code>，弹出的<code>栈顶符号</code>来进行状态转移，并压入新的符号串</p>
+<p>因为多了一个存储结构，所以下推自动机能识别的语言比有穷自动机更多</p>
+<blockquote>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004135252759.png" alt="image-20221004135252759"> </p>
+</blockquote>
+<p><strong>形式定义:</strong></p>
+<p>Γ(栈状态集)和 Z0(栈底符号)是新增的,Z0不能是输入符号之一</p>
+<blockquote>
+<p>q读入a后非确定的转为状态集中的一个,且入栈一个符号β</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004135341682.png" alt="image-20221004135341682"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004140636148.png" alt="image-20221004140636148"> </p>
+<p>例子:</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004141108863.png" alt="image-20221004141108863"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004141504065.png" alt="image-20221004141504065"> </p>
+</blockquote>
+<p><strong>瞬时描述与转移符号:</strong></p>
+<blockquote>
+<p>瞬时描述ID是PDA里的状态,包括当前状态,剩下的输入,栈中所有符号</p>
+<p>转移符号|-是PDA里的转移,状态改变,输入符号减少一个,栈顶符号变化</p>
+<p><img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004142032604.png" alt="image-20221004142032604"> <img src="/2022/08/07/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%BD%A2%E5%BC%8F%E8%AF%AD%E8%A8%80%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%9C%BA/image-20221004142612131.png" alt="image-20221004142612131"> </p>
+</blockquote>
+<h2 id="下推自动机接受的语言"><a href="#下推自动机接受的语言" class="headerlink" title="下推自动机接受的语言"></a>下推自动机接受的语言</h2><h2 id="下推自动机与文法的等价性"><a href="#下推自动机与文法的等价性" class="headerlink" title="下推自动机与文法的等价性"></a>下推自动机与文法的等价性</h2><h2 id="确定型下推自动机"><a href="#确定型下推自动机" class="headerlink" title="确定型下推自动机"></a>确定型下推自动机</h2><h1 id="上下文无关语言的性质"><a href="#上下文无关语言的性质" class="headerlink" title="上下文无关语言的性质"></a>上下文无关语言的性质</h1><h1 id="计算导论"><a href="#计算导论" class="headerlink" title="计算导论"></a>计算导论</h1><h2 id="图灵机及其扩展"><a href="#图灵机及其扩展" class="headerlink" title="图灵机及其扩展"></a>图灵机及其扩展</h2><h2 id="不可判定性"><a href="#不可判定性" class="headerlink" title="不可判定性"></a>不可判定性</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" rel="tag"># 编译原理</a>
+          
+            <a href="/tags/%E7%BD%91%E8%AF%BE/" rel="tag"># 网课</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/07/30/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB/" rel="next" title="程序员的自我修养">
+                <i class="fa fa-chevron-left"></i> 程序员的自我修养
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/08/21/ctf/reverse/game/moe2022/moe2022/" rel="prev" title="moectf2022">
+                moectf2022 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">课程简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E4%B8%8E%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">语言与问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">正则语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E7%A9%B7%E8%87%AA%E5%8A%A8%E6%9C%BA-%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-number">2.1.</span> <span class="nav-text">有穷自动机(有限状态机)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E7%9A%84%E6%9C%89%E7%A9%B7%E8%87%AA%E5%8A%A8%E6%9C%BADFA"><span class="nav-number">2.1.1.</span> <span class="nav-text">确定的有穷自动机DFA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E7%A1%AE%E5%AE%9A%E6%9C%89%E7%A9%B7%E8%87%AA%E5%8A%A8%E6%9C%BANFA"><span class="nav-number">2.1.2.</span> <span class="nav-text">非确定有穷自动机NFA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DFA%E5%92%8CNFA%E7%9A%84%E7%AD%89%E4%BB%B7%E6%80%A7"><span class="nav-number">2.1.3.</span> <span class="nav-text">DFA和NFA的等价性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E6%9C%89%E7%A9%BA%E8%BD%AC%E7%A7%BB%E7%9A%84%E9%9D%9E%E7%A1%AE%E5%AE%9A%E6%9C%89%E7%A9%B7%E8%87%AA%E5%8A%A8%E6%9C%BA%CE%B5-NFA"><span class="nav-number">2.1.4.</span> <span class="nav-text">带有空转移的非确定有穷自动机ε-NFA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F-%E6%AD%A3%E8%A7%84%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">正则表达式(正规式?)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DFA%E8%BD%AC%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">2.2.1.</span> <span class="nav-text">DFA转正则表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0NFA"><span class="nav-number">2.2.2.</span> <span class="nav-text">*正则表达式到NFA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">2.3.</span> <span class="nav-text">正则语言的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%B5%E5%BC%95%E7%90%86"><span class="nav-number">2.3.1.</span> <span class="nav-text">泵引理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%81%E9%97%AD%E6%80%A7"><span class="nav-number">2.3.2.</span> <span class="nav-text">封闭性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%AF%AD%E8%A8%80%E7%9A%84%E5%88%A4%E5%AE%9A%E6%80%A7%E8%B4%A8"><span class="nav-number">2.3.3.</span> <span class="nav-text">正则语言的判定性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%9C%BA%E7%9A%84%E6%9C%80%E5%B0%8F%E5%8C%96"><span class="nav-number">2.3.4.</span> <span class="nav-text">*自动机的最小化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E8%AF%AD%E8%A8%80"><span class="nav-number">3.</span> <span class="nav-text">上下文无关语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E6%96%87%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">上下文无关文法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">文法的形式定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E7%BA%A6%E5%92%8C%E6%B4%BE%E7%94%9F"><span class="nav-number">3.1.2.</span> <span class="nav-text">规约和派生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E7%9A%84%E8%AF%AD%E8%A8%80-%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E8%AF%AD%E8%A8%80"><span class="nav-number">3.1.3.</span> <span class="nav-text">文法的语言-上下文无关语言</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E6%A0%91"><span class="nav-number">3.2.</span> <span class="nav-text">语法分析树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%91%E5%BD%A2%E5%BC%8F%E5%AE%9A%E4%B9%89"><span class="nav-number">3.2.1.</span> <span class="nav-text">语法树形式定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%91%E5%92%8C%E6%B4%BE%E7%94%9F%E7%9A%84%E7%AD%89%E4%BB%B7%E6%80%A7"><span class="nav-number">3.2.2.</span> <span class="nav-text">语法树和派生的等价性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80%E7%9A%84%E6%AD%A7%E4%B9%89%E6%80%A7"><span class="nav-number">3.3.</span> <span class="nav-text">文法和语言的歧义性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E7%9A%84%E5%8C%96%E7%AE%80%E4%B8%8E%E8%8C%83%E5%BC%8F"><span class="nav-number">3.4.</span> <span class="nav-text">文法的化简与范式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E6%AD%A5%E5%8C%96%E7%AE%80"><span class="nav-number">3.4.1.</span> <span class="nav-text">3步化简</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8C%83%E5%BC%8F"><span class="nav-number">3.4.2.</span> <span class="nav-text">范式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%94%E5%A7%86%E6%96%AF%E5%9F%BA%E8%8C%83%E5%BC%8F"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">乔姆斯基范式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%BC%E9%9B%B7%E5%B7%B4%E8%B5%AB%E8%8C%83%E5%BC%8F"><span class="nav-number">3.4.2.2.</span> <span class="nav-text">格雷巴赫范式</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E6%8E%A8%E8%87%AA%E5%8A%A8%E6%9C%BA"><span class="nav-number">4.</span> <span class="nav-text">下推自动机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E6%8E%A8%E8%87%AA%E5%8A%A8%E6%9C%BAPDA"><span class="nav-number">4.1.</span> <span class="nav-text">下推自动机PDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E6%8E%A8%E8%87%AA%E5%8A%A8%E6%9C%BA%E6%8E%A5%E5%8F%97%E7%9A%84%E8%AF%AD%E8%A8%80"><span class="nav-number">4.2.</span> <span class="nav-text">下推自动机接受的语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E6%8E%A8%E8%87%AA%E5%8A%A8%E6%9C%BA%E4%B8%8E%E6%96%87%E6%B3%95%E7%9A%84%E7%AD%89%E4%BB%B7%E6%80%A7"><span class="nav-number">4.3.</span> <span class="nav-text">下推自动机与文法的等价性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%9E%8B%E4%B8%8B%E6%8E%A8%E8%87%AA%E5%8A%A8%E6%9C%BA"><span class="nav-number">4.4.</span> <span class="nav-text">确定型下推自动机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E6%97%A0%E5%85%B3%E8%AF%AD%E8%A8%80%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">5.</span> <span class="nav-text">上下文无关语言的性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%AF%BC%E8%AE%BA"><span class="nav-number">6.</span> <span class="nav-text">计算导论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%81%B5%E6%9C%BA%E5%8F%8A%E5%85%B6%E6%89%A9%E5%B1%95"><span class="nav-number">6.1.</span> <span class="nav-text">图灵机及其扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%8F%AF%E5%88%A4%E5%AE%9A%E6%80%A7"><span class="nav-number">6.2.</span> <span class="nav-text">不可判定性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

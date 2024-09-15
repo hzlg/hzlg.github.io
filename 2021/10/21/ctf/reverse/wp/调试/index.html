@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="调试相关题目的wp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="调试">
+<meta property="og:url" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="调试相关题目的wp">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211016132831367.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211016132958683.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121135724986.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121111857318.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121134622412.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121134729651.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121111918277.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121112315859.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121112605928.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929150905343.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929151054863.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121135021242.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929152514369-16374655691671.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929152639999-16374655691672.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008150623129.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008150730252.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008153633934.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211017120800167.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211017120927695.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008153215828.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008153221308.png">
+<meta property="article:published_time" content="2021-10-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-20T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211016132831367.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/调试/"/>
+
+
+
+
+
+  <title>调试 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">调试</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-21T00:00:00+08:00">
+                2021-10-21
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-11-21T00:00:00+08:00">
+                2021-11-21
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>调试相关题目的wp</p>
+<span id="more"></span>
+
+<p>装gdb详见《环境配置》这一篇</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211016132831367.png" alt="image-20211016132831367"> </p>
+<hr>
+<h4 id="10-25-Geek2021-调试-jz-gt-jmp"><a href="#10-25-Geek2021-调试-jz-gt-jmp" class="headerlink" title="10.25-Geek2021-调试(jz-&gt;jmp)"></a>10.25-Geek2021-调试(jz-&gt;jmp)</h4><h4 id="ad-Simple-check-100（jz-gt-jnz）"><a href="#ad-Simple-check-100（jz-gt-jnz）" class="headerlink" title="ad-Simple-check-100（jz-&gt;jnz）"></a>ad-Simple-check-100（jz-&gt;jnz）</h4><blockquote>
+<p>给了三个文件,wp说exe文件有坑,elf才行</p>
+</blockquote>
+<blockquote>
+<p>在ida里发现关键是check_key函数</p>
+<p>用pwndbg打开</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gdb -q</span><br><span class="line">file task9_x86_64_46d01fe312d35ecf69c4ff8ab8ace75d080891dc</span><br><span class="line">b main</span><br><span class="line">r</span><br></pre></td></tr></table></figure>
+
+<p>按n单步步过,s是步进,比较详细，这里不需要，一直n到check_key函数</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211016132958683.png" alt="image-20211016132958683"> </p>
+<p>要使test eax eax为真,要让eax为1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set $eax=1</span><br></pre></td></tr></table></figure>
+
+<p>之后再继续步过就行了</p>
+</blockquote>
+<p>ida远程调试也可以</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121135724986.png" alt="image-20211121135724986">  </p>
+<p>jz改jnz</p>
+<blockquote>
+<p>flag_is_you_know_cracking!!!</p>
+</blockquote>
+<h4 id="ad-re1（union共用体）"><a href="#ad-re1（union共用体）" class="headerlink" title="ad-re1（union共用体）"></a>ad-re1（union共用体）</h4><p>将输入的flag与v5.m128i_i8进行比较,知道v5是什么就行</p>
+<p>点进去看不懂</p>
+<blockquote>
+<p> <img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121111857318.png" alt="image-20211121111857318"> </p>
+<p> <img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121134622412.png" alt="image-20211121134622412"> </p>
+<p> 翻译：</p>
+<p> 使用数据定义命令创建局部变量和函数参数。<br> 两个特殊字段“r”和“s”代表返回地址和保存的寄存器。<br> 帧数：44； 保存的寄存器：4； 清除：0</p>
+<p> <img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121134729651.png" alt="image-20211121134729651"> </p>
+<p> <img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121111918277.png" alt="image-20211121111918277"> </p>
+</blockquote>
+<p>在scanf处下个断点然后动调,此时再点进v5就有了</p>
+<p>详解:</p>
+<p>① v5一开始不可见的原因:</p>
+<p>m128i表明这是一个共用体,一次只能存储其中一个成员变量的值,程序运行后才为其赋上了flag的值</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/bwl111/article/details/8981091">__m128i类型的解析</a></p>
+<p> <img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121112315859.png" alt="image-20211121112315859"></p>
+</blockquote>
+<p>② 如何找到v5</p>
+<p>看汇编,将xmmword__413E34通过movdqu移动到了xmm0寄存器,后又移动到了ebp+44处</p>
+<p>后面又将xmmword__413E44移到了ebp+34处</p>
+<blockquote>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121112605928.png" alt="image-20211121112605928"> </p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929150905343.png" alt="image-20210929150905343"> </p>
+<p>进入ds:xmmword_413E34</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929151054863.png" alt="image-20210929151054863"> </p>
+<p>undefine发现确实是由这两个数据拼接成的</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211121135021242.png" alt="image-20211121135021242"> </p>
+<p>按a转换为字符串</p>
+</blockquote>
+<blockquote>
+<p>非预期:vim打开,按/进入查找模式</p>
+<img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929152514369-16374655691671.png" alt="image-20210929152514369" style="zoom:50%;"> 
+
+<p>反编译的结果不是一定正确的，这次IDA把flag当成代码，进行了反编译，因此在string界面无法找到flag</p>
+<p>解决方法是在IDA打开文件时选择binary file,在此模式下IDA不会进行反编译，此时再打开strings界面就可发现flag</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20210929152639999-16374655691672.png" alt="image-20210929152639999">  </p>
+</blockquote>
+<blockquote>
+<p>DUTCTF{We1c0met0DUTCTF}</p>
+</blockquote>
+<h4 id="buu-justre-使用OD跳过判断"><a href="#buu-justre-使用OD跳过判断" class="headerlink" title="buu-justre(使用OD跳过判断)"></a>buu-justre(使用OD跳过判断)</h4><p>打开程序让你疯狂点,点了个200下人麻了,打开ida(其实flag已经出了,想试下找地址然后改数据的办法)</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008150623129.png" alt="image-20211008150623129"> </p>
+<p>跟踪format发现是:<img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008150730252.png" alt="image-20211008150730252"> </p>
+<p>猜测dword_4099F0是点击数，点19999下就能出</p>
+<p>点是不可能点的，在ida里找到判断语句的汇编地址</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008153633934.png" alt="image-20211008153633934"> </p>
+<p>在OD里打开，找到跳转的函数nop掉</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211017120800167.png" alt="image-20211017120800167">  </p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211017120927695.png" alt="image-20211017120927695"> </p>
+<p>再运行程序，点getflag：</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008153215828.png" alt="image-20211008153215828"> </p>
+<p>click it：flag直接出了</p>
+<p><img src="/2021/10/21/ctf/reverse/wp/%E8%B0%83%E8%AF%95/image-20211008153221308.png" alt="image-20211008153221308"> </p>
+<blockquote>
+<p>BJD{1999902069a45792d233ac}</p>
+</blockquote>
+<h4 id="week3-FlareOn6-Overlang-动调改参数"><a href="#week3-FlareOn6-Overlang-动调改参数" class="headerlink" title="week3 - FlareOn6 Overlang(动调改参数 )"></a>week3 - FlareOn6 Overlang(动调改参数 )</h4><h4 id="week3-BJDCTF2020-easy-动调改函数地址"><a href="#week3-BJDCTF2020-easy-动调改函数地址" class="headerlink" title="week3 -  BJDCTF2020 easy(动调改函数地址)"></a>week3 -  BJDCTF2020 easy(动调改函数地址)</h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/10/21/ctf/reverse/wp/%E5%8A%A0%E5%AF%86%E5%87%BD%E6%95%B0/" rel="next" title="加密函数">
+                <i class="fa fa-chevron-left"></i> 加密函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/10/21/ctf/reverse/wp/%E8%84%B1%E5%A3%B3/" rel="prev" title="脱壳">
+                脱壳 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-25-Geek2021-%E8%B0%83%E8%AF%95-jz-gt-jmp"><span class="nav-number">1.</span> <span class="nav-text">10.25-Geek2021-调试(jz-&gt;jmp)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ad-Simple-check-100%EF%BC%88jz-gt-jnz%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">ad-Simple-check-100（jz-&gt;jnz）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ad-re1%EF%BC%88union%E5%85%B1%E7%94%A8%E4%BD%93%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">ad-re1（union共用体）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#buu-justre-%E4%BD%BF%E7%94%A8OD%E8%B7%B3%E8%BF%87%E5%88%A4%E6%96%AD"><span class="nav-number">4.</span> <span class="nav-text">buu-justre(使用OD跳过判断)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#week3-FlareOn6-Overlang-%E5%8A%A8%E8%B0%83%E6%94%B9%E5%8F%82%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">week3 - FlareOn6 Overlang(动调改参数 )</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#week3-BJDCTF2020-easy-%E5%8A%A8%E8%B0%83%E6%94%B9%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80"><span class="nav-number">6.</span> <span class="nav-text">week3 -  BJDCTF2020 easy(动调改函数地址)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

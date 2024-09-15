@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="re," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="RSA&amp; 动调参数 &amp; 动调地址">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强壮逆向人week3">
+<meta property="og:url" content="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="RSA&amp; 动调参数 &amp; 动调地址">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120165851237.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120172316018.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120173042051.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120173121152.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120174920132.png">
+<meta property="article:published_time" content="2021-11-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-19T16:00:00.000Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="re">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120165851237.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2021/11/20/ctf/reverse/强壮逆向人/week3/"/>
+
+
+
+
+
+  <title>强壮逆向人week3 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">强壮逆向人week3</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-11-20T00:00:00+08:00">
+                2021-11-20
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-11-20T00:00:00+08:00">
+                2021-11-20
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>RSA&amp; 动调参数 &amp; 动调地址</p>
+<span id="more"></span>
+
+<h1 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h1><p>sub_96A函数是把用户输入的字符串<strong>转换为16进制存入v9</strong>中。</p>
+<p>可以用下面这个试一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line"></span><br><span class="line">char byte_202010[] = &#123;0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66&#125;;</span><br><span class="line"></span><br><span class="line">int sub_96A(const char *a1, char *a2)</span><br><span class="line">&#123;</span><br><span class="line">    int result; // rax</span><br><span class="line">    int v3;     // [rsp+0x18] [rbp-0x18]</span><br><span class="line">    int i;      // [rsp+0x1C] [rbp-0x14]</span><br><span class="line"></span><br><span class="line">    v3 = 0;</span><br><span class="line">    for (i = 0;; i += 2)</span><br><span class="line">    &#123;</span><br><span class="line">        result = strlen(a1);</span><br><span class="line">        if (v3 &gt;= result)</span><br><span class="line">            break;</span><br><span class="line">        *(a2 + i) = byte_202010[a1[v3] &gt;&gt; 4];</span><br><span class="line">        *(a2 + i + 1) = byte_202010[a1[v3++] &amp; 0xF];</span><br><span class="line">    &#125;</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    char *T = (char *)malloc(sizeof(char) * 100);</span><br><span class="line">    char *R = (char *)malloc(sizeof(char) * 100);</span><br><span class="line">    while (1)</span><br><span class="line">    &#123;</span><br><span class="line">        scanf(&quot;%s&quot;, T);</span><br><span class="line">        sub_96A(T, R);</span><br><span class="line">        printf(&quot;%s\n&quot;, R);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看wp得知__gmpz_init_set_str 函来自一个 GNU 高精度算法库，和python的gmpy2很像</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43790779/article/details/108473984">gmpy2文档</a> (感谢DX3906)</p>
+<p>RSA，不多说</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">from Crypto.Util.number import long_to_bytes</span><br><span class="line"></span><br><span class="line">p = 366669102002966856876605669837014229419</span><br><span class="line">q = 282164587459512124844245113950593348271</span><br><span class="line">N = 103461035900816914121390101299049044413950405173712170434161686539878160984549</span><br><span class="line">c = 0xad939ff59f6e70bcbfad406f2494993757eee98b91bc244184a377520d06fc35</span><br><span class="line">e = 65537</span><br><span class="line"></span><br><span class="line">d = gmpy2.invert(e, (p-1)*(q-1))</span><br><span class="line">m = gmpy2.powmod(c, d, p*q)</span><br><span class="line">print(long_to_bytes(m), end=&#x27;&#x27;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>suctf{Pwn_@_hundred_years}</p>
+</blockquote>
+<h1 id="动调改参数-FlareOn6-Overlang"><a href="#动调改参数-FlareOn6-Overlang" class="headerlink" title="动调改参数 FlareOn6 Overlang"></a>动调改参数 FlareOn6 Overlang</h1><p>运行之后是一个弹窗</p>
+<p><img src="/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120165851237.png" alt="image-20211120165851237"> </p>
+<p>函数如下，没什么信息</p>
+<p>start以TEXT,unknown,28为参数调用了10060，10060继续以TEXT,unknown调用了11000</p>
+<p><img src="/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120172316018.png" alt="image-20211120172316018"> </p>
+<p>在10060中进行了28次循环，调用了28次11000</p>
+<p>但是unknown很长,不止28,就处理的应该是不完整的,就动调一下把栈里的28改大一点</p>
+<p><img src="/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120173042051.png" alt="image-20211120173042051"> </p>
+<blockquote>
+<p>右键edit或者按f2就能修改栈内的值了</p>
+</blockquote>
+<p>bb用的是a2的长度0xAE，不过其实0x44就够了，0xFF也不是不行</p>
+<p><img src="/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120173121152.png" alt="image-20211120173121152"> </p>
+<blockquote>
+<p>flag{<a href="mailto:&#x49;&#95;&#x61;&#95;&#77;&#x5f;&#116;&#x5f;&#x68;&#95;&#101;&#x5f;&#101;&#95;&#110;&#95;&#67;&#95;&#x6f;&#95;&#x44;&#x5f;&#105;&#x5f;&#x6e;&#x5f;&#103;&#64;&#x66;&#x6c;&#x61;&#114;&#101;&#x2d;&#111;&#110;&#46;&#x63;&#111;&#x6d;">&#x49;&#95;&#x61;&#95;&#77;&#x5f;&#116;&#x5f;&#x68;&#95;&#101;&#x5f;&#101;&#95;&#110;&#95;&#67;&#95;&#x6f;&#95;&#x44;&#x5f;&#105;&#x5f;&#x6e;&#x5f;&#103;&#64;&#x66;&#x6c;&#x61;&#114;&#101;&#x2d;&#111;&#110;&#46;&#x63;&#111;&#x6d;</a>}</p>
+</blockquote>
+<h1 id="动调改函数地址-BJDCTF2020-easy"><a href="#动调改函数地址-BJDCTF2020-easy" class="headerlink" title="动调改函数地址 BJDCTF2020 easy"></a>动调改函数地址 BJDCTF2020 easy</h1><p>打开发现就说了一句can you find me?</p>
+<p>其他什么也没了,再看看函数,只有main,time,puts,system</p>
+<p>main里是啥initialized,不太看得懂 </p>
+<p>看看函数表,main函数上面有个ques没有被调用,里面的东西能看懂了,是putchar(32)和putchar(42),也就是空格和’*’</p>
+<p>循环了好多次,就别想着手撕了,动调把随便一条指令改成<code>call 0x401520</code>,执行之后:</p>
+<p><img src="/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week3/image-20211120174920132.png" alt="image-20211120174920132"> </p>
+<p>进到ques函数之后按ctrl + f7,可以直接执行到ret,按完之后看终端打印出来还挺爽的哈哈哈哈:)</p>
+<blockquote>
+<p>flag{HACKIT4FUN}</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/re/" rel="tag"># re</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/11/20/ctf/reverse/%E5%BC%BA%E5%A3%AE%E9%80%86%E5%90%91%E4%BA%BA/week4/" rel="next" title="强壮逆向人week4">
+                <i class="fa fa-chevron-left"></i> 强壮逆向人week4
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/21/ctf/reverse/%E6%AF%8F%E6%97%A5%E5%8D%9A%E5%AE%A2/2021/11.21-excel%E9%80%86%E5%90%91/" rel="prev" title="11.21-excel型逆向(z3)">
+                11.21-excel型逆向(z3) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RSA"><span class="nav-number">1.</span> <span class="nav-text">RSA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E8%B0%83%E6%94%B9%E5%8F%82%E6%95%B0-FlareOn6-Overlang"><span class="nav-number">2.</span> <span class="nav-text">动调改参数 FlareOn6 Overlang</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E8%B0%83%E6%94%B9%E5%87%BD%E6%95%B0%E5%9C%B0%E5%9D%80-BJDCTF2020-easy"><span class="nav-number">3.</span> <span class="nav-text">动调改函数地址 BJDCTF2020 easy</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
