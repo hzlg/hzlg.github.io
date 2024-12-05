@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CFI," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="[https:&#x2F;&#x2F;www.acsac.org&#x2F;2019&#x2F;program&#x2F;final&#x2F;1&#x2F;103.pdf](https:&#x2F;&#x2F;www.acsac.org&#x2F;2019&#x2F;program&#x2F;final&#x2F;1&#x2F;103.pdf#:~:text&#x3D;LLVM-CFI is a control-flow integrity defense analysis framework%2C,analyst to thoroughly">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLVM-CFI">
+<meta property="og:url" content="https://hzlg.github.ioz/2024/12/03/indirect-call/LLVM-CFI/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="[https:&#x2F;&#x2F;www.acsac.org&#x2F;2019&#x2F;program&#x2F;final&#x2F;1&#x2F;103.pdf](https:&#x2F;&#x2F;www.acsac.org&#x2F;2019&#x2F;program&#x2F;final&#x2F;1&#x2F;103.pdf#:~:text&#x3D;LLVM-CFI is a control-flow integrity defense analysis framework%2C,analyst to thoroughly">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/12/03/indirect-call/LLVM-CFI/2YSPWGXS.png">
+<meta property="article:published_time" content="2024-12-03T07:29:39.799Z">
+<meta property="article:modified_time" content="2024-12-03T07:35:50.239Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="CFI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2024/12/03/indirect-call/LLVM-CFI/2YSPWGXS.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2024/12/03/indirect-call/LLVM-CFI/"/>
+
+
+
+
+
+  <title>LLVM-CFI | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2024/12/03/indirect-call/LLVM-CFI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LLVM-CFI</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-03T15:29:39+08:00">
+                2024-12-03
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2024-12-03T15:35:50+08:00">
+                2024-12-03
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[<a target="_blank" rel="noopener" href="https://www.acsac.org/2019/program/final/1/103.pdf]">https://www.acsac.org/2019/program/final/1/103.pdf]</a>(<a target="_blank" rel="noopener" href="https://www.acsac.org/2019/program/final/1/103.pdf#:~:text=LLVM-CFI">https://www.acsac.org/2019/program/final/1/103.pdf#:~:text=LLVM-CFI</a> is a control-flow integrity defense analysis framework%2C,analyst to thoroughly compare conceptual%2Fdeployed static CFI policies.)</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/TeamVault/LLVM-CFI">TeamVault/LLVM-CFI</a></p>
+<p>Analyzing Control Flow Integrity with LLVM-CFI（利用 LLVM-CFI 分析控制流完整性）</p>
+<p>本文包含了 <strong>在C++程序中查找间接调用</strong> 的系统的描述（Sec 3.4）</p>
+<span id="more"></span>
+
+<h2 id="概论"><a href="#概论" class="headerlink" title="概论"></a>概论</h2><p>背景：控制流hijacking攻击用于执行恶意计算，现有防护方法在应用CFI策略后对攻击面的评估只能测量最佳情况下的间接转移平均值，不能提供绝对值，也不能提供gadget可用性。（<strong>评估不准</strong>）CFI能抵御hijacking，但没有对CFI防御方法之间的系统评估（<strong>缺失系统评估对比</strong>）</p>
+<p>贡献：本文在Clang / LLVM编译器框架的基础上，提出了一个静态源代码分析框架<strong>LLVM - CFI</strong>，用于分析现有的静态CFI保护。① 对CFI政策精确<strong>建模</strong>② 用统一方法<strong>评估</strong></p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在CFI策略部署后，攻击者可以寻找仍然可用的gadget发动CRA，要衡量CFI策略下的程序安全性，需要一个攻击分析工具（在攻击者已知防御方法的前提下），而现在没有对静态CFI建模或者对比的工具，也没有已知防御方法的静态CRA制作工具（现在的工具对程序没有深入了解，可以找到gadget，但不能确定gadget在部署防御后是否可用）（<strong>需要针对CFI防御的评估/攻击工具</strong>）</p>
+<p>评估工具需要做到：</p>
+<ol>
+<li> 对防御精确<strong>建模</strong></li>
+<li> 使用程序<strong>元数据</strong>，不单纯依赖运行时内存的限制 (使用程序原语?)</li>
+<li> 利用被保护程序的精确<strong>语义知识</strong>（使用源代码？）</li>
+<li> 提供部署防御后剩余的<strong>攻击面数目</strong></li>
+</ol>
+<p>LLVM-CFI 介绍：</p>
+<ul>
+<li><p>  LLVM-CFI 通过寻找程序控制流可以转移到的受保护target，来自动化COOP - like攻击的一步。LLVM-CFI 不能直接制造攻击，但可以帮助攻击（<strong>可以用于评估/攻击</strong>）</p>
+</li>
+<li><p>  LLVM-CFI是一个统一的框架来评估不同的CFI，引入精确的<strong>CTR指标</strong>（在实施CFI后还有多少calltarget可用）</p>
+</li>
+<li><p>  LLVM - CFI依赖于这样的洞察：通过将CFI防御精确地<strong>建模</strong>成一个全面的策略，在程序编译期间，通过一个统一的分析框架，可以评估对调用点和调用目标引入的约束。LLVM - CFI提供了一组<strong>程序表达原语</strong>，有助于对CFI策略建模。例如，LLVM - CFI提供了与变量类型、类层次结构、虚表布局和函数签名相关的静态原语。这些原语可以作为构建模块，对广泛的CFI政策进行建模。</p>
+</li>
+<li><p>  LLVM - CFI在不同的CFI防御下为每个callsite提供合法的<strong>calltarget集合</strong>。集合下界：在良性程序执行期间可以被受保护的callsite依据分析策略<strong>合法</strong>调用的calltarget集合。集合上界：在良性程序执行期间可以被受保护的callsite<strong>合法或不合法</strong>调用的calltarget集合。</p>
+</li>
+<li><p>  LLVM-CFI<strong>静态分析</strong>CFI，进行<strong>源码</strong>级别的分析（将LLCM IR和Clang metadata推送到编译器的LTO链接时优化阶段来分析）因为二进制CFI策略的实现可以用手头的源代码更精确地表示，所以选择不分析受保护程序的机器码，因为对于每个CFI防御所施加的约束，源代码提供了更多的语义和精度。</p>
+</li>
+</ul>
+<h2 id="技术背景知识"><a href="#技术背景知识" class="headerlink" title="技术背景知识"></a>技术背景知识</h2><h3 id="CFI"><a href="#CFI" class="headerlink" title="CFI"></a>CFI</h3><h3 id="保护方案"><a href="#保护方案" class="headerlink" title="保护方案"></a>保护方案</h3><p>二进制程序中的别名分析是不可判定的[ 40 ]</p>
+<p>chatgpt：<br><strong>别名分析</strong> 是一种静态分析技术，用来确定程序中不同变量或内存位置是否可能引用相同的内存区域。对于程序优化或安全分析来说，判断不同变量是否可能是相同的内存位置（即“别名”）是很重要的。但对于二进制程序，别名分析 是 <strong>不可判定的</strong>，这意味着我们不能总是准确地确定程序中所有变量或内存位置是否存在别名关系。特别是在没有源代码的情况下，直接从二进制代码进行别名分析是非常困难的。<br>因为别名分析的不可判定性，防御者在保护控制流时，不能依赖于像别名分析这样的静态分析技术来完全准确地验证所有控制流路径。于是，防御者转而采用其他<strong>程序原语</strong>来 <strong>动态</strong> 维护和验证控制流，确保程序控制流的完整性。这些原语一般是程序中可以被提取和利用的结构或信息，用来动态地保证控制流的正确性。以下是这些原语的几个常见例子：</p>
+<ul>
+<li>  类层次结构：在面向对象编程中，程序中的类和类之间的<strong>继承关系</strong>可以被用于验证控制流的合法性，防止攻击者通过虚假对象篡改程序的控制流。</li>
+<li>  虚函数表布局：对于面向对象语言，虚函数表是存储虚函数指针的结构。通过分析<strong>虚函数表的布局</strong>，防御者可以了解程序中的合法方法调用。比如，vtable通过存储类的虚函数地址来实现动态绑定。攻击者如果篡改虚函数表，就可能使程序跳转到非法的函数。通过保护虚函数表布局，防御者可以确保程序<strong>只调用合法的虚函数</strong>。</li>
+<li>  重构的类层次结构：如果程序只有二进制文件，防御者可以通过静态分析二进制代码来 <strong>重构类层次结构</strong>，即推断程序中可能存在的类和它们的继承关系。这种方法可以帮助防御者理解程序结构，并根据这些信息来构建和验证控制流图。</li>
+<li>  二进制函数类型：通过分析二进制代码中的函数签名和调用约定，防御者可以确定某个函数调用是否符合预期的 <strong>参数个数</strong>、<strong>参数类型</strong> 等。通过匹配 <strong>callsite</strong>（调用点）和 <strong>calltarget</strong>（调用目标）之间的参数类型和个数，防御者可以确保程序的函数调用符合预期，防止攻击者通过篡改调用目标来绕过保护机制。例如，某个函数原本期望接收两个整数参数，如果攻击者修改了调用目标，使得该函数接收不匹配的参数类型或个数，这可能导致错误行为或漏洞的出现。防御者通过这种方式，确保每个函数调用的目标是合法的，并且与调用点的预期匹配。</li>
+</ul>
+<h3 id="静态信息"><a href="#静态信息" class="headerlink" title="静态信息"></a>静态信息</h3><p>基于静态信息的CFI防御机制允许</p>
+<p>callsite到target：( 1 )函数入口点，通过创建一个掩码将callsite类型映射到目标函数类型，该掩码要求提供的参数(最多达6种)的数量必须高于消耗的参数的数量</p>
+<p>（2）一个重建的类层次(无根节点( s)和边不定向)可以从二进制中恢复并执行</p>
+<p>（3）所有可以恢复和执行的虚拟表，只允许某些虚拟表条目，例如[ 57 ]基于精确的函数类型映射</p>
+<p>（4）子类的层次结构是强制的。</p>
+<p>因此，为了使这些技术发挥作用，程序元数据应该是可用的，或者可以通过程序分析对其进行重构。</p>
+<h2 id="LLVM-CFI的设计"><a href="#LLVM-CFI的设计" class="headerlink" title="LLVM-CFI的设计"></a>LLVM-CFI的设计</h2><p>LLVM - CFI采用<strong>静态黑盒策略</strong>，静态获取攻击者可控的前向CFG边集合。易受攻击的前向CFG边 被表示为一个具有可变数目的target函数的callsite。这些CFG边可以被攻击者重复使用，通过任意的读或写原语调用任意函数。</p>
+<p>LLVM - CFI的主要思想是用不同类型的CFI策略编译目标程序，得到每个约束配置下每个callsite允许的target集合。</p>
+<p><img src="/2024/12/03/indirect-call/LLVM-CFI/2YSPWGXS.png" alt="\&lt;img alt=&quot;&quot; data-attachment-key=&quot;2YSPWGXS&quot; width=&quot;830&quot; height=&quot;811&quot; src=&quot;attachments/2YSPWGXS.png&quot; ztype=&quot;zimage&quot;&gt;"></p>
+<ol>
+<li><p> 提供程序源代码作为LLVM - CFI的输入</p>
+</li>
+<li><p> 选择防御策略（切换LLVM-CFI源代码中的flag/编译器flag来选择防御策略）也可以建模防御策略：扩展原语列表，并将防御建模为LLVM - CFI分析组件中的策略(约束集)</p>
+</li>
+<li><p> 分析人员将应用程序的源代码转发给LLVM - CFI，LLVM - CFI将使用其静态分析组件对其进行分析。</p>
+</li>
+<li><p> 静态分析时，会在编译源码时应用所选的防御</p>
+</li>
+<li><p> 收集并统计可使用的gadgets</p>
+</li>
+</ol>
+<h3 id="分析原语"><a href="#分析原语" class="headerlink" title="分析原语"></a>分析原语</h3><p>LLVM-CFI在编译时收集或构造以下原语：</p>
+<ol>
+<li><p> 虚表层次结构 可以被用于虚表继承分析，只对虚拟类进行分析因为只有虚拟类才有虚表</p>
+</li>
+<li><p> 虚表集合 可以帮助确定程序中 某个调用点（callsite） 的 合法调用目标（call targets）。通过使用程序内部包含的类继承关系来确定call target的集合。</p>
+</li>
+<li><p> 类层次 可以表示为一个类层次图，目标是对类之间的继承关系进行建模。虚表层次结构和类层次结构的不同在于，类层次结构既包含虚拟类又包含非虚拟类，而虚表层次结构只能用于推理虚拟类之间的继承关系。</p>
+</li>
+<li><p>虚拟表项 允许LLVM-CFI分析每个虚拟表中的表项数量，帮助分析虚函数表的条目（entries），从而确定虚函数表中的每个条目是指向虚函数的地址，还是其他一些特殊的条目，例如 偏移量（offsets） 或 thunks（一个用来转换调用目标的辅助函数）。</p>
+<ul>
+<li>  虚函数条目通常指向类的虚函数的地址</li>
+<li>  偏移量是虚函数表中的一些非函数条目，它们指向一些数据或指令的偏移量。比如，可能有一个条目用于存储一个类的虚基类的指针或偏移量。</li>
+<li>  <code>Thunk</code> 是一个技术术语，通常指的是在程序执行过程中，编译器或者操作系统插入的一个小的代码片段，用于解决某些跨越边界（如跨越函数、类、模块等）的调用问题。Thunk 在 C++ 中尤其重要，它常用于虚函数调用、虚继承、跨模块调用等场景中。</li>
+</ul>
+</li>
+<li><p> 虚表类型 是由给定vtable的vtable根的名称决定的。vtable根是vtable层次结构中包含的最后一个派生vtable。</p>
+</li>
+<li><p> 间接Callsites(基于对象的调度和基于函数指针的间接调用) ，可以推导出从调用目标到调用点的逆向关系</p>
+</li>
+<li><p> 调用点函数类型 允许LLVM - CFI精确地确定调用点提供参数的个数和类型。这样，在调用点和调用目标之间的精确映射是可能的。</p>
+</li>
+<li><p> 函数类型 允许LLVM - CFI精确地确定给定函数的参数个数、基元类型和返回类型值。通过这种方式，LLVM - CFI可以在兼容的调用目标和调用点之间生成一个精确的映射。</p>
+</li>
+</ol>
+<h3 id="CFI包括的约束条件"><a href="#CFI包括的约束条件" class="headerlink" title="CFI包括的约束条件"></a>CFI包括的约束条件</h3><p>CRA防御试图依赖以下一至二个维度来缓解CRA：</p>
+<ul>
+<li>  写约束：限制攻击者破坏可写的内存，<del>如果没有防御到位，攻击者可以破坏：指向数据的指针、指向代码(即函数指针)的指针和字符串等非指针值。</del>本文关注target的约束</li>
+<li>  目标约束：target约束限制了 可以被攻击者控制的callsite 的合法calltarget集合，如果没有target约束，每个callsite的target集合由程序内与链接库中的所有函数来表示。</li>
+<li>  静态分析：LLVM-CFI基于LLVM IR进行<strong>静态分析</strong>，分析在LLVM编译器的链接时优化LTO过程中进行的，用于检测CFI防御下的callsite与合法的callee。LLVM-CFI使用当前可用的原语和防御为每个callsite独立的<strong>施加目标约束</strong>。</li>
+<li>  通用目标约束：LLVM - CFI可以用来施加通用调用目标约束(防御)，基于不同精度级别的 类层次关系和 callsite calltarget类型匹配。此外，LLVM - CFI允许扩展和组合现有的策略或同时应用这些策略。</li>
+</ul>
+<h3 id="形式化描述CFI防御"><a href="#形式化描述CFI防御" class="headerlink" title="//形式化描述CFI防御"></a>//形式化描述CFI防御</h3><p>CFI防御被用于限制控制流转移仅指向合法的调用目标，对CFI防御的描述是<strong>理想化的表示</strong>，接近原始CFI防御在工具中的实现。对于基于二进制的CFI防御，防御描述比防御实现更加的准确。</p>
+<h4 id="Bin-Type（TypeArmor）"><a href="#Bin-Type（TypeArmor）" class="headerlink" title="Bin Type（TypeArmor）"></a>Bin Type（TypeArmor）</h4><ol>
+<li> 虚表层次结构中包含的任意虚函数v都在函数集合F中</li>
+<li> 虚函数表项ve属于虚表层次结构包含的虚函数V</li>
+<li> 非虚函数nvf属于函数集合F</li>
+<li> 间接callsite属于类层次结构C</li>
+<li> 所有匹配的calltarget都是 间接callsite×虚表层次中的虚函数×程序中的函数</li>
+</ol>
+<p>LLVM-CFI分析：对于每个间接callsite：（1）统计程序P中包含的每个虚表层次V中的虚表条目ve的总数；（2）统计驻留在F中的非虚函数nvf的个数，需要callsite提供的函数参数数目最多为6个。如果F包含多个不同的虚拟表层次结构(岛屿)，则继续对它们进行计数，并将它们考虑为一个特定的callsite。一个岛是一个虚拟表层次结构，它与程序P中的另一个虚拟表层次结构没有父子关系。</p>
+<h4 id="Safe-src-types（Safe-IFCC）"><a href="#Safe-src-types（Safe-IFCC）" class="headerlink" title="Safe src types（Safe IFCC）"></a>Safe src types（Safe IFCC）</h4><ol>
+<li> 虚表层次结构中包含的任意虚函数v都在函数集合F中</li>
+<li> 虚函数vf属于程序内所有的虚函数集合Fvirt</li>
+<li> 非虚函数nvf属于函数集合F</li>
+<li> callsite的数量和参数类型属于函数签名</li>
+<li> calltarget的数量和参数类型属于函数签名</li>
+<li> 函数返回类型属于函数签名</li>
+<li> 间接callsite属于callsite集合</li>
+<li> 所有匹配的target都是 间接callsite×程序中的函数×函数签名</li>
+</ol>
+<p>LLVM - CFI的分析。对于每个间接调用点cs，统计位于程序P中的虚函数vf和非虚函数nvf的数量，调用目标所需的参数数量和类型ntpct与调用点提供的参数数量和类型ntpcs相匹配。不考虑匹配函数的函数返回类型frt。所有参数指针类型都被认为是可互换的，例如int *和void *指针被认为是可互换的。</p>
+<h4 id="Src-types-IFCC-MCFI"><a href="#Src-types-IFCC-MCFI" class="headerlink" title="Src types. (IFCC/MCFI)"></a>Src types. (IFCC/MCFI)</h4><p><span style="color: rgb(0, 0, 0)"><span style="background-color: rgb(245, 245, 245)">Indirect Function Call Checker (IFCC)</span></span></p>
+<ol>
+<li> 虚表层次结构中包含的任意虚函数v都在函数集合F中</li>
+<li> 虚函数vf属于程序内所有的虚函数集合Fvirt</li>
+<li> 非虚函数nvf属于函数集合F</li>
+<li> callsite的数量和参数类型属于函数签名</li>
+<li> calltarget的数量和参数类型属于函数签名</li>
+<li> 函数返回类型属于函数签名</li>
+<li> 间接callsite属于callsite集合</li>
+<li> 所有匹配的target都是 间接callsite×程序中的函数×函数签名</li>
+</ol>
+<p>LLVM - CFI的分析。对于每个间接调用方cs，统计位于程序F中的虚函数和非虚函数的数量，调用目标所需的参数数量和类型ntpct与调用方提供的参数数量和类型ntpcs相匹配。匹配函数的返回类型被忽略。<strong>与Safe src类型相比，该策略区分了不同的指针类型。这意味着这些是不可互换的，也意味着函数签名更加严格。既没有考虑匹配函数的返回值，也没有考虑函数的名字。</strong></p>
+<h4 id="Strict-src-types-vTrust"><a href="#Strict-src-types-vTrust" class="headerlink" title="Strict src types. (vTrust)"></a>Strict src types. (vTrust)</h4><ol>
+<li><p> 虚表层次结构中包含的任意虚函数v都在函数集合F中</p>
+</li>
+<li><p> 虚函数vf属于程序内所有的虚函数集合Fvirt<del>非虚函数nvf属于函数集合F</del></p>
+</li>
+<li><p> callsite的数量和参数类型属于函数签名<del>calltarget的数量和参数类型属于函数签名</del></p>
+</li>
+<li><p> 函数返回类型属于函数签名</p>
+</li>
+<li><p> 间接callsite属于callsite集合</p>
+</li>
+<li><p> 所有匹配的target都是 间接callsite×函数签名×程序内所有的虚函数集合×虚表层次结构中包含的任意虚函数</p>
+</li>
+</ol>
+<p>Llvm - CFI的分析。对于每个间接调用站点cs，使用参数的数量，它们的类型和函数nt fpcs (在C / C + +中使用的字面名称,不附带任何类信息)的名称来计算在这个特定的调用站点被调用的函数的函数签名。将该函数类型标识符与P的每个虚拟表层次结构V中包含的每个虚拟函数vf进行匹配。在构建哈希时考虑函数的名称，而不是函数返回类型fr t，因为这可以是多态的。当一个被调用的函数的签名与一个虚函数vf的签名相匹配时，我们就有了一个匹配。</p>
+<h4 id="All-vtables-vTint"><a href="#All-vtables-vTint" class="headerlink" title="All vtables. (vTint)"></a>All vtables. (vTint)</h4><h4 id="vTable-hierarchy-island-Marx"><a href="#vTable-hierarchy-island-Marx" class="headerlink" title="vTable hierarchy/island. (Marx)"></a>vTable hierarchy/island. (Marx)</h4><h4 id="Sub-hierarchy-VTV-Vtable-Verification）"><a href="#Sub-hierarchy-VTV-Vtable-Verification）" class="headerlink" title="Sub-hierarchy. (VTV Vtable Verification）"></a>Sub-hierarchy. (VTV <span style="background-color: rgb(245, 245, 245)">Vtable V</span><span style="color: rgb(0, 0, 0)"><span style="background-color: rgb(245, 245, 245)">erification</span></span>）</h4><p><span style="background-color: rgb(245, 245, 245)">主要是对vtable调用进行检测，VTV在每个调用点验证用于虚拟调用的vtable指针的有效性。</span></p>
+<h4 id="Strict-sub-hierarchy-ShrinkWrap"><a href="#Strict-sub-hierarchy-ShrinkWrap" class="headerlink" title="Strict sub-hierarchy. (ShrinkWrap)"></a>Strict sub-hierarchy. (ShrinkWrap)</h4><h2 id="LLVM-CFI的实现细节"><a href="#LLVM-CFI的实现细节" class="headerlink" title="LLVM-CFI的实现细节"></a>LLVM-CFI的实现细节</h2><h3 id="数据收集和聚合（收集虚表给编译器，收集或构造程序原语）"><a href="#数据收集和聚合（收集虚表给编译器，收集或构造程序原语）" class="headerlink" title="数据收集和聚合（收集虚表给编译器，收集或构造程序原语）"></a>数据收集和聚合（收集虚表给编译器，收集或构造程序原语）</h3><ul>
+<li><p>  收集：LLVM - CFI在Clang前端收集程序的<strong>虚拟表</strong>，并通过编译管道推送，使其在链接时优化( LTO )时可用。对于每个虚拟表，LLVM - CFI收集<strong>条目数</strong>。在下一步中，对虚拟表进行分析并聚合为虚拟表层次结构。其他数据如<strong>6直接/间接callsite</strong>、<strong>函数签名</strong>等都是在LTO期间收集的。</p>
+</li>
+<li><p>  聚合：接下来，我们给出了由LLVM - CFI构造的<strong>程序原语</strong>。首先，基于前面收集的Clang前端中的虚拟表元数据构建<strong>1虚拟表层次结构</strong>。虚拟表层次结构用于导出程序内部类之间的关系(<strong>3类层次结构</strong>)，确定子层次结构关系，并统计例如某个虚拟表子层次结构有多少个<strong>4虚拟表项</strong>(虚函数)。其次，构造<strong>2虚拟表集合</strong>，用于将callsite映射到合法的基于类层次结构的虚拟calltargets。第三，构建了<strong>7Callsite函数类型</strong>。这些是由一个callsite提供的参数的数量，它们的类型，以及callsite是否是一个空的callsite。最后，构建<strong>8函数类型</strong>。这些由函数名、期望的参数个数、它们的类型和用于指示函数是否是空函数或非空函数的附加位组成。</p>
+</li>
+</ul>
+<h3 id="CFI建模"><a href="#CFI建模" class="headerlink" title="CFI建模"></a>CFI建模</h3><p>LLVM-CFI为每个被建模的CFI防御实现了一组约束，这些约束被定义为建模CFI行为的分析条件。这些约束在不同的原语上操作，建立CFI防御模型的五个步骤如下：</p>
+<ol>
+<li> LLVM - CFI的哪些原语被策略使用?</li>
+<li> 这些原语之间是否存在嵌套或子集关系?</li>
+<li> 该策略是否依赖于层次元数据原语?</li>
+<li> callsite/calltarget的匹配标准是什么?</li>
+<li> 如何统计一个callsite/calltarget匹配?</li>
+</ol>
+<p>对Bin types建模的例子：</p>
+<ol>
+<li> 该策略使用了LLVM-CFI提供的callsite，间接callsite，callsite函数类型，和函数类型 原语。</li>
+<li> 从程序中所有函数，我们只分析需要callsite传递最多六个参数的虚函数。从所有的callsite中，过滤掉那些没有调用虚函数，或者向calltarget提供了6个以上参数的callsite，检查callsite是否是void callsite，检查calltarget是否是void calltarget。</li>
+<li> 该策略不依赖于层次元数据。</li>
+<li> 一个callsite匹配一个calltarget，如果它提供了少于等于calltarget期望数量的参数。</li>
+<li> 在匹配标准成立的情况下，对于每一个找到的匹配，我们将总数增加一个。</li>
+</ol>
+<p>最后，将这些约束作为LTO过程中执行的LLVM编译器模块通行证来实现。因此，即使在有限的CFI政策知识约束下，也可以通过观察其他现有政策在LLVM - CFI内部的执行情况来建模。</p>
+<h3 id="CFI分析"><a href="#CFI分析" class="headerlink" title="CFI分析"></a>CFI分析</h3><p>对于typrarmor，需要确定每个间接callsite提供的参数数量（最多6个参数）与程序中存在的所有虚函数（不考虑对象继承）之间的匹配，这些虚函数可能是此类callsite的target（可能消耗最多6个参数）。为了分析这种CFI防御并收集统计数据，LLVM - CFI访问了它之前在程序中检测到的所有间接callsite，以及位于所有以前恢复的类层次结构中的所有虚函数。然后每个callsite与潜在的calltarget进行匹配。在所有虚拟callsite或虚函数被访问后，将生成的信息展示给分析人员。</p>
+<h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><h2 id="LLVM-CFI的评估"><a href="#LLVM-CFI的评估" class="headerlink" title="//LLVM-CFI的评估"></a>//LLVM-CFI的评估</h2><h3 id="衡量CFI的指标"><a href="#衡量CFI的指标" class="headerlink" title="衡量CFI的指标"></a>衡量CFI的指标</h3><ul>
+<li><p>  <strong>CTR</strong>：<span style="color: rgb(51, 51, 51)"><span style="background-color: rgb(255, 255, 255)">indirect call target reduction </span></span>CTR是应用CFI策略后<strong>合法的calltarget总数</strong>，该指标越小越好，该指标的最优值等于加固程序中存在的callsite总数，这意味着callsite和calltarget是一对一映射。</p>
+</li>
+<li><p>  <strong>RTR</strong>：<span style="color: rgb(51, 51, 51)"><span style="background-color: rgb(255, 255, 255)">indirect return target reduction </span></span>RTR是用CFI策略加固程序的后沿后<strong>可用return target的总数</strong>。该指标越小越好，该指标的最优值等于加固程序中存在的间接return site总数，这意味着return site和return target是一对一映射。</p>
+</li>
+<li><p>  <strong>fCGA</strong>：forward-edge based CG（code reuse gadget）availability fCGA是被允许的合法的包含gadget（根据gadget寻找工具）的calltarget的总数。该指标越小越好，这意味着每当一个包含gadget的calltarget被CFI保护时，gadget无法被访问。</p>
+</li>
+<li><p>  <strong>bCGA</strong>：backward return-edge based CG（code reuse gadget）availability bCGA是被允许的合法的包含gadget（根据gadget寻找工具）的return target的总数。该指标越小越好，这意味着每当calltarget返回一个包含gadget的地址时，gadget无法被访问。</p>
+</li>
+</ul>
+<h3 id="NodeJS"><a href="#NodeJS" class="headerlink" title="NodeJS"></a>NodeJS</h3><h3 id="CFI防御分数"><a href="#CFI防御分数" class="headerlink" title="CFI防御分数"></a>CFI防御分数</h3><h3 id="CFI策略排名"><a href="#CFI策略排名" class="headerlink" title="CFI策略排名"></a>CFI策略排名</h3><h3 id="综合结果"><a href="#综合结果" class="headerlink" title="综合结果"></a>综合结果</h3><h3 id="自动化CRA构建"><a href="#自动化CRA构建" class="headerlink" title="自动化CRA构建"></a>自动化CRA构建</h3><p>我们展示了如何使用LLVM - CFI来自动化COOP - like攻击的一个步骤，即找到可以合法调用的受保护目标。这个攻击绕过了名为VTV的SOTA CFI防御。由于LLVM - CFI的分析是在LLVM的LTO时间内在IR层面进行的，因此本案例研究是架构无关的。值得注意的是，LLVM的IR代码代表了机器代码(元数据)的更高层次的表示，因此我们的结果也可以应用到其他体系结构(例如, ARM)中。我们的案例研究假设了VTV / IFCC的一个理想实现，打破这个理想的工具说明在任何实现中都可以绕过防御。更具体地说，我们通过研究针对Firefox Web浏览器的原始COOP攻击[ 46 ]，提出了COOP攻击所需的组件，并证明了当使用LLVM - CFI时，这种攻击更容易执行。</p>
+<p>例如，舒斯特等[ 46 ]提出的原始COOP攻击由以下4个步骤组成：( 1 )攻击者填充6个假冒对象的缓冲区溢出；( 2 ) Firefox libxul . so共享库布局的精确知识；( 3 ) libxul . so中包含COOP分派器和其他gadget ( ML-G )的知识；( 4 )如何将信息从一个gadget传递到另一个gadget以打开Unix shell。正如COOP所证明的那样，攻击者首先需要找到一个可利用的内存损坏(例如,缓冲区溢出等。)，并将其用伪造的对象填充。接下来，攻击者调用位于libxul . so中的不同gadgets (虚拟C + +函数)。值得注意的是，由于这些函数位于不同的类层次结构中，因此这些函数在良性执行中不可调用。进一步地，在细粒度CFI防御的情况下，这些调用目标将在攻击期间得到保护。LLVM - CFI有助于识别上述的受保护目标( (见步骤( 3 )) )，如果需要，攻击者可以根据他的目标和部署的CFI防御类型使用其他目标。</p>
+<p>因此，我们假设NodeJS包含一个可利用的内存漏洞(即缓冲区溢出)，并且攻击者知道程序二进制的布局。接下来，我们假设攻击者希望将控制流弯曲到仅针对每个呼叫站点合法呼叫目标，因为这样他就可以绕过就地CFI策略。其次，攻击者希望避免调用位于其他程序类层次结构中的目标或受保护的目标。因此，他需要知道位于NodeJS主二进制中的<strong>每个callsite的哪些calltarget是合法的，哪些目标是受保护的。</strong></p>
+<p>表8描绘了根据所使用的CFI策略，合法目标设定的10个可控callsite( LLVM - CFI总共发现了数千个可控callsite）对于每一个调用目标，LLVM - CFI都提供了：<strong>文件名、函数名、起始地址和源代码行号</strong>，这样就可以很容易地在源代码文件中进行回溯。调用目标(右手侧见表8斜体)代表了八个评估策略中的每个策略的可用调用目标。此外，表8所示的信息表明了LLVM - CFI在分析师使用时的有用性。通过使用LLVM - CFI，在部署了一定的CFI策略后，可以大幅减少搜索类似COOP的受保护和未受保护的gadget所需的时间。最后，这有助于更好地调整基于CFI防御的攻击。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>防御评估指标：<span style="color: rgb(51, 51, 51)"><span style="background-color: rgb(255, 255, 255)">AIR，fAIR和AIA</span></span></p>
+<p>静态gadget发现：</p>
+<ul>
+<li>  沃尔加斯特等人[ 55 ]在分析VEX的中间语言( Intermediate Language，IL )的基础上，提出了一个静态的多架构gadget检测工具，它是Valgrind [ 45 ]编程调试框架的一部分。该工具可以发现一系列抗CFI的gadget。与LLVM - CFI相比，这两种工具都将gadget链的构建作为<strong>手工工作</strong>。相比之下，当使用LLVM - CFI时，可以定义特定的CFI防御策略并搜索可用的gadget，而沃尔加斯特等的工具则通过定义其边界(开始和结束指令)来指定抗CFI的gadget。这些都要符合一定的约束条件，尊重程序的正常程序控制流程，才能被认为是抗CFI的。这些类型的gadget被戈克塔描述得更为透彻。</li>
+<li>  Rop Defender [ 12 ]、ROPgadget [ 43 ]和Ropper [ 44 ]是基于二进制程序分析的非学术性小工具检测工具。这些工具用于在程序二进制文件内部进行搜索，目的是找到连续的机器码指令，这些指令类似于先前指定的一组定义有效gadget的规则。虽然允许快速搜索，但这些工具<strong>不能检测防御感知的gadget</strong>，因为这些工具没有对应用于程序二进制的防御进行建模。因此，这些工具无法确定哪些gadget在应用了一定的防御之后是可用的。</li>
+</ul>
+<p>动态攻击构建：</p>
+<ul>
+<li>  Newton [ 51 ]是一个运行时二进制分析工具，它依靠污点分析来帮助显著简化对被定义为调用站点和合法调用目标对的代码重用gadget的检测。牛顿可以对给定程序中的部分字节内存依赖关系进行建模。牛顿更进一步能够通过一次不关注特定攻击来建模一系列代码重用防御。牛顿能够在面对几个任意的内存写约束时进行巧妙的攻击。与Newton相比，LLVM - CFI使用程序源代码，比基于二进制分析的方法捕获了关于调用者-调用者对的更精确的信息。</li>
+<li>  Stack Defiler [ 10 ]提出了一组利用运行时对象分配信息绕过细粒度CFI防御的栈损坏攻击。基于间接函数调用检查( IFCC ) [ 49 ] (对VTV也有效)将关键指针溢出到栈上的事实，作者展示了即使在细粒度CFI防御的情况下，如何建立CRAs。与基于控制流向合法目标弯曲的LLVM - CFI相比，Stack Defiler为构造CRAs提供了一种可供选择的方法。更具体地说，作者表明，信息泄露构成了严重的威胁，而不通过内存隔离保护的影子堆栈是熟练攻击者容易攻击的目标。</li>
+<li>  ADT工具在运行时检测ACICS [ 14 ] gadgets，与Newton检测gadgets的方式类似。值得注意的是，ACICS的gadgets比Newton的gadgets受到更多的约束。例如，只考虑函数指针和参数在堆上或全局内存中损坏的攻击。与LLVM - CFI类似，ADT工具可以通过找到与某些函数匹配的间接调用对，从而在运行时破坏IFCC的CFI防御策略。相比之下，LLVM - CFI不依赖于程序输入，因为它不是一个运行时工具。因此，它可以在某种模型化的CFI策略下找到所有可破坏的间接调用点和函数对。</li>
+<li>  Revery [ 53 ]通过分析一个易受攻击的程序并收集崩溃路径上的运行时信息来处理攻击，例如变量的污点属性。在某些情况下，由于复杂的防御机制，Revery不能生成攻击，而该工具是不知道的。最后，在某些情况下，由于在利用过程中必须做出动态决策，Revery不能生成利用。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们提出了LLVM - CFI，一个控制流完整性( CFI )<strong>防御</strong>分析框架，允许分析人员彻底比较概念性和部署的CFI防御。LLVM - CFI为自动化构造控制流劫持<strong>攻击</strong>铺平了道路。</p>
+<p>我们在Clang / LLVM编译器框架之上实现了LLVM - CFI，为在编译期间精确分析真实程序提供了可能。我们已经发布了LLVM - CFI的源代码。</p>
+<p>通过使用LLVM - CFI，分析师可以大幅减少<strong>搜索</strong>与许多真实程序中包含的最先进的CFI防御兼容的<strong>gadget</strong>所需的时间。我们的实验结果表明，大多数的CFI防御都是过于宽松的。进一步地，如果攻击者在搜索gadget时不只依赖程序二进制，而且手头有LLVM - CFI等工具来分析易受攻击的应用程序，那么很多CFI防御很容易被绕过。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CFI/" rel="tag"># CFI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/11/30/indirect-call/CFI/" rel="next" title="Control-Flow Integrity (CFI)">
+                <i class="fa fa-chevron-left"></i> Control-Flow Integrity (CFI)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">概论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86"><span class="nav-number">3.</span> <span class="nav-text">技术背景知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CFI"><span class="nav-number">3.1.</span> <span class="nav-text">CFI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E6%8A%A4%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.</span> <span class="nav-text">保护方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E4%BF%A1%E6%81%AF"><span class="nav-number">3.3.</span> <span class="nav-text">静态信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LLVM-CFI%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.</span> <span class="nav-text">LLVM-CFI的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%8E%9F%E8%AF%AD"><span class="nav-number">4.1.</span> <span class="nav-text">分析原语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFI%E5%8C%85%E6%8B%AC%E7%9A%84%E7%BA%A6%E6%9D%9F%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.2.</span> <span class="nav-text">CFI包括的约束条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%A2%E5%BC%8F%E5%8C%96%E6%8F%8F%E8%BF%B0CFI%E9%98%B2%E5%BE%A1"><span class="nav-number">4.3.</span> <span class="nav-text">&#x2F;&#x2F;形式化描述CFI防御</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Bin-Type%EF%BC%88TypeArmor%EF%BC%89"><span class="nav-number">4.3.1.</span> <span class="nav-text">Bin Type（TypeArmor）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Safe-src-types%EF%BC%88Safe-IFCC%EF%BC%89"><span class="nav-number">4.3.2.</span> <span class="nav-text">Safe src types（Safe IFCC）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Src-types-IFCC-MCFI"><span class="nav-number">4.3.3.</span> <span class="nav-text">Src types. (IFCC&#x2F;MCFI)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Strict-src-types-vTrust"><span class="nav-number">4.3.4.</span> <span class="nav-text">Strict src types. (vTrust)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#All-vtables-vTint"><span class="nav-number">4.3.5.</span> <span class="nav-text">All vtables. (vTint)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vTable-hierarchy-island-Marx"><span class="nav-number">4.3.6.</span> <span class="nav-text">vTable hierarchy&#x2F;island. (Marx)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sub-hierarchy-VTV-Vtable-Verification%EF%BC%89"><span class="nav-number">4.3.7.</span> <span class="nav-text">Sub-hierarchy. (VTV Vtable Verification）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Strict-sub-hierarchy-ShrinkWrap"><span class="nav-number">4.3.8.</span> <span class="nav-text">Strict sub-hierarchy. (ShrinkWrap)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LLVM-CFI%E7%9A%84%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">5.</span> <span class="nav-text">LLVM-CFI的实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%94%B6%E9%9B%86%E5%92%8C%E8%81%9A%E5%90%88%EF%BC%88%E6%94%B6%E9%9B%86%E8%99%9A%E8%A1%A8%E7%BB%99%E7%BC%96%E8%AF%91%E5%99%A8%EF%BC%8C%E6%94%B6%E9%9B%86%E6%88%96%E6%9E%84%E9%80%A0%E7%A8%8B%E5%BA%8F%E5%8E%9F%E8%AF%AD%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">数据收集和聚合（收集虚表给编译器，收集或构造程序原语）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFI%E5%BB%BA%E6%A8%A1"><span class="nav-number">5.2.</span> <span class="nav-text">CFI建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFI%E5%88%86%E6%9E%90"><span class="nav-number">5.3.</span> <span class="nav-text">CFI分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">5.4.</span> <span class="nav-text">实现细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LLVM-CFI%E7%9A%84%E8%AF%84%E4%BC%B0"><span class="nav-number">6.</span> <span class="nav-text">&#x2F;&#x2F;LLVM-CFI的评估</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A1%E9%87%8FCFI%E7%9A%84%E6%8C%87%E6%A0%87"><span class="nav-number">6.1.</span> <span class="nav-text">衡量CFI的指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NodeJS"><span class="nav-number">6.2.</span> <span class="nav-text">NodeJS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFI%E9%98%B2%E5%BE%A1%E5%88%86%E6%95%B0"><span class="nav-number">6.3.</span> <span class="nav-text">CFI防御分数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CFI%E7%AD%96%E7%95%A5%E6%8E%92%E5%90%8D"><span class="nav-number">6.4.</span> <span class="nav-text">CFI策略排名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%BC%E5%90%88%E7%BB%93%E6%9E%9C"><span class="nav-number">6.5.</span> <span class="nav-text">综合结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96CRA%E6%9E%84%E5%BB%BA"><span class="nav-number">6.6.</span> <span class="nav-text">自动化CRA构建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">7.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

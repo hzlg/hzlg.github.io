@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CFI," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="CFI可以缓解hijacking">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Control-Flow Integrity (CFI)">
+<meta property="og:url" content="https://hzlg.github.ioz/2024/11/30/indirect-call/CFI/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="CFI可以缓解hijacking">
+<meta property="og:locale">
+<meta property="article:published_time" content="2024-11-30T07:13:50.749Z">
+<meta property="article:modified_time" content="2024-11-30T12:18:55.747Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="CFI">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2024/11/30/indirect-call/CFI/"/>
+
+
+
+
+
+  <title>Control-Flow Integrity (CFI) | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2024/11/30/indirect-call/CFI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Control-Flow Integrity (CFI)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-11-30T15:13:50+08:00">
+                2024-11-30
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2024-11-30T20:18:55+08:00">
+                2024-11-30
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>CFI可以缓解hijacking</p>
+<span id="more"></span>
+
+<h3 id="CFI"><a href="#CFI" class="headerlink" title="CFI"></a>CFI</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Control-flow_integrity">控制流完整性 - 维基百科，自由的百科全书</a></p>
+</blockquote>
+<p>背景：</p>
+<p>程序控制流转移，可以分为直接转移和间接转移，间接转移包括：</p>
+<ul>
+<li><strong>间接跳转</strong>–跳转目标是从寄存器或内存位置中读出的</li>
+<li><strong>间接调用</strong>–通过变量或函数指针而不是函数名来调用函数</li>
+<li><strong>函数返回指令</strong>–ret语句</li>
+</ul>
+<p>攻击者试图将代码注入到程序中，希望利用间接转移将程序重定向到一个单独的、不受保护、包含要运行的代码的区域。利用间接传输可以覆盖虚拟表进行forward-edge攻击，也可以更改调用堆栈进行backward edge攻击（ROP）</p>
+<ul>
+<li><strong>Forward-Edge CFI</strong> 主要关注的是程序中控制流的前向跳转（程序执行时，从当前代码段跳转到另一个函数或代码段。这类跳转通常出现在函数调用中，或者在程序中使用了函数指针或虚函数调用等<code>间接调用</code>）。这包括函数调用和跳转指令（如 <code>call</code>、<code>jmp</code>）的目标。Forward-Edge CFI 目的是确保程序的执行在任何时刻都只能跳转到预定义的、合法的目标。</li>
+<li><strong>Backward-Edge CFI</strong> 关注的是程序中的控制流的后向跳转（即程序中的<code>返回指令</code>return，即从一个函数的栈帧跳回到调用该函数的位置）。它的主要目的是确保函数返回时的返回地址是合法的，确保每次函数返回时，程序会跳转到一个合法的调用点。避免攻击者通过篡改返回地址（例如通过缓冲区溢出）来控制程序的执行流。</li>
+</ul>
+<p>加州大学和微软公司于2005年提出了CFI的防御机制，CFI旨在保护间接转移去到非法目的地,其核心思想是<strong>限制程序运行中的控制转移，使之始终处于原有的控制流图CFG所限定的范围内</strong>，具体做法是通过分析程序的控制流图CFG，获取间接转移指令目标的白名单，并在运行过程中，核对间接转移指令的目标是否在白名单中</p>
+<hr>
+<p><code>Call Site</code>（调用点）是指程序中发生 函数调用 的位置，也就是源代码中的函数调用表达式所在的位置，也就是你在代码中实际写下 call 或类似指令的地方。它是调用栈中函数调用的起点。Call Site 可能是一个 直接调用（例如，functionA()）或一个 间接调用（例如，通过函数指针调用 function_ptr()）。</p>
+<p><code>Call Target</code>（调用目标）是指在 call site 执行时，实际跳转到的 函数 或 代码块 的地址。也就是说，它是被调用的函数或代码片段的目标。在直接调用中，call target 就是被调用的函数地址。在间接调用中，call target 是指通过函数指针、虚函数表等方式决定的目标函数。</p>
+<hr>
+<p>技术：</p>
+<p>相关技术包括：</p>
+<ul>
+<li>代码指针分离 code-pointer separation (CPS)</li>
+<li>代码指针完整性 code-pointer integrity (CPI)</li>
+<li>堆栈金丝雀 stack canaries</li>
+<li>影子栈 shadow stacks</li>
+<li>虚表指针验证 vtable pointer verification</li>
+</ul>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://maskray.me/blog/2022-12-18-control-flow-integrity">Control-flow integrity | MaskRay</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pwl999/p/15534982.html">CFI/CFG 安全防护原理详解 - pwl999 - 博客园</a></p>
+</blockquote>
+<p>根据受限制的目标数量，这些保护可以分为<code>粗粒度</code>或<code>细粒度</code>。例如，对于forward-edge CFI，</p>
+<p>粗粒度的实现可以将indirect call target集合限制为程序中可能被间接调用的任何函数(函数指针可以指向任意程序中存在的函数)</p>
+<p>细粒度的实现可以将每个indirect call site限制为与将要调用的函数具有相同类型的函数(程序在进行间接调用时，调用的目标不仅需要是合法的函数，还必须与调用点的预期类型匹配，比如，如果程序调用一个无参函数指针，那么该指针只能指向无参的函数。类似地，如果指针指向一个返回值类型为 <code>int</code> 的函数，那么只允许调用返回类型也是 int 的函数：int (*ptr)()不能指向无返回值的func)</p>
+<hr>
+<p>ChatGPT：</p>
+<p>Control-Flow Integrity (CFI) 通过对程序的控制流进行监控和限制，确保程序执行的每一步都是合法的。具体来说，CFI 主要通过以下方式来保障程序的合法执行：</p>
+<h4 id="1-定义合法控制流图"><a href="#1-定义合法控制流图" class="headerlink" title="1. 定义合法控制流图"></a>1. <strong>定义合法控制流图</strong></h4><p>CFI 的核心思想是构建一个 **控制流图 (Control Flow Graph, CFG)**，该图记录了程序中所有函数或代码块之间的合法跳转关系。通过这种方式，CFI 定义了程序在运行时可以合法执行的所有控制流路径。</p>
+<h5 id="生成控制流图"><a href="#生成控制流图" class="headerlink" title="生成控制流图"></a>生成控制流图</h5><p>编译器在<code>编译时</code>生成控制流图，或者通过静态分析技术生成。图中包括：</p>
+<ul>
+<li>函数调用关系。</li>
+<li>函数返回点。</li>
+<li>跳转指令的目标地址。</li>
+</ul>
+<p>对于每个函数入口点，控制流图会标明允许从哪里跳转到该函数；对于每个跳转指令，控制流图会标明合法的跳转目标。</p>
+<h4 id="2-检查控制流完整性"><a href="#2-检查控制流完整性" class="headerlink" title="2. 检查控制流完整性"></a>2. <strong>检查控制流完整性</strong></h4><p>在<code>程序执行过程</code>中，CFI 会在每次发生跳转（如函数调用、函数返回或跳转指令）时，验证跳转目标是否符合控制流图中的合法目标。如果跳转指令的目标地址不在预定义的合法范围内，CFI 会阻止跳转，通常会导致程序崩溃或触发其他安全响应。</p>
+<p>例如：</p>
+<ul>
+<li>函数调用：当程序调用某个函数时，CFI 检查跳转的目标是否是程序预定义的合法函数入口。</li>
+<li>函数返回：当程序返回时，CFI 检查返回地址是否是合法的返回目标（即确保返回到正确的函数调用位置，而不是攻击者指定的恶意地址）。</li>
+<li>跳转指令：对于其他类型的控制流跳转（如 <code>jmp</code>、<code>call</code>），CFI 会检查目标地址是否符合合法的跳转路径。</li>
+</ul>
+<h4 id="3-动态监控和验证"><a href="#3-动态监控和验证" class="headerlink" title="3. 动态监控和验证"></a>3. <strong>动态监控和验证</strong></h4><p>CFI 通常是通过动态验证来实现的，也就是程序在运行时实时检查控制流是否合法。这种验证通常依赖于在程序中<code>插入检查代码</code>（例如，通过编译器生成额外的安全检查指令）。这些检查指令会在执行每个跳转时进行目标验证，确保跳转指令没有被恶意修改。</p>
+<h4 id="4-攻击防护"><a href="#4-攻击防护" class="headerlink" title="4. 攻击防护"></a>4. <strong>攻击防护</strong></h4><p>CFI 防止了多种攻击方式，尤其是利用控制流劫持的攻击：</p>
+<ul>
+<li><strong>缓冲区溢出攻击</strong>：如果攻击者通过缓冲区溢出覆盖了函数的返回地址或其他控制数据，CFI 可以检测到返回地址的非法修改，防止程序跳到恶意代码。</li>
+<li><strong>ROP (Return-Oriented Programming) 攻击</strong>：ROP 攻击通过拼接一系列小的代码片段来绕过传统的防护措施。CFI 可以有效防止这类攻击，因为它确保程序的跳转仅限于合法的控制流路径，无法跳到不合法的 “gadget”（即代码片段）。</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>Control-Flow Integrity 是通过以下步骤确保程序的合法执行：</p>
+<ol>
+<li><strong>构建合法控制流图</strong>：确定程序中所有合法的控制流路径。</li>
+<li><strong>执行时验证</strong>：每次控制流转移时，动态验证跳转目标是否合法。</li>
+<li><strong>防范控制流劫持攻击</strong>：通过阻止非法的控制流跳转，防止攻击者利用漏洞劫持程序控制流。</li>
+</ol>
+<hr>
+<h3 id="CG-CFG-ICFG"><a href="#CG-CFG-ICFG" class="headerlink" title="CG,CFG,ICFG"></a>CG,CFG,ICFG</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39441603/article/details/128904946">【程序分析】函数调用图 | 控制流图 | 过程间控制流图 | 数据流图 | 值流图 | 分析敏感性-CSDN博客</a></p>
+</blockquote>
+<p>CHATGPT：</p>
+<p>函数调用图 (Call Graph, CG)、控制流图 (Control Flow Graph, CFG) 和过程间控制流图 (Interprocedural Control Flow Graph, ICFG) 是程序分析中常用的图结构，它们有不同的关注点和应用。</p>
+<ol>
+<li>**函数调用图 (Call Graph, CG)**：<ul>
+<li><strong>定义</strong>：函数调用图是描述程序中函数之间调用关系的图。每个节点表示一个函数，边表示函数之间的调用关系。图中的每一条边从一个调用者函数指向被调用的函数。</li>
+<li><strong>用途</strong>：主要用于分析程序中函数如何相互调用，帮助发现程序中的函数调用路径、优化程序性能或进行静态分析。</li>
+<li><strong>特点</strong>：只关心函数之间的调用关系，不涉及函数内部的控制流。也就是说，CG不关注函数内部如何执行，它仅关心函数的调用关系。</li>
+</ul>
+</li>
+<li>**控制流图 (Control Flow Graph, CFG)**：<ul>
+<li><strong>定义</strong>：控制流图是表示单个函数内执行流程的图。节点表示基本块（即没有跳转或分支的代码段），边表示控制流的传递（如顺序执行、分支、跳转等）。</li>
+<li><strong>用途</strong>：用于分析程序内部的执行流程，帮助进行优化、代码分析和检测潜在的错误。CFG是程序静态分析中常用的工具，特别是在编译器的优化和程序的验证中。</li>
+<li><strong>特点</strong>：聚焦于单个函数的内部执行流，反映了函数内部的逻辑和控制结构，适用于局部分析。</li>
+</ul>
+</li>
+<li>**过程间控制流图 (Interprocedural Control Flow Graph, ICFG)**：<ul>
+<li><strong>定义</strong>：过程间控制流图是结合了函数调用图和控制流图的图结构。它不仅表示每个函数内部的控制流（像CFG一样），还表示函数之间的调用关系（像CG一样）。ICFG的节点可以是函数，也可以是函数内部的基本块，边则表示函数间或函数内部的控制流。</li>
+<li><strong>用途</strong>：用于进行跨函数的分析，特别是在涉及到函数调用时，分析程序的全局控制流。ICFG对于检测程序中的全局控制流问题、程序间依赖和安全漏洞（如未处理的异常、回调等）非常有用。</li>
+<li><strong>特点</strong>：它比单独的CFG或CG更全面，因为它涵盖了函数内部和函数间的控制流。通常在进行跨函数的静态分析时会使用ICFG。</li>
+</ul>
+</li>
+</ol>
+<p>总结：</p>
+<ul>
+<li><strong>CG</strong>：仅关心函数间的调用关系，不涉及函数内部的执行流。</li>
+<li><strong>CFG</strong>：专注于单个函数的控制流，反映函数内部的执行顺序。</li>
+<li><strong>ICFG</strong>：结合了CG和CFG的特性，既表示函数内部的控制流，也表示函数间的调用关系，适用于跨函数的分析。</li>
+</ul>
+<p>这些图在静态程序分析、优化和安全性分析中都有重要应用。</p>
+<p>我们可以通过一个简单的程序例子来对比 <strong>CG</strong>、<strong>CFG</strong> 和 <strong>ICFG</strong>。假设有如下的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">if</span> (x &gt; <span class="number">5</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;x is greater than 5\n&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;x is less than or equal to 5\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    foo();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;In function bar\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    bar();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>函数调用图 (CG)</strong></li>
+</ol>
+<p>函数调用图表示的是程序中各个函数的调用关系。我们只关心函数之间的调用，不关心函数内部的执行流。</p>
+<ul>
+<li><strong>节点</strong>：每个函数（<code>foo()</code>、<code>bar()</code> 和 <code>main()</code>）是一个节点。</li>
+<li><strong>边</strong>：函数之间的调用关系。<code>main()</code> 调用了 <code>bar()</code>，<code>bar()</code> 调用了 <code>foo()</code>。</li>
+</ul>
+<p>函数调用图 (CG) 可以表示如下：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">main</span>() ---&gt; bar() ---&gt; foo()</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>控制流图 (CFG)</strong></li>
+</ol>
+<p>控制流图表示的是单个函数内部的控制流。每个函数都有一个单独的控制流图，描述了函数内部的执行路径。</p>
+<p><code>foo()</code> 的控制流图：</p>
+<ul>
+<li><strong>节点</strong><code>foo()</code>中的基本块。我们有：<ul>
+<li>基本块1：<code>int x = 10;</code></li>
+<li>基本块2：<code>if (x &gt; 5)</code></li>
+<li>基本块3：<code>printf(&quot;x is greater than 5\n&quot;);</code></li>
+<li>基本块4：<code>printf(&quot;x is less than or equal to 5\n&quot;);</code></li>
+</ul>
+</li>
+<li><strong>边</strong>：控制流的跳转关系。<code>if</code> 语句会根据条件跳转到不同的输出。</li>
+</ul>
+<p><code>foo()</code> 的控制流图：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[int x = 10]</span> ---&gt; <span class="selector-attr">[if (x &gt; 5)]</span></span><br><span class="line">                     /        \</span><br><span class="line">                  <span class="selector-attr">[true]</span>     <span class="selector-attr">[false]</span></span><br><span class="line">                 /            \</span><br><span class="line"><span class="selector-attr">[printf(<span class="string">&quot;x is greater than 5&quot;</span>)]</span>  <span class="selector-attr">[printf(<span class="string">&quot;x is less than or equal to 5&quot;</span>)]</span></span><br></pre></td></tr></table></figure>
+
+<p><code>bar()</code> 的控制流图：</p>
+<ul>
+<li><strong>节点</strong>：<ul>
+<li>基本块1：<code>foo();</code></li>
+<li>基本块2：<code>printf(&quot;In function bar\n&quot;);</code></li>
+</ul>
+</li>
+<li><strong>边</strong>：从 <code>foo()</code> 调用后的返回进入 <code>printf</code>。</li>
+</ul>
+<p><code>bar()</code> 的控制流图：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[foo()]</span> ---&gt; <span class="selector-attr">[printf(<span class="string">&quot;In function bar&quot;</span>)]</span></span><br></pre></td></tr></table></figure>
+
+<p><code>main()</code> 的控制流图：</p>
+<ul>
+<li><strong>节点</strong>：<ul>
+<li>基本块1：<code>bar();</code></li>
+<li>基本块2：<code>return 0;</code></li>
+</ul>
+</li>
+<li><strong>边</strong>：从 <code>bar()</code> 调用返回后进入 <code>return 0;</code>。</li>
+</ul>
+<p><code>main()</code> 的控制流图：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[bar()]</span> ---&gt; <span class="selector-attr">[return 0]</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>过程间控制流图 (ICFG)</strong></li>
+</ol>
+<p>过程间控制流图结合了 <strong>函数调用图</strong> 和 <strong>控制流图</strong>。它不仅表示函数内的控制流，还表示函数间的调用关系。因此，ICFG 结合了 <code>main()</code>、<code>bar()</code> 和 <code>foo()</code> 的控制流。</p>
+<p>在 ICFG 中：</p>
+<ul>
+<li><strong>节点</strong>：包括了 <code>main()</code>、<code>bar()</code> 和 <code>foo()</code> 的基本块，以及它们之间的调用关系。</li>
+<li><strong>边</strong>：包含了函数间的调用边和函数内部的控制流边。</li>
+</ul>
+<p>ICFG 可以通过合并 <code>main()</code>、<code>bar()</code> 和 <code>foo()</code> 的控制流图，以及它们之间的调用关系，表示如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[main()]</span> ---&gt; <span class="selector-attr">[bar()]</span> ---&gt; <span class="selector-attr">[foo()]</span></span><br><span class="line">     |          |           |      </span><br><span class="line">     v          v           v</span><br><span class="line"><span class="selector-attr">[return 0]</span>  <span class="selector-attr">[printf(<span class="string">&quot;In function bar&quot;</span>)]</span></span><br><span class="line">               |   </span><br><span class="line">               v</span><br><span class="line">      <span class="selector-attr">[printf(<span class="string">&quot;x is greater than 5&quot;</span>)]</span>  </span><br><span class="line">            |   </span><br><span class="line">            v</span><br><span class="line">   <span class="selector-attr">[printf(<span class="string">&quot;x is less than or equal to 5&quot;</span>)]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>main()</code> 调用了 <code>bar()</code>，并且 <code>bar()</code> 调用了 <code>foo()</code>。</li>
+<li><code>foo()</code> 内部有条件语句，决定了不同的输出路径。</li>
+<li>函数间的调用关系（如 <code>main()</code> 调用 <code>bar()</code>、<code>bar()</code> 调用 <code>foo()</code>）是通过 ICFG 结合到控制流中的。</li>
+</ul>
+<p>总结对比：</p>
+<ol>
+<li><strong>CG</strong> 仅显示了函数之间的调用关系：<ul>
+<li><code>main()</code> → <code>bar()</code> → <code>foo()</code></li>
+</ul>
+</li>
+<li><strong>CFG</strong> 关注单个函数内部的控制流：<ul>
+<li><code>foo()</code> 的内部流程：从初始化到 <code>if</code> 判断，再到不同的输出。</li>
+<li><code>bar()</code> 的流程：调用 <code>foo()</code> 后打印信息。</li>
+<li><code>main()</code> 的流程：调用 <code>bar()</code> 后返回。</li>
+</ul>
+</li>
+<li><strong>ICFG</strong> 将函数间的调用关系和每个函数内部的控制流结合起来，形成一个跨函数的控制流图：<ul>
+<li><code>main()</code> 调用 <code>bar()</code>，<code>bar()</code> 调用 <code>foo()</code>，并且每个函数内部都有自己的控制流。</li>
+</ul>
+</li>
+</ol>
+<p>通过这个例子，我们可以看到这三种图结构的不同关注点和用途。CG 主要关心函数间的调用，CFG 关心单个函数的内部流，ICFG 则结合了两者，进行跨函数的控制流分析。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CFI/" rel="tag"># CFI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/11/29/indirect-call/COOP/" rel="next" title="COOP伪造面向对象编程">
+                <i class="fa fa-chevron-left"></i> COOP伪造面向对象编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/12/03/indirect-call/LLVM-CFI/" rel="prev" title="LLVM-CFI">
+                LLVM-CFI <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#CFI"><span class="nav-number">1.</span> <span class="nav-text">CFI</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%9A%E4%B9%89%E5%90%88%E6%B3%95%E6%8E%A7%E5%88%B6%E6%B5%81%E5%9B%BE"><span class="nav-number">1.1.</span> <span class="nav-text">1. 定义合法控制流图</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%8E%A7%E5%88%B6%E6%B5%81%E5%9B%BE"><span class="nav-number">1.1.1.</span> <span class="nav-text">生成控制流图</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E6%A3%80%E6%9F%A5%E6%8E%A7%E5%88%B6%E6%B5%81%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">1.2.</span> <span class="nav-text">2. 检查控制流完整性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%8A%A8%E6%80%81%E7%9B%91%E6%8E%A7%E5%92%8C%E9%AA%8C%E8%AF%81"><span class="nav-number">1.3.</span> <span class="nav-text">3. 动态监控和验证</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%94%BB%E5%87%BB%E9%98%B2%E6%8A%A4"><span class="nav-number">1.4.</span> <span class="nav-text">4. 攻击防护</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CG-CFG-ICFG"><span class="nav-number">2.</span> <span class="nav-text">CG,CFG,ICFG</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

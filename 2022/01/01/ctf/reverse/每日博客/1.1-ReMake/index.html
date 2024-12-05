@@ -358,7 +358,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">enc = &#x27;PyvragFvqrYbtvafNerRnfl@syner-ba.pbz&#x27;</span><br><span class="line">flag = &#x27;&#x27;</span><br><span class="line">for i in enc:</span><br><span class="line">    if ord(i) &gt;= 65 and ord(i) &lt;= 90:  # 大写字母</span><br><span class="line">        if ord(i) - 13 &lt; 65:</span><br><span class="line">            flag += chr(ord(i) + 13)</span><br><span class="line">        else:</span><br><span class="line">            flag += chr(ord(i) - 13)</span><br><span class="line">    elif ord(i) &gt;= 97 and ord(i) &lt;= 122:  # 小写字母</span><br><span class="line">        if ord(i) - 13 &lt; 97:</span><br><span class="line">            flag += chr(ord(i) + 13)</span><br><span class="line">        else:</span><br><span class="line">            flag += chr(ord(i) - 13)</span><br><span class="line">    else:</span><br><span class="line">        flag += i</span><br><span class="line"></span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>flag{<a href="mailto:&#x43;&#108;&#x69;&#x65;&#x6e;&#x74;&#x53;&#x69;&#100;&#x65;&#76;&#111;&#103;&#x69;&#x6e;&#x73;&#x41;&#x72;&#101;&#x45;&#x61;&#x73;&#x79;&#x40;&#x66;&#108;&#97;&#114;&#101;&#x2d;&#111;&#110;&#46;&#99;&#111;&#109;">&#x43;&#108;&#x69;&#x65;&#x6e;&#x74;&#x53;&#x69;&#100;&#x65;&#76;&#111;&#103;&#x69;&#x6e;&#x73;&#x41;&#x72;&#101;&#x45;&#x61;&#x73;&#x79;&#x40;&#x66;&#108;&#97;&#114;&#101;&#x2d;&#111;&#110;&#46;&#99;&#111;&#109;</a>}</p>
+<p>flag{<a href="mailto:&#x43;&#108;&#105;&#x65;&#110;&#116;&#83;&#x69;&#x64;&#101;&#x4c;&#111;&#x67;&#105;&#x6e;&#115;&#65;&#114;&#101;&#69;&#x61;&#x73;&#121;&#x40;&#x66;&#108;&#x61;&#x72;&#101;&#x2d;&#111;&#110;&#x2e;&#x63;&#111;&#x6d;">&#x43;&#108;&#105;&#x65;&#110;&#116;&#83;&#x69;&#x64;&#101;&#x4c;&#111;&#x67;&#105;&#x6e;&#115;&#65;&#114;&#101;&#69;&#x61;&#x73;&#121;&#x40;&#x66;&#108;&#x61;&#x72;&#101;&#x2d;&#111;&#110;&#x2e;&#x63;&#111;&#x6d;</a>}</p>
 </blockquote>
 <h2 id="buu-GUET-CTF2019-re"><a href="#buu-GUET-CTF2019-re" class="headerlink" title="buu-GUET-CTF2019 re"></a>buu-GUET-CTF2019 re</h2><p>打开看到upx，kali脱壳</p>
 <p>之后看到校验函数是一堆除法，除就完事了，flag[6]是爆破出来的，1</p>
@@ -499,7 +499,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-count">100</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -512,7 +512,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

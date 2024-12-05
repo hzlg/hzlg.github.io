@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CFI," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="C++虚函数基础（vtable，vptr），多继承，虚继承（vbase table）……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++虚函数">
+<meta property="og:url" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="C++虚函数基础（vtable，vptr），多继承，虚继承（vbase table）……">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241126160044197.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241127154122477.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130224454290.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130215837315.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130221516623.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130231145862.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241127153918294.png">
+<meta property="article:published_time" content="2024-10-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-11-30T15:40:22.463Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="CFI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241126160044197.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2024/10/18/indirect-call/C++虚函数/"/>
+
+
+
+
+
+  <title>C++虚函数 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++虚函数</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-10-18T00:00:00+08:00">
+                2024-10-18
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2024-11-30T23:40:22+08:00">
+                2024-11-30
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>C++虚函数基础（vtable，vptr），多继承，虚继承（vbase table）……</p>
+<span id="more"></span>
+
+<h3 id="C-虚函数"><a href="#C-虚函数" class="headerlink" title="C++虚函数"></a>C++虚函数</h3><p>C++的派生：在已有类的基础上产生新类</p>
+<p>C++的继承：派生类继承了父类的特性，包括数据成员和函数成员</p>
+<p>同名屏蔽（父类成员被屏蔽）：成员同名的话，父类成员会被屏蔽，不管参数表是不是一样(只要同名,重载也会被屏蔽)，可以通过作用域分析符::来访问被屏蔽的成员</p>
+<p>类型兼容规则（子类对象成员被屏蔽）：子类对象可以代替父类对象，此时派生类对象替代父类的对象后，只能发挥父类的功能</p>
+<img src="/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241126160044197.png" alt="image-20241126160044197" style="zoom:25%;"> 
+
+<p>虚函数（根据对象覆盖成员）：C++中引入了虚函数的机制在派生类中可以对基类中的成员函数进行<strong>覆盖</strong>（overwrite, 即重定义，重载是overload），虚函数是运行时多态的基础(编译时不知道要调用哪个方法,运行时传入对象,就调用对应对象的方法)</p>
+<p>虚函数是通过一张虚函数表（Virtual Table，V-Table）来实现的。虚函数表实现上是<strong>一个函数指针的数组。</strong>每个包含虚函数的类都有一张虚函数表，如果类没有派生类，则虚函数表存储<strong>类自身的虚函数地址</strong>；如果类有派生类，并且派生类中重写了基类的虚函数，则派生类的虚函数表中会存储<strong>派生类的函数地址</strong>(重写的虚函数)。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7a7d22393277">https://www.jianshu.com/p/7a7d22393277</a></p>
+</blockquote>
+<p>根据vptr和vtable实现虚函数的重写：编译器会为每个有虚函数的类创建一个虚函数表，该虚函数表将被该类的所有对象共享。类的每个虚成员占据虚函数表中的一行。如果类中有N个虚函数，那么其虚函数表将有N*4（x64下是N*8）的大小。派生类的虚函数表存放重写的虚函数，当基类的指针指向派生类的对象时，调用虚函数时都会根据vptr（虚表指针）来选择虚函数，而基类的虚函数在派生类里已经被改写或者说已经不存在了，所以也就只能调用派生类的虚函数版本了。</p>
+<p><strong>每个类共享一个vtable，每个对象有一个vptr指向vtable</strong>：虚表指针在类对象中，每个同类对象中都有个一个vptr，指向内存中的vtable，所有同类对象，共享一个vtable，但是每个对象都自带一个vptr指向这个vtable,否则调用虚函数的时候会找不到正确的函数入口，（后面将会讲明）虚表指针是对象的第一个数据成员。</p>
+<p>编译器在<strong>编译的时候</strong>，发现Base类中有虚函数，此时</p>
+<ol>
+<li>编译器会 为每个包含虚函数的类创建一个虚表，该表是一个一维数组，在这个数组中存放每个虚函数的地址。那么如何定位虚表呢？</li>
+<li>编译器另外还 为每个类的对象提供了一个虚表指针，这个指针指向了对象所属类的虚表，用于定位虚表。</li>
+<li>在程序运行时 根据对象的类型去初始化vptr，从而让vptr正确的指向所属类的虚表。所以在调用虚函数时，就能够找到正确的函数。</li>
+</ol>
+<blockquote>
+<p>虚函数表创建时机是在编译期间。编译期间编译器就为每个类确定好了对应的虚函数表里的内容。</p>
+<p>vptr跟着对象走，所以对象什么时候创建出来，vptr就什么时候创建出来，也就是运行的时候。当程序在编译期间，编译器会为构造函数中增加为vptr赋值的代码(这是编译器的行为)，当程序在运行时，遇到创建对象的代码，执行对象的构造函数，那么这个构造函数里有为这个对象的vptr赋值的语句。</p>
+</blockquote>
+<p>虚表是怎么实现的？虚表存放在哪里？虚表中的数据是在什么时候确定的？对象中的虚表指针又在什么时候赋值的？</p>
+<p>答案是在<strong>构造函数</strong>中进行虚表的创建和虚表指针的初始化。虚表和静态变量一样存在全局数据区，虚表可以理解成类的静态成员，虚表指针和构造函数的执行初始化列表是初始化。</p>
+<p>构造函数的调用顺序是：</p>
+<ol>
+<li>在构造子类对象时，要先调用父类的构造函数，此时编译器只“看到了”父类，并不知道后面是否后还有继承者，它初始化父类对象的虚表指针，该虚表指针指向父类的虚表。</li>
+<li>当执行子类的构造函数时，子类对象的虚表指针被初始化，指向自身的虚表。</li>
+</ol>
+<p>有以下几个结论：</p>
+<ul>
+<li><p>拥有虚函数的类会有一个虚表，而且这个虚表存放在<strong>类定义模块的数据段</strong>中。模块的数据段通常存放定义在该模块的全局数据和静态数据，这样我们可以把虚表看作是模块的全局数据或者静态数据</p>
+</li>
+<li><p>虚表中存放的是虚函数的地址</p>
+</li>
+<li><p>类的虚表会被这个类的<strong>所有对象所共享</strong>。类的对象可以有很多，但是他们的虚表指针都指向同一个虚表，从这个意义上说，我们可以把虚表简单理解为类的静态数据成员。值得注意的是，虽然虚表是共享的，但是虚表指针并不是，类的<strong>每一个对象有一个属于它自己的虚表指针</strong>。</p>
+<blockquote>
+<img src="/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241127154122477.png" alt="image-20241127154122477" style="zoom:50%;"> </blockquote>
+</li>
+<li><p>虚表的地址（虚表指针）被存放在<strong>对象的起始位置</strong>，即对象的第一个数据成员就是它的虚表指针。 同时我们还可以注意到，<strong>虚表指针的初始化确实发生在构造函数的调用过程中， 但是在执行构造函数体之前，即进入到构造函数的”{“和”}”之前</strong>。 为了更好的理解这一问题， 我们可以把构造函数的调用过程细分为两个阶段，即：</p>
+<ol>
+<li>进入到构造函数体之间。在这个阶段如果存在虚函数的话，虚表指针被初始化。如果存在构造函数的初始化列表的话，初始化列表也会被执行。</li>
+<li>进入到构造函数体内。这一阶段是我们通常意义上说的构造函数</li>
+</ol>
+</li>
+</ul>
+<h3 id="多继承-多个表"><a href="#多继承-多个表" class="headerlink" title="多继承(多个表)"></a>多继承(多个表)</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36359022/article/details/81870219">C++多态虚函数表详解(多重继承、多继承情况)_一个类有几个虚函数表-CSDN博客</a></p>
+</blockquote>
+<p>首先不考虑继承的情况。<strong>如果一个类中有虚函数，那么该类就有一个虚函数表</strong>。这个虚函数表是属于类的，所有该类的实例化对象中都会有一个虚函数表指针去指向该类的虚函数表。</p>
+<p>那么在有继承情况下，<strong>只要基类有虚函数，子类不论实现或没实现，都有虚函数表</strong>。</p>
+<p>多继承是指一个类同时继承了多个基类，假设这些基类都有虚函数，也就是说每个基类都有虚函数表，那么该子类的逻辑结果和虚函数表是什么样子呢？在多继承情况下，<strong>有多少个基类就有多少个虚函数表指针</strong>，前提是基类要有虚函数才算上这个基类。</p>
+<h3 id="虚继承"><a href="#虚继承" class="headerlink" title="虚继承"></a>虚继承</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wildricky/p/14924560.html">第四章：虚成员函数（虚函数表、thunk、split function和多接入点函数） - 放不下的小女孩 - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40376612/article/details/130843089">【C++】虚表和虚基表到底有哪些区别？-CSDN博客</a></p>
+</blockquote>
+<p>但是如果是虚继承则会添加一个新的虚函数表用来存放虚基类的偏移量同时多一个指向虚函数表的指针（<strong>虚基类表</strong>和虚函数表公用的情况下）（无论有多少个虚基类，只有一个虚基类表）。</p>
+<p><strong>虚继承</strong>：每个虚基类只会有一个虚基类表（vbase table），且通过一个额外的指针（虚基类指针 vptr for vbase table）来访问它。虚基类表和虚函数表有时是共享的，用于确保正确的偏移量。</p>
+<p>虚基类表 会保存虚基类的偏移量，地址等信息，派生类中会存储一个虚基类指针来访问虚基类表</p>
+<p>在ABCD菱形继承的例子中，在虚继承的情况下，A的虚基类表并不会直接存储在B或C中，而是会存储在D中。虚基类表存储了A在D对象（在对象中A的实例只会存在一份）中的偏移量，并且D对象中会包含一个指向虚基类表的指针。</p>
+<blockquote>
+<p><img src="/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130224454290.png" alt="image-20241130224454290" style="zoom: 25%;"> <img src="/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130215837315.png" alt="image-20241130215837315" style="zoom:33%;"> <img src="/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130221516623.png" alt="image-20241130221516623" style="zoom:33%;"> <img src="/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241130231145862.png" alt="image-20241130231145862" style="zoom:33%;"> </p>
+</blockquote>
+<blockquote>
+<p><del><a target="_blank" rel="noopener" href="https://xuanxuanblingbling.github.io/ctf/pwn/2019/12/17/vtable/">C++虚函数的攻与防 | Clang裁缝店</a></del></p>
+<img src="/2024/10/18/indirect-call/C++%E8%99%9A%E5%87%BD%E6%95%B0/image-20241127153918294.png" alt="image-20241127153918294" style="zoom:33%;"> 
+</blockquote>
+<h3 id="Thunk-技术简介"><a href="#Thunk-技术简介" class="headerlink" title="Thunk 技术简介"></a><strong>Thunk 技术简介</strong></h3><p>chatgpt：</p>
+<p><code>Thunk</code> 是一个技术术语，通常指的是在程序执行过程中，编译器或者操作系统插入的一个小的代码片段，用于解决某些跨越边界（如跨越函数、类、模块等）的调用问题。Thunk 在 C++ 中尤其重要，它常用于虚函数调用、虚继承、跨模块调用等场景中。</p>
+<p>简单来说，Thunk 是“桥接”或“适配”代码，它可以帮助实现某些操作，通常是为了处理编译器无法直接处理的情况，如虚函数调用、函数指针的跳转等。</p>
+<p><strong>Thunk 的基本作用</strong></p>
+<ul>
+<li><strong>虚函数调用</strong>：C++ 在使用虚函数时，会使用虚函数表（vtable）来动态绑定函数。如果函数的调用者和被调用者不在同一类中，编译器可能无法直接通过普通的函数调用方式来访问该函数。在这种情况下，编译器插入一个 <code>Thunk</code>，它用于跳转到正确的虚函数。</li>
+<li><strong>虚继承</strong>：在虚继承中，当派生类通过多个路径继承同一虚基类时，编译器需要确保访问虚基类的成员数据。由于内存布局的复杂性，编译器会生成 <code>Thunk</code> 来跳转到正确的虚基类数据或函数。</li>
+<li><strong>跨模块调用</strong>：在跨模块调用（例如 DLL 或共享库的函数调用）时，编译器会插入 Thunk 来处理不同模块之间的地址和调用约定的差异。</li>
+</ul>
+<p><strong>在 C++ 中的 Thunk 作用</strong></p>
+<ol>
+<li><p><strong>虚函数的 Thunk</strong> 在 C++ 中，虚函数的调用依赖于虚函数表（vtable）。当一个对象通过指针或引用调用虚函数时，编译器会在幕后生成一个 <code>Thunk</code>，它负责找到正确的虚函数地址并跳转到对应的函数。</p>
+<p><strong>例子</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">func</span><span class="params">()</span> </span>&#123; std::cout &lt;&lt; <span class="string">&quot;A::func&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> <span class="keyword">public</span> A &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123; std::cout &lt;&lt; <span class="string">&quot;B::func&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A* obj = <span class="keyword">new</span> <span class="built_in">B</span>();</span><br><span class="line">    obj-&gt;<span class="built_in">func</span>();  <span class="comment">// 动态绑定，会通过 Thunk 调用 B::func</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，当 <code>obj-&gt;func()</code> 被调用时，编译器会插入一个 Thunk，以便根据对象的实际类型（<code>B</code> 类型）来正确调用 <code>B::func</code>。这个过程是通过虚函数表（vtable）实现的，<code>Thunk</code> 负责在运行时解决多态问题。</p>
+</li>
+<li><p><strong>虚继承中的 Thunk</strong> 在虚继承中，<code>Thunk</code> 被用来处理虚基类成员的访问。由于虚继承的特殊性（例如，多个派生类通过不同路径继承同一个虚基类），编译器需要确保通过正确的偏移量访问虚基类的成员数据。</p>
+<p><strong>例子</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> A &#123; &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> A &#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">D</span> :</span> <span class="keyword">public</span> B, <span class="keyword">public</span> C &#123; &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，类 <code>D</code> 继承了 <code>B</code> 和 <code>C</code>，而 <code>B</code> 和 <code>C</code> 都虚继承了 <code>A</code>。由于 <code>A</code> 是通过虚继承共享的，<code>D</code> 中只有一份 <code>A</code> 的数据。当 <code>D</code> 访问 <code>A</code> 的成员时，编译器会生成一个 <code>Thunk</code>，该 <code>Thunk</code> 会正确地通过虚基类表找到 <code>A</code> 的数据。</p>
+</li>
+<li><p><strong>函数指针和 Thunk</strong> 当我们通过函数指针或回调函数来调用函数时，编译器可能会插入 <code>Thunk</code> 代码来实现参数的转换或调用约定的适配。例如，当你将一个成员函数作为回调传递给一个非成员函数时，编译器可能会生成一个 <code>Thunk</code>，用来正确地传递 <code>this</code> 指针。</p>
+<p><strong>例子</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">()</span> </span>&#123; std::cout &lt;&lt; <span class="string">&quot;A::func&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">call_func</span><span class="params">(<span class="keyword">void</span> (A::*func)())</span> </span>&#123;</span><br><span class="line">    A obj;</span><br><span class="line">    (obj.*func)();  <span class="comment">// 调用成员函数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A obj;</span><br><span class="line">    <span class="built_in">call_func</span>(&amp;A::func);  <span class="comment">// 这里会有 Thunk 代码帮助调用</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，<code>call_func</code> 函数接受一个成员函数指针，并在调用时正确地传递 <code>this</code> 指针。编译器为 <code>call_func</code> 生成了一个 <code>Thunk</code>，以便在函数调用时处理 <code>this</code> 指针的传递。</p>
+</li>
+</ol>
+<p><strong>Thunk 的内部实现</strong></p>
+<p>在实现上，<code>Thunk</code> 通常是一个小的内联代码块，位于某个对象的虚函数表或函数指针的入口处。具体实现会依赖于编译器和平台：</p>
+<ol>
+<li><strong>虚函数的 Thunk</strong>：虚函数表中的每个函数指针可能会被修改为一个 Thunk，该 Thunk 会负责根据实际对象类型调用正确的虚函数。比如，在调用虚函数时，Thunks 会处理多态性，确保运行时能够找到正确的函数。</li>
+<li><strong>虚继承中的 Thunk</strong>：在虚继承中，Thunks 会插入到访问虚基类成员的代码中，确保对虚基类的正确访问，通常需要通过虚基类表来获取偏移量。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CFI/" rel="tag"># CFI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/10/18/indirect-call/SOK-%E5%88%86%E6%9E%90%E9%A3%9E%E6%8E%A7%E7%B3%BB%E7%BB%9F%E9%97%B4%E6%8E%A5%E8%B0%83%E7%94%A8/" rel="next" title="SOK-分析飞控系统间接调用">
+                <i class="fa fa-chevron-left"></i> SOK-分析飞控系统间接调用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/11/29/indirect-call/COOP/" rel="prev" title="COOP伪造面向对象编程">
+                COOP伪造面向对象编程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E8%99%9A%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">C++虚函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BB%A7%E6%89%BF-%E5%A4%9A%E4%B8%AA%E8%A1%A8"><span class="nav-number">2.</span> <span class="nav-text">多继承(多个表)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E7%BB%A7%E6%89%BF"><span class="nav-number">3.</span> <span class="nav-text">虚继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thunk-%E6%8A%80%E6%9C%AF%E7%AE%80%E4%BB%8B"><span class="nav-number">4.</span> <span class="nav-text">Thunk 技术简介</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
