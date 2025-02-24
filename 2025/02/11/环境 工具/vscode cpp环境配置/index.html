@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="c++,tools," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="换电脑了，重新配一下 c++环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vscode c++环境配置">
+<meta property="og:url" content="https://hzlg.github.ioz/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="换电脑了，重新配一下 c++环境">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250214230407587.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250214224901435.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250213230720660.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250213212654700.png">
+<meta property="article:published_time" content="2025-02-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-24T14:20:57.459Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="tools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250214230407587.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2025/02/11/环境 工具/vscode cpp环境配置/"/>
+
+
+
+
+
+  <title>vscode c++环境配置 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">vscode c++环境配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-11T00:00:00+08:00">
+                2025-02-11
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2025-02-24T22:20:57+08:00">
+                2025-02-24
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>换电脑了，重新配一下 c++环境</p>
+<span id="more"></span>
+
+<h2 id="windows-下的编译器选择"><a href="#windows-下的编译器选择" class="headerlink" title="windows 下的编译器选择"></a>windows 下的编译器选择</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.mingw-w64.org/downloads/">Pre-built Toolchains - mingw-w64</a></p>
+</blockquote>
+<p>MinGw vs Cygwin vs MSVC</p>
+<p>Cygwin 全面模拟了 Linux 的接口, MinGw 包含轻量级的 Windows 版 GCC 和其他 GNU 程序开发工具，MinGw 可以结合更现代的 MSYS2(提供了类似 Linux 的 Bash 环境，方便使用 GNU 工具链，改进了对 Windows API 的支持)，MinGW 和 Cygwin 都可以用来跨平台开发, MSVC 则用于 Windows 原生开发、游戏</p>
+<p>gcc vs llvm</p>
+<p>LLVM 的 编译速度快，尤其适用于需要频繁编译的开发流程（如大型 C++ 项目）。Clang 的 错误和警告信息更清晰，更容易理解，而 GCC 的错误信息往往过于复杂。Clang 内置的 静态分析工具更强大，如 clang-tidy 可以自动修复代码问题。</p>
+<table>
+<thead>
+<tr>
+<th>编译器</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://cygwin.com/">Cygwin</a></td>
+<td>完整 POSIX 兼容层，适合 Unix 迁移</td>
+<td>运行依赖 cygwin1.dll，性能略低</td>
+<td>Unix 程序移植</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/niXman/mingw-builds-binaries/releases">MinGW</a></td>
+<td>轻量，支持 Windows API</td>
+<td>维护较少，GCC 版本较老</td>
+<td>轻量级 C++ 项目</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.msys2.org/">MSYS2+MinGW</a></td>
+<td>现代 GCC，POSIX 支持好</td>
+<td>需要额外配置环境</td>
+<td>需要 GNU 工具链的项目（Qt）</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/mstorsjo/llvm-mingw/releases">LLVM-MinGW</a></td>
+<td>Clang 优化，兼容 MinGW，性能更好</td>
+<td>部分 MinGW 代码兼容性问题</td>
+<td>现代化开发，优化需求高</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/releases">Clang</a></td>
+<td>编译快，优化强，支持 MSVC 兼容</td>
+<td>可能对部分 Windows 代码兼容性差</td>
+<td>需要 Clang 高级优化</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://visualstudio.microsoft.com/zh-hans/downloads/">MSVC</a></td>
+<td>官方支持，优化针对 Windows，兼容 WinAPI</td>
+<td>GCC/Clang 兼容性较差</td>
+<td>Windows 原生开发、游戏（Direct X，.NET，UWP）</td>
+</tr>
+</tbody></table>
+<h2 id="gcc-clang-cl-编译器安装"><a href="#gcc-clang-cl-编译器安装" class="headerlink" title="gcc/clang/cl 编译器安装"></a>gcc/clang/cl 编译器安装</h2><p>下载 <a target="_blank" rel="noopener" href="https://github.com/niXman/mingw-builds-binaries/releases">mingw-builds-binaries</a> 中的 x86_64-14.2.0-release-win32-seh-ucrt-rt_v12-rev1.7z，解压后将 bin 加入环境变量</p>
+<p>下载 <a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/releases">llvm-project</a> 中的 LLVM-19.1.7-win64.exe，在安装过程中选择 add llvm to path 或解压后将 bin 加入环境变量</p>
+<p>下载 <a target="_blank" rel="noopener" href="https://aka.ms/vs/17/release/vs_BuildTools.exe">vs_BuildTools</a>，选择 使用 C++的桌面开发下载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">D:\graduate\C\tools\x86_64-14.2.0-release-win32-seh-ucrt-rt_v12-rev1\mingw64\bin</span><br><span class="line">D:\graduate\C\tools\LLVM\bin</span><br><span class="line">C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\bin\Hostx64\x64</span><br></pre></td></tr></table></figure>
+
+<p>测试是否能找到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ --version</span><br><span class="line">clang++ --version</span><br></pre></td></tr></table></figure>
+
+<p>创建 helloworld.cpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vector&lt;string&gt; msg &#123;<span class="string">&quot;Hello&quot;</span>, <span class="string">&quot;C++&quot;</span>, <span class="string">&quot;World&quot;</span>, <span class="string">&quot;from&quot;</span>, <span class="string">&quot;VS Code&quot;</span>, <span class="string">&quot;and the C++ extension!&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> string&amp; word : msg)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; word &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>测试是否能编译：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ helloworld.cpp</span><br><span class="line">clang++ helloworld.cpp</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="vscode-上使用编译器"><a href="#vscode-上使用编译器" class="headerlink" title="vscode 上使用编译器"></a>vscode 上使用编译器</h2><p>安装 vscode 插件:</p>
+<p>C/C++、C/C++ Extension Pack</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/cpp/config-msvc">为 Microsoft C++ 配置 VS Code 英文</a></p>
+<p><a target="_blank" rel="noopener" href="https://vscode.js.cn/docs/cpp/config-msvc">为 Microsoft C++ 配置 VS Code 中文</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2426696">MSVC 编译工具 cl.exe 入门指南-腾讯云开发者社区-腾讯云</a></p>
+</blockquote>
+<p>要从命令行或 VS Code 使用 MSVC，您必须从 <strong>Visual Studio 的开发人员命令提示符</strong>（Developer Command Prompt）运行。普通 shell（如 PowerShell、Bash 或 Windows 命令提示符）没有设置必要的路径环境变量。win + s 搜索 developer, 才可以使用 cl.exe, 普通 cmd 找不到 cl.exe (其实可以 <a href="#cl%E7%8B%AC%E7%AB%8B">修改环境变量</a>, 使 vscode 独立使用 cl)</p>
+<p>打开 Developer Command Prompt for VS 2022，打开 vscode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code .</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>点击右上角的三角运行按钮旁边的齿轮 Add Debug Configuration，会生成 tasks.json 和 launch.json</p>
+<ul>
+<li>tasks.json（构建说明）</li>
+</ul>
+<p>The first time you run your program, the C++ extension creates <code>tasks.json</code>, which you’ll find in your project’s <code>.vscode</code> folder. <code>tasks.json</code> stores build configurations.</p>
+<p>如果您需要更改默认编译器，您可以运行 <strong>Tasks: Configure default build task</strong>。或者，您可以修改“任务”。并通过替换以下段来删除默认值：</p>
+<p>==想要 clang++能够通过 cpptools 使用, 需要将 lldb 有关的设置都改为 gdb==(在 tasks.json 中的编译参数 args 中必须添加–target = x86_64-w64-mingw）</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &quot;group&quot;: &#123;</span></span><br><span class="line">            <span class="comment">//     &quot;kind&quot;: &quot;build&quot;,</span></span><br><span class="line">            <span class="comment">//     &quot;isDefault&quot;: true</span></span><br><span class="line">            <span class="comment">// &#125;,  </span></span><br><span class="line"><span class="string">&quot;group&quot;</span>: <span class="string">&quot;build&quot;</span>,</span><br></pre></td></tr></table></figure>
+
+<p>你可以修改 tasks.json 来构建多个 C++ 文件, 通过使用参数 <code>&quot;$&#123;workspaceFolder&#125;/*.cpp&quot;</code> 代替 <code>&quot;$&#123;file&#125;&quot;</code>。这会构建当前文件夹下所有的 .cpp 文件。 </p>
+<hr>
+<ul>
+<li>launch.json（调试器设置）</li>
+</ul>
+<p>To create <code>launch.json</code>, choose <strong>Add Debug Configuration</strong> from the play button drop-down menu. </p>
+<p>==想要 clang++能够通过 cpptools 使用, 需要将 lldb 有关的设置都改为 gdb==（如 “MIMode”，”miDebuggerPath”)</p>
+<hr>
+<ul>
+<li>c_cpp_properties.json（编译器路径和 IntelliSense 设置）</li>
+</ul>
+<p>You can view the C/C++ configuration UI by running the command <strong>C/C++: Edit Configurations (UI)</strong> / json from the Command Palette (Ctrl+Shift+P).</p>
+<hr>
+<h3 id="clang-编译注意事项"><a href="#clang-编译注意事项" class="headerlink" title="clang++ 编译注意事项"></a>clang++ 编译注意事项</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/613922486">vscode+clang+llvm 搭建 C++ 编译环境（windows） - 知乎</a> </p>
+<p><a target="_blank" rel="noopener" href="https://objccn.io/issue-19-2/">与调试器共舞 - LLDB 的华尔兹</a></p>
+</blockquote>
+<p>只安装 clang 是不能编译的, Clang 在 Windows 上通常依赖于 Microsoft 的编译工具链，包括链接器和标准库</p>
+<p>clang 的 target 是 msvc, 要想在 MinGW 模式下运行，可以通过添加 target 选项来编译，例如：<code>--target = x86_64-w64-windows-gnu</code> 或 <code>--target = x86_64-w64-mingw</code> 将 target 改为 mingw，不改的话，cpptools 默认的 task.json 和 launch.json 会调用 lldb 来调试，会报错 <code>Unable to start debugging. Unable to establish a connection to LLDB. Debug output may contain more information.</code> <del>安装 codelldb 可能可以解决</del></p>
+<blockquote>
+<img src="/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250214230407587.png" alt="image-20250214230407587" style="zoom: 25%;"> 
+</blockquote>
+<p>安装 codelldb 插件，可以 <a target="_blank" rel="noopener" href="https://github.com/vadimcn/vscode-lldb/releases">离线安装</a></p>
+<blockquote>
+<img src="/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250214224901435.png" alt="image-20250214224901435" style="zoom:33%;"> 
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/LaoYuanPython/article/details/133908025">tasks.json 进行 C++编译的任务配置类型 type 取值及含义</a></p>
+<ul>
+<li>cppbuild：表示 C++程序编译构建</li>
+<li>shell：执行 shell</li>
+<li>process：运行进程。</li>
+</ul>
+</blockquote>
+<p>不要用 cpptools 生成的 task.json，创建一个 <code>&quot;type&quot;: &quot;shell&quot;</code>, <code>&quot;command&quot;: &quot;clang++&quot;</code>, 的 task</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;tasks&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;type&quot;: &quot;shell&quot;, //不再是cppbuild</span><br><span class="line">            &quot;label&quot;: &quot;C/C++: lldb + clang++.exe build active file&quot;,</span><br><span class="line">            &quot;command&quot;: &quot;clang++&quot;,</span><br><span class="line">            &quot;args&quot;: [</span><br><span class="line">                &quot;$&#123;fileDirname&#125;\\$&#123;fileBasenameNoExtension&#125;.cpp&quot;,</span><br><span class="line">                &quot;-o&quot;,</span><br><span class="line">                &quot;$&#123;fileDirname&#125;\\$&#123;fileBasenameNoExtension&#125;.exe&quot;,</span><br><span class="line">                &quot;-g&quot;,</span><br><span class="line">                &quot;-pedantic&quot;,</span><br><span class="line">                &quot;-Wall&quot;,</span><br><span class="line">                &quot;-Wextra&quot;,</span><br><span class="line">                &quot;-pthread&quot;,</span><br><span class="line">                &quot;-fuse-ld=lld&quot;,</span><br><span class="line">                &quot;-fsanitize=address&quot;,</span><br><span class="line">                &quot;-fsanitize=undefined&quot;,</span><br><span class="line">                &quot;-stdlib=libc++&quot;,</span><br><span class="line">                &quot;-std=c++20&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;options&quot;: &#123;</span><br><span class="line">                &quot;cwd&quot;: &quot;$&#123;fileDirname&#125;&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;problemMatcher&quot;: [</span><br><span class="line">                &quot;$gcc&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;group&quot;: &quot;build&quot;,</span><br><span class="line">            &quot;presentation&quot;: &#123;</span><br><span class="line">                &quot;echo&quot;: true,</span><br><span class="line">                &quot;reveal&quot;: &quot;always&quot;,</span><br><span class="line">                &quot;focus&quot;: false,</span><br><span class="line">                &quot;panel&quot;: &quot;shared&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;detail&quot;: &quot;Clang++: 编译单个文件&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;: &quot;2.0.0&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个 type 为 lldb 的 launch</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;Launch&quot;,</span><br><span class="line">    &quot;type&quot;: &quot;lldb&quot;,</span><br><span class="line">    &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line">    &quot;program&quot;: &quot;$&#123;workspaceFolder&#125;/&lt;executable file&gt;&quot;,</span><br><span class="line">    &quot;args&quot;: [&quot;-arg1&quot;, &quot;-arg2&quot;],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在终端查看 <code>lldb --version</code> 时，lldb 可能会报错：由于找不到 python310.dll，无法继续执行代码。重新安装程序可能会解决此问题。</p>
+<blockquote>
+<p>![image-20250213150501939](vscode cpp环境配置/image-20250213150501939.png)</p>
+<img src="/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250213230720660.png" alt="image-20250213230720660" style="zoom:25%;"> 
+</blockquote>
+<p>下载 python10 python-3.10.0-amd64.exe，安装时勾选添加环境变量</p>
+<h3 id="cl-脱离-developer"><a href="#cl-脱离-developer" class="headerlink" title=" cl 脱离 developer "></a><a id="cl独立"> cl 脱离 developer </a></h3><p>现在 cl 和 g++都可以 run/debug，但此时 cl 只能通过 developer 启动 vscode 才能使用</p>
+<p>vscode 能使用 cl：</p>
+<p><a target="_blank" rel="noopener" href="https://vscode.js.cn/docs/cpp/config-msvc#_run-vs-code-outside-the-developer-command-prompt">在开发者命令提示符外部运行 VS Code</a> 里说明了，在 test.json 中执行主开发人员命令提示符命令文件 VsDevCmd.bat 可以使 cmd 找到 c1（vscode 还是找不到, 只有 vscode 的终端能找到），不过如果未指定任何参数，该命令文件会将环境设置为使用 x86 本机工具生成 32 位 x86 代码</p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/build/building-on-the-command-line?view=msvc-170">通过命令行使用 Microsoft C++ 工具集 | Microsoft Learn</a> 里说明了不同主机和目标体系结构对应的命令文件，我选择每次在 vscode 启动前执行 vcvars64.bat</p>
+<blockquote>
+<table>
+<thead>
+<tr>
+<th><strong>命令文件</strong></th>
+<th><strong>主机和目标体系结构</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vcvars32.bat</td>
+<td>使用 32 位 x86 本机工具生成 32 位 x86 代码。</td>
+</tr>
+<tr>
+<td>vcvars64.bat</td>
+<td>使用 64 位 x64 本机工具生成 64 位 x64 代码。</td>
+</tr>
+<tr>
+<td>vcvarsamd64_x86.bat</td>
+<td>使用 64 位 x64 本机兼容工具生成 32 位 x86 代码。</td>
+</tr>
+<tr>
+<td>vcvarsx86_amd64.bat</td>
+<td>使用 32 位 x86 本机兼容工具生成 64 位 x64 代码。</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p>写一个 start_vscode.bat</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="keyword">call</span> &quot;C:\Program Files (x86)\Microsoft Visual Studio\<span class="number">2022</span>\BuildTools\VC\Auxiliary\Build\vcvars64.bat&quot;</span><br><span class="line"><span class="built_in">start</span> &quot;&quot; &quot;D:\install\Microsoft VS Code\Code.exe&quot;</span><br></pre></td></tr></table></figure>
+
+<p>win+s vscode 右键文件位置找到 vscode 的快捷方式，将目标改为 “C:\Users\hzlggg\Desktop\start_vscode.bat”</p>
+<blockquote>
+<img src="/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/image-20250213212654700.png" alt="image-20250213212654700" style="zoom: 25%;"> 
+</blockquote>
+<hr>
+<p>命令行能使用 cl：</p>
+<p>修改系统的 <code>环境变量</code> </p>
+<p>环境变量添加：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/build/building-on-the-command-line?view=msvc-170">通过命令行使用 Microsoft C++ 工具集 | Microsoft Learn</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c313b1dd9cf3">VS：在 windows 上调用 cl.exe 编译运行 C/C++程序 - 简书</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_57168310/article/details/129233677">【VsCode】使用 MSVC 的 cl.exe 编译 C++文件，环境配置。-CSDN 博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xuan0211/article/details/129339187">cl.exe 命令行（cmd)配置 X64-CSDN 博客</a></p>
+</blockquote>
+<p>MSVC 命令行工具使用 <code>PATH</code>、<code>TMP</code>、<code>INCLUDE</code>、<code>LIB</code> 和 <code>LIBPATH</code> 环境变量，还使用特定于已安装工具、平台和 SDK 的其他环境变量。 即使是简单 Visual Studio 安装，也可以设置二十或更多个环境变量。 正是考虑到这种复杂性，我们强烈建议使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/build/building-on-the-command-line?view=msvc-170#developer_command_prompt_shortcuts">开发人员命令提示符快捷方式</a> 或一个 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/build/building-on-the-command-line?view=msvc-170#developer_command_file_locations">自定义命令文件</a>。 建议不要自行在 Windows 环境中设置这些变量。</p>
+<p>若要查看通过开发人员命令提示符快捷方式设置的环境变量，可以使用 <code>SET</code> 命令。 打开一个普通命令提示符窗口，并捕获 <code>SET</code> 命令输出以用作基线。 打开开发人员命令提示符窗口，并捕获 <code>SET</code> 命令输出以用于比较。 使用差异工具（如 Visual Studio 中内置的工具）突出显示通过开发人员命令提示符设置的环境变量。 有关编译器和链接器环境变量的详细信息，请参阅 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/build/reference/cl-environment-variables?view=msvc-170">CL 环境变量</a>。</p>
+<p>在 cmd 中 <code>SET &gt; cmd.txt</code>，在 dev（注意 x86 还是 x64） 中 <code>SET &gt; dev.txt</code>，对比两个文件，关键差异如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">添加/修改INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\include;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\um;C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\shared;C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\winrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\cppwinrt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">添加/修改LIB=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\lib\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.22621.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.22621.0\um\x64;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">备份:</span><br><span class="line">Path=C:\Users\hzlggg\AppData\Local\Programs\Python\Launcher\;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\Users\hzlggg\AppData\Roaming\npm;%PyCharm%;C:\Users\hzlggg\AppData\Local\Programs\Ollama;D:\install\Microsoft VS Code\bin;D:\graduate\C\tools\x86_64-14.2.0-release-win32-seh-ucrt-rt_v12-rev1\mingw64\bin;D:\graduate\C\tools\LLVM\bin</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">修改PATH</span><br><span class="line">只添加了:</span><br><span class="line">C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\bin\HostX64\x64;</span><br><span class="line">C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;</span><br><span class="line">C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;</span><br><span class="line"></span><br><span class="line">全部不同:</span><br><span class="line">C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\bin\HostX64\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\VCPackages;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\bin\Roslyn;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\Extensions\Microsoft\CodeCoverage.Console;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64;C:\Program Files (x86)\Windows Kits\10\bin\x64;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.43.34808\bin\HostX64\x64;;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\vcpkg</span><br></pre></td></tr></table></figure>
+
+<h2 id="clangd-amp-cmake"><a href="#clangd-amp-cmake" class="headerlink" title="clangd &amp; cmake"></a>clangd &amp; cmake</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://vscode-cpp-starter.readthedocs.io/preface/">0.使用本教程能得到的功能 — Windows/MacOS/Linux 上 VSCode 配置 C++: Clang + Clang-based Tools + CMake + Conan</a> </p>
+</blockquote>
+<h3 id="clangd"><a href="#clangd" class="headerlink" title="clangd"></a>clangd</h3><p>LSP（Language Server Protocol，语言服务器协议）是一个由微软提出的标准协议，旨在让不同的编程工具（如编辑器、IDE 等）与语言服务器进行通信，以便为开发者提供代码补全、跳转、错误检查等功能。LSP 使得编辑器和 IDE 可以通过一个统一的协议与多种编程语言的功能进行交互，而无需为每种语言分别实现不同的功能支持。</p>
+<p>安装 vscode 插件: clangd</p>
+<p>由于同时安装了 C/C++ 和 clangd 插件，并且这两个插件都有 代码自动补全或者提示功能，因此会出现冲突的情况</p>
+<h3 id="cmake"><a href="#cmake" class="headerlink" title="cmake"></a>cmake</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/build/cmake-projects-in-visual-studio?view=msvc-170">Visual Studio 中的 CMake 项目 | Microsoft Learn</a></p>
+<p>[CMake 教程 — CMake 3.31.5 文档](<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/guide/tutorial/index.html#guide:CMake">https://cmake.org/cmake/help/latest/guide/tutorial/index.html#guide:CMake</a> Tutorial) </p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/691553267">CMake 构建多个源文件，包含路径，以及第三方库 - 知乎</a></p>
+</blockquote>
+<p>安装 vscode 插件:</p>
+<p>CMake、CMake Tools</p>
+<p><a target="_blank" rel="noopener" href="https://question-board.readthedocs.io/learning_map/">学习大纲 — C++ 洋葱剥法交流群资料</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/c/" rel="tag"># c++</a>
+          
+            <a href="/tags/tools/" rel="tag"># tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/12/03/indirect-call/LLVM-CFI/" rel="next" title="LLVM-CFI">
+                <i class="fa fa-chevron-left"></i> LLVM-CFI
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2025/02/14/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/cmake/" rel="prev" title="cmake学习">
+                cmake学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">104</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#windows-%E4%B8%8B%E7%9A%84%E7%BC%96%E8%AF%91%E5%99%A8%E9%80%89%E6%8B%A9"><span class="nav-number">1.</span> <span class="nav-text">windows 下的编译器选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gcc-clang-cl-%E7%BC%96%E8%AF%91%E5%99%A8%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">gcc&#x2F;clang&#x2F;cl 编译器安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vscode-%E4%B8%8A%E4%BD%BF%E7%94%A8%E7%BC%96%E8%AF%91%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">vscode 上使用编译器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clang-%E7%BC%96%E8%AF%91%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.1.</span> <span class="nav-text">clang++ 编译注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cl-%E8%84%B1%E7%A6%BB-developer"><span class="nav-number">3.2.</span> <span class="nav-text"> cl 脱离 developer </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#clangd-amp-cmake"><span class="nav-number">4.</span> <span class="nav-text">clangd &amp; cmake</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clangd"><span class="nav-number">4.1.</span> <span class="nav-text">clangd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmake"><span class="nav-number">4.2.</span> <span class="nav-text">cmake</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

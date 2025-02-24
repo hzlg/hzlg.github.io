@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="论文,CFI," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Where Does It Go? | Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security  基于类型匹配的间接调用分析-CSDN博客 Where Does It Go? Refining Indirect-Call Targets with Multi-Layer Type A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MLTA">
+<meta property="og:url" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="Where Does It Go? | Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security  基于类型匹配的间接调用分析-CSDN博客 Where Does It Go? Refining Indirect-Call Targets with Multi-Layer Type A">
+<meta property="og:locale">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/V4EXMHM4.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/U2XXY9TI.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/FLJ4HDRY.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/BLPYHYQH.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/WBI7PD3I.png">
+<meta property="og:image" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/VXKF4UXY.png">
+<meta property="article:published_time" content="2025-02-24T14:04:26.221Z">
+<meta property="article:modified_time" content="2025-02-24T14:26:56.396Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="论文">
+<meta property="article:tag" content="CFI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/V4EXMHM4.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/"/>
+
+
+
+
+
+  <title>MLTA | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2025/02/24/indirect-call/MLTA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MLTA</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-24T22:04:26+08:00">
+                2025-02-24
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2025-02-24T22:26:56+08:00">
+                2025-02-24
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a target="_blank" rel="noopener" href="https://dl.acm.org/doi/abs/10.1145/3319535.3354244">Where Does It Go? | Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security</a></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44370676/article/details/134513475">基于类型匹配的间接调用分析-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://yunlongs.cn/2021/11/15/MLTA/">Where Does It Go? Refining Indirect-Call Targets with Multi-Layer Type Analysis阅读笔记 - Yunlong Lyu</a></p>
+</blockquote>
+<span id="more"></span>
+
+<p>问题：</p>
+<p>间接调用很常见，但对准确构造CFG带来了挑战；</p>
+<p>目前识别间接调用的方法基于类型匹配分析，即匹配函数指针的类型与潜在目标函数函数的类型，（如果一个函数指针的类型是<code>int (*)(float)</code>，那么只有那些接受一个<code>float</code>参数并返回<code>int</code>的函数才会被视为候选。）但有很高的假阳</p>
+<hr>
+<p>创新：</p>
+<p>提出MLTA，MLTA依赖于一个观察，即函数指针/函数地址通常存储在类型具有多层类型层次结构的对象中；在间接调用之前，函数指针将从具有相同类型层次结构的对象”逐层”加载。(比如b.a.fptr()需要加载 b 的地址，再根据偏移量加载 b.a 的地址，逐层加载到最后 b.a.fptr 的地址，调用存储的函数)</p>
+<p>所以匹配函数指针的<strong>多层</strong>类型与潜在目标函数的<strong>多层</strong>类型</p>
+<hr>
+<p>优点：</p>
+<ol>
+<li> 解决假阳问题：追踪目标在多层类型之间的传播</li>
+<li> 解决假阴问题：当对某一层的分析变得不可行时，安全地回退</li>
+<li> 有利于语义错误检测，最后，我们利用TypeDive来查找对等函数，并对它们进行交叉检查，以识别未通过安全检查或使用初始化变量的语义错误。</li>
+</ol>
+<hr>
+<p>实现困难1：</p>
+<p>维持多层类型的映射很吃开销，类型经常变动时很难维护</p>
+<p>解决：</p>
+<p><strong>将一个多层类型分解成一系列两层类型</strong>，并将每一个两层类型与其相关的icall目标进行映射。</p>
+<hr>
+<p>实现困难2：</p>
+<p>虚函数表( VTable )的指针经常被投射到一般类型，如char *，导致类型匹配失效。</p>
+<p>解决：</p>
+<p>之前的工作：一个虚拟函数调用只能调用当前类或其派生类中实现的虚拟函数，而不能调用其他类中实现的虚拟函数。这种分析是通过从C + +程序中<strong>提取类层次信息</strong>来实现的。</p>
+<p>MLTA：将VTables精确地连接到相应的类，并跟踪类的投射。</p>
+<p>首先，当对象指针递归存储到不同类的对象时，MLTA可以进一步细化icall目标。</p>
+<p>其次，MLTA精确地跟踪类型转换。因此，只有在实际强制转换存在时，派生类的虚函数才成为基类的有效调用目标。</p>
+<hr>
+<p>函数指针可以驻留在两类内存对象中：基本类型变量或复合类型对象。在将函数指针存储到内存中之前，可以保留其函数类型或将其强制转换为一般类型，例如char*。</p>
+<p>有88 %的指令将函数地址存放在复合类型对象中，只有12 %的指令将函数地址存放在原语类型变量中。在前一种情况下，91 %在存储指令前不投放函数类型，而在后一种情况下，80 %将函数指针投放到不同的类型中。</p>
+<p>在复合类型对象中存储函数地址是很常见的，并且对于icalls来说，在非关联的之前，通常会从相同复合类型的对象中加载函数地址。MLTA将利用这些类型信息来细化icall目标。</p>
+<p><span class="highlight" data-annotation="%7B%22attachmentURI%22%3A%22http%3A%2F%2Fzotero.org%2Fusers%2F15815393%2Fitems%2FVHD7A7N3%22%2C%22pageLabel%22%3A%223%22%2C%22position%22%3A%7B%22pageIndex%22%3A2%2C%22rects%22%3A%5B%5B179.888%2C292.77386240000004%2C294.0437305664%2C300.7360256%5D%2C%5B53.798%2C281.81486240000004%2C299.273643392%2C289.7770256%5D%2C%5B53.798%2C270.85586240000003%2C294.04712883199994%2C278.8180256%5D%2C%5B53.798%2C259.89686240000003%2C294.047128832%2C267.8590256%5D%2C%5B53.798%2C248.9378624%2C294.043703168%2C256.9000256%5D%2C%5B53.798%2C237.9788624%2C295.5567119360002%2C245.9410256%5D%2C%5B53.798%2C227.0198624%2C294.04361400320005%2C234.9820256%5D%2C%5B53.798%2C216.0608624%2C294.047128832%2C224.02302559999998%5D%2C%5B53.798%2C205.1018624%2C294.0460169983999%2C213.06402559999998%5D%2C%5B53.798%2C194.1438624%2C294.3306464%2C202.10602559999998%5D%2C%5B53.798%2C183.1848624%2C295.03418600960003%2C191.14702559999998%5D%2C%5B53.467%2C172.2258624%2C294.0468455295999%2C180.1880256%5D%2C%5B53.798%2C161.2668624%2C294.04533555200004%2C169.2290256%5D%2C%5B53.798%2C150.3078624%2C295.56330224000004%2C158.2700256%5D%2C%5B53.798%2C139.3488624%2C294.0453355520001%2C147.3110256%5D%2C%5B53.798%2C128.3898624%2C294.0463563904%2C136.3520256%5D%2C%5B53.798%2C117.4308624%2C195.60161600000015%2C125.3930256%5D%5D%7D%2C%22citationItem%22%3A%7B%22uris%22%3A%5B%22http%3A%2F%2Fzotero.org%2Fusers%2F15815393%2Fitems%2FE2BSN25Z%22%5D%2C%22locator%22%3A%223%22%7D%7D" ztype="zhighlight"><a href="zotero://open/library/items/VHD7A7N3?page=3">“Before a function pointer is stored into memory, its function type can be preserved or cast to general types, such as char*. Storing function addresses in a composite-type object is quite common, and the function addresses will typically be loaded from objects of the same composite types before being dereferenced for icalls. MLTA will exploit such type information to refine icall targets.”</a></span> <span class="citation" data-citation="%7B%22citationItems%22%3A%5B%7B%22uris%22%3A%5B%22http%3A%2F%2Fzotero.org%2Fusers%2F15815393%2Fitems%2FE2BSN25Z%22%5D%2C%22locator%22%3A%223%22%7D%5D%2C%22properties%22%3A%7B%7D%7D" ztype="zcitation">(<span class="citation-item"><a href="zotero://select/library/items/E2BSN25Z">Lu 和 Hu, 2019, p. 3</a></span>)</span></p>
+<p>函数指针可以存储在独立的变量中或复合类型对象中；</p>
+<p>在存储函数指针到内存之前，它的<strong>原始类型</strong>可能会被<strong>保留</strong>，也可能会被<strong>转换（cast）为通用类型</strong>，例如 <code>char*</code></p>
+<p><strong>复合类型对象</strong>（88%）更常用于存储函数指针</p>
+<p>==没懂:为什么在原始类型变量中，80% 都进行了类型转换？==</p>
+<p>chatgpt:</p>
+<ul>
+<li>  <strong>通用存储</strong>：有时为了在不同的上下文中传递函数指针，程序员会将它转换为 <code>void*</code> 或 <code>char*</code>，然后再转换回来。</li>
+<li>  <strong>兼容性</strong>：某些低级代码（例如内核）可能需要将函数指针存储到 <code>void*</code> 类型的字段中，以便与不同类型的回调函数兼容。</li>
+</ul>
+<p>复合类型存储的函数指针，通常从相同的复合类型对象加载后被调用。优化策略：如果知道 <code>B.A.fptr_t</code> 是 <code>void(*)()</code>，那么可以限制** **<code>icall</code> 只能调用 <code>void(*)()</code> 类型的函数，而不是所有函数。</p>
+<ol>
+<li> 原始类型变量存储的函数指针，通常被转换为 <code>void*</code> 或 <code>char*</code>，导致难以确定其原始类型。</li>
+<li> 在复合类型中，91% 的情况不会进行类型转换，意味着这些函数指针的原始类型信息仍然可用，可以用于更精准的间接调用目标分析。</li>
+<li> 原始类型变量中，80% 的情况会进行类型转换，导致直接分析这些变量的原始类型变得更加困难。</li>
+</ol>
+<hr>
+<p>MLTA不仅考虑函数类型，还考虑了持有函数指针的内存对象的类型。MLTA逐层追踪函数指针的类型。对于b.a.fptr()，MLTA发现函数指针<code>b.a.handler</code>取类型<code>fptr_t</code>，其值从类型<code>A</code>的对象a中读取，而a又从类型<code>B</code>的对象b中检索。因此，MLTA找到了一种三层类型<code>B.A.fptr_t</code>来检索函数指针。MLTA**要求目标函数的地址必须曾存入某个 **<code>B.A.fptr_t</code> 变量，否则不能调用。</p>
+<hr>
+<p>TypeDive以目标程序的<strong>未链接</strong>LLVM字节码为输入，输出每个icall的目标。TypeDive需要两个阶段来产生icall目标。</p>
+<p>第一阶段彻底扫描所有字节码文件以收集类型相关信息。</p>
+<ul>
+<li><p>TypeDive首先<strong>收集</strong>所有address-taken函数并识别所有address-taking操作，其中后者可以是全局变量的静态初始化器或存储指令。</p>
+<ul>
+<li><p>静态初始化：声明时初始化，在** <strong><code>b</code> 定义时就初始化，编译器会确保 <code>b.a.handler</code> 立即指向 <code>copy_with_check</code>。适用于 静态（global）、局部（stack）和动态分配（heap）的变量，但在 全局作用域 定义时，它的 <code>handler</code> 必须是一个 全局函数。</strong>通常编译器会在编译阶段分配并初始化内存**，减少运行时赋值的开销。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Struct B b = &#123;.a=&#123;.handler = &amp;copy_with_check &#125; &#125;;</span><br></pre></td></tr></table></figure></li>
+<li><p>取址/存储指令：先声明再赋值，先声明 <code>b</code>，然后<strong>在运行时显式赋值</strong> <code>b.a.handler = &amp;copy_with_check;</code>。适用于局部变量（stack）、动态分配变量（heap），但不能用于 <code>const</code> 或 <code>static</code> 变量的初始化。由于是运行时赋值，可能会多出一条存储指令。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Struct B b; b.a.handler = &amp;copy_with_check;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>  然后TypeDive分析address-taking操作来<strong>识别</strong>内存对象的<strong>多层类型</strong>。例如：将copy _ with _ check ( )的地址取下并赋值给b . a . handler。TypeDive将其多层类型鉴定为B.A.fptr_t。</p>
+</li>
+<li><p>  <strong>类型函数约束</strong>：然后，TypeDive将多层类型<strong>拆分</strong>为若干个两层类型，以实现高效的目标传播。在这种情况下，B.A.fptr_t被拆分为fptr_t (第一层)，A.fptr_t (第二层)和B.A (第三层)。TypeDive将这样的信息添加到<strong>类型-函数映射</strong>中，其中key是两层类型的哈希，value是关联函数的集合。目的是识别哪些类型被赋值给了哪些函数（如果&amp;foo存储在A对象中，则type A限制foo）<img src="/2025/02/24/indirect-call/MLTA/V4EXMHM4.png" alt="\&lt;img alt=&quot;&quot; data-attachment-key=&quot;V4EXMHM4&quot; width=&quot;806&quot; height=&quot;485&quot; src=&quot;attachments/V4EXMHM4.png&quot; ztype=&quot;zimage&quot;&gt;"></p>
+</li>
+<li><p><strong>传播分析</strong>：然后，TypeDive确定了typed类型化对象如何存储到其他不同类型的对象，例如通过* p = a，并将两个操作数类型之间的关系添加到<strong>类型-传播映射</strong>中。类型传播图的key是值对象a的类型，value是指针对象p的类型。TypeDive分析所有的casting操作，并通过类型-传播映射来维护两种类型之间的转换关系。需要注意的是，嵌套类型也会被转换和维护以进行转换操作。Type casts/non-address-taking object stores</p>
+<p><img src="/2025/02/24/indirect-call/MLTA/U2XXY9TI.png" alt="\&lt;img alt=&quot;&quot; data-attachment-key=&quot;U2XXY9TI&quot; width=&quot;799&quot; height=&quot;472&quot; src=&quot;attachments/U2XXY9TI.png&quot; ztype=&quot;zimage&quot;&gt;"> </p>
+</li>
+<li><p><strong>逃逸分析</strong>：最后，TypeDive捕获潜在的类型逃逸案例并将他们添加到<strong>逃逸类型集合</strong>中。如果不能确定类型可以约束的所有调用目标，则类型正在进行转义。例如，当一个基元类型被投射到一个复合类型时，由于我们无法决定基元类型的目标，复合类型的目标也变得不可决定。在这种情况下，复合类型是逃逸的。前两步寻找了一个类型能限制的完整函数集，但并不是每个类型都能找到一个完整的函数集，找不到完整的，就将该类型称为逃逸的类型（从不支持类型转换而来或转换到了不支持类型）<img src="/2025/02/24/indirect-call/MLTA/FLJ4HDRY.png" alt="\&lt;img alt=&quot;&quot; data-attachment-key=&quot;FLJ4HDRY&quot; width=&quot;848&quot; height=&quot;458&quot; src=&quot;attachments/FLJ4HDRY.png&quot; ztype=&quot;zimage&quot;&gt;"></p>
+<p>general type下的ptr，转换为了struct A，在这种情况下，认为struct A逃逸了struct A转换为了general type，也认为struct A逃逸了</p>
+<p><img src="/2025/02/24/indirect-call/MLTA/BLPYHYQH.png" alt="\&lt;img alt=&quot;&quot; data-attachment-key=&quot;BLPYHYQH&quot; width=&quot;617&quot; height=&quot;403&quot; src=&quot;attachments/BLPYHYQH.png&quot; ztype=&quot;zimage&quot;&gt;"> </p>
+</li>
+</ul>
+<p>第二阶段利用构建的映射对每个icall进行目标解析。</p>
+<p>初始化icall目标集，收集FLTA返回的结果（最外层的类型）查看<strong>逃逸集合</strong>当前层的类型是否逃逸，如果没有逃逸，就查询<strong>类型-传播映射</strong>来寻找曾经转换到当前类型的所有类型，根据<strong>类型-函数映射</strong>收集这些类型的所有目标，当做当前层的目标集，将前一层的目标集与当前层的目标集取交集，如果逃逸了，或者没有下一层了，就输出当前的目标集</p>
+<p>由于每一层的目标是相交的，TypeDive可以有效地细化icall目标。TypeDive的分析具有保守性和<strong>弹性</strong>：( 1 )如果TypeDive找不到下一层，则立即返回最终目标集；( 2 )如果任何类型正在逃逸，TypeDive将停止对目标的解析并返回到上一层。</p>
+<p><img src="/2025/02/24/indirect-call/MLTA/WBI7PD3I.png" alt="\&lt;img alt=&quot;&quot; data-attachment-key=&quot;WBI7PD3I&quot; width=&quot;790&quot; height=&quot;489&quot; src=&quot;attachments/WBI7PD3I.png&quot; ztype=&quot;zimage&quot;&gt;"> </p>
+<hr>
+<p>C++支持</p>
+<p><img src="/2025/02/24/indirect-call/MLTA/VXKF4UXY.png" alt="\&lt;img alt=&quot;&quot; data-attachment-key=&quot;VXKF4UXY&quot; width=&quot;812&quot; height=&quot;412&quot; src=&quot;attachments/VXKF4UXY.png&quot; ztype=&quot;zimage&quot;&gt;"> </p>
+<p>C++的虚表指针都是不支持类型指针，按照前面的说法，虚表指针无法使用MLTA</p>
+<p>解决方法：直接将虚函数映射到class类型，跳过虚表指针</p>
+<p>具体来说，分析一个类的<strong>构造函数</strong>来识别VTables和包含的虚函数，并使用<strong>类型-函数映射</strong>将虚函数映射到类。</p>
+<hr>
+<p>实现</p>
+<p><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">某些较难生成 bc 文件的直接丢弃。作者们实现了一个 LLVM 模块 pass，特意提到了 LLVM 提供的 </span></span><strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">WriteBitcodeFile() </span></span></strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">函数，用于存储 IR。</span></span></p>
+<p><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">LLVM 有它自己的类型系统，每种类型在每个 Module 中都有一个类型对象（object），因此存在相同类型会有不同的类型对象。TypeDive 的处理方式是</span></span><strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">比较类型的字符串</span></span></strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">，若两个类型的字符串相同，则认为是相同类型。全字符串处理会占有较多存储空间，因此类型名会和转为字符串的索引一起做哈希。</span></span></p>
+<p><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">目前支持的类型是函数类型（签名）、结构体、array 和 vector，其余类型都被</span></span><strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">保守地</span></span></strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">认为是不支持的类型。这部分代码实现在 </span></span><strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">fuzzyTypeMatch</span></span></strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)"> 函数。</span></span></p>
+<p><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">虚函数编译时，this 指针会作为第一个参数自动插入，this 指针指向的永远是调用对象。那么，当发生</span></span><strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">向上转型</span></span></strong><span style="color: rgb(25, 27, 31)"><span style="background-color: rgb(255, 255, 255)">的时候，如 base* 由 derived* 转义得到，那么 this 指针的类型是 base* 而不是 derived*。因此，TypeDive 在计算虚函数的哈希值时，会把 this 指针从参数列表中移除</span></span></p>
+<p><span class="highlight" data-annotation="%7B%22attachmentURI%22%3A%22http%3A%2F%2Fzotero.org%2Fusers%2F15815393%2Fitems%2FVHD7A7N3%22%2C%22annotationKey%22%3A%22STAVMEDD%22%2C%22color%22%3A%22%23ffd400%22%2C%22pageLabel%22%3A%227%22%2C%22position%22%3A%7B%22pageIndex%22%3A6%2C%22rects%22%3A%5B%5B518.889%2C126.39%2C558.202%2C134.352%5D%2C%5B317.955%2C115.431%2C558.202%2C123.393%5D%2C%5B317.955%2C104.472%2C558.202%2C112.434%5D%2C%5B317.955%2C93.513%2C558.203%2C101.475%5D%2C%5B317.623%2C82.555%2C457.575%2C90.517%5D%5D%7D%2C%22citationItem%22%3A%7B%22uris%22%3A%5B%22http%3A%2F%2Fzotero.org%2Fusers%2F15815393%2Fitems%2FE2BSN25Z%22%5D%2C%22locator%22%3A%227%22%7D%7D" ztype="zhighlight"><a href="zotero://open/library/items/VHD7A7N3?page=7&#x26;annotation=STAVMEDD">“if an object pointer of type base* is cast from type derived*, and the object pointer is used to invoke a virtual function (the one in the derived class), the first argument will be base* instead of derived*, which will fail the matching of function types.”</a></span> <span class="citation" data-citation="%7B%22citationItems%22%3A%5B%7B%22uris%22%3A%5B%22http%3A%2F%2Fzotero.org%2Fusers%2F15815393%2Fitems%2FE2BSN25Z%22%5D%2C%22locator%22%3A%227%22%7D%5D%2C%22properties%22%3A%7B%7D%7D" ztype="zcitation">(<span class="citation-item"><a href="zotero://select/library/items/E2BSN25Z">Lu 和 Hu, 2019, p. 7</a></span>)</span> 如果基类型*的对象指针由派生类型*投射而来，并且该对象指针用于调用虚拟函数(派生类中的那个)，则第一个参数将是基类型*而不是派生类型*，这将导致函数类型匹配失败。在计算虚函数类型的哈希值时，<strong>将该指针从参数列表中排除</strong>。相反，TypeDive将通过<strong>维护类型转换历史</strong>来正确解析虚拟函数调用可能的class类型。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xinxiangwangzhi_/article/details/126091214">c++进阶–this指针与虚函数指针的关系_c++ this指针 虚函数-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/crr411422/article/details/131063469">【C++】C++中的 `this` 指针：深度探索和应用_c++ this-CSDN博客</a></p>
+</blockquote>
+<p><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)"> 动态绑定是多态的关键机制之一，它使得在运行时可以根据对象的实际类型来调用相应的成员函数。</span></span><code>this</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)"> 指针在这个过程中起到了关键的作用。</span></span></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class Base &#123;</span><br><span class="line">public:</span><br><span class="line">    virtual void print() const &#123; // 定义虚函数 print() ，用来打印 Base 类的信息</span><br><span class="line">        std::cout &lt;&lt; &quot;Base::print()&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">class Derived : public Base &#123;  // Derived 类从 Base 类公有继承</span><br><span class="line">public:</span><br><span class="line">    void print() const override &#123; // 重写基类的虚函数 print() 用来打印 Derived 类的信息</span><br><span class="line">        std::cout &lt;&lt; &quot;Derived::print()&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">void callPrint(const Base* base) &#123;  // 定义一个函数，参数类型为指向 Base 类的常指针</span><br><span class="line">    base-&gt;print();  // Dynamic binding 动态绑定，通过指针调用 Fprint() 函数</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">// 使用示例</span><br><span class="line">Derived d;  // 创建 Derived 对象</span><br><span class="line">callPrint(&amp;d);  // 通过 callPrint 函数打印对象 d 的信息，输出 &quot;Derived::print()&quot;</span><br></pre></td></tr></table></figure>
+
+<p><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)">在上述代码中，我们有一个基类 </span></span><code>Base</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)"> 和一个派生类 </span></span><code>Derived</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)">，它们都有一个 </span></span><code>print</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)"> 成员函数。在 </span></span><code>callPrint</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)"> 函数中，我们通过 </span></span><code>this</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)"> 指针（</span></span><code>base</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)">）来调用 </span></span><code>print</code><span style="color: rgb(13, 0, 22)"><span style="background-color: rgb(255, 255, 255)"> 函数，此时会发生动态绑定。</span></span></p>
+<p>没懂：</p>
+<p>能识别语义bug？</p>
+<blockquote>
+<p>虽然TypeDive的目标是细化icall目标，但我们相信TypeDive对于发现通过浅层规范(如无越界访问)无法检测到的语义缺陷也是有用的。我们的洞察是，icalls的目标往往是实现预定义接口的对等函数，从而共享相似的语义。通过交叉检查对等函数，我们可以将偏差或矛盾检测为潜在的bug，避免了理解语义的挑战性问题。</p>
+<p>我们还使用TypeDive来检测两类语义错误，即初始化丢失和安全检查丢失。由于TypeDive识别的是典型的语义等价的icall目标，因此我们会交叉检查这些对等目标中的参数和函数是如何使用的。例如，如果一个icall中的一个参数在除一个函数之外的所有节点中被普遍初始化，那么我们报告这个函数中存在一个潜在的初始化缺失问题。</p>
+<p>如果一个函数调用或参数通常被检查但不在一个对等函数中，我们也将其报告为一个潜在的漏检错误。我们实现了基于LLVM的检测。在检测过程中，我们执行了一个过程内数据流分析，以判断是否检查并初始化参数，以及是否检查函数调用的返回值。然后，我们根据不存在问题的节点的比例对潜在的bug案例进行统计排序。</p>
+</blockquote>
+<p>灵活，能回退？</p>
+<blockquote>
+<p>由于每一层的目标是相交的，TypeDive可以有效地细化icall目标。TypeDive的分析具有保守性和<strong>弹性</strong>：( 1 )如果TypeDive找不到下一层，则立即返回最终目标集；( 2 )如果任何类型正在逃逸，TypeDive将停止对目标的解析并返回到上一层。值得注意的是，TypeDive的分析具有字段敏感性</p>
+</blockquote>
+<p>多层改双层后是怎么匹配的？</p>
+<blockquote>
+<p>根据最外层的类型，找类型-传播映射，找到上一层的所有类型，根据类型-函数映射，找到类型的所有目标集，一直找目标集并取交集</p>
+</blockquote>
+<p>虚表指针会被映射到一般类型是什么意思？</p>
+<p>函数指针在存进内存之前为什么要转换函数类型为通常类型？</p>
+<p>和safedispatch等工作相比，mlta怎么提高的？</p>
+<p>类型限制和传播分析、类型逃逸分析是什么？</p>
+<blockquote>
+<p>类型限制的目的是识别哪些类型被赋值给了哪些函数（如果&amp;foo存储在A对象中，则type A限制foo）</p>
+<p>传播分析的目的是识别类之间的关系</p>
+<p>类型逃逸分析的目的是找到不可分析的类型</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E8%AE%BA%E6%96%87/" rel="tag"># 论文</a>
+          
+            <a href="/tags/CFI/" rel="tag"># CFI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/02/19/indirect-call/%E6%9D%82%E9%A1%B9/" rel="next" title="C++杂项">
+                <i class="fa fa-chevron-left"></i> C++杂项
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">104</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

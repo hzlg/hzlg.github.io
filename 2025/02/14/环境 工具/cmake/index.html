@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tools," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="CMake 教程 — CMake 3.31.0 文档 - CMake 构建系统 CMake Tutorial — CMake 3.31.5 Documentation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cmake学习">
+<meta property="og:url" content="https://hzlg.github.ioz/2025/02/14/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/cmake/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="CMake 教程 — CMake 3.31.0 文档 - CMake 构建系统 CMake Tutorial — CMake 3.31.5 Documentation">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-02-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-24T14:20:47.944Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="tools">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2025/02/14/环境 工具/cmake/"/>
+
+
+
+
+
+  <title>cmake学习 | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2025/02/14/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/cmake/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cmake学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-14T00:00:00+08:00">
+                2025-02-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2025-02-24T22:20:47+08:00">
+                2025-02-24
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/guide/tutorial/index.html">CMake 教程 — CMake 3.31.0 文档 - CMake 构建系统</a></p>
+<p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/guide/tutorial/index.html">CMake Tutorial — CMake 3.31.5 Documentation</a></p>
+<span id="more"></span>
+
+<h2 id="最基本的-CMake-项目"><a href="#最基本的-CMake-项目" class="headerlink" title="最基本的 CMake 项目"></a>最基本的 CMake 项目</h2><p>最基本的 CMake 项目是从单个源代码文件构建的可执行文件。对于这样的简单项目，只需要一个包含三个命令的 CMakeLists.txt 文件。</p>
+<blockquote>
+<p>注意：虽然 CMake 支持大写，小写和混合大小写命令，但小写命令是首选，并将在整个教程中使用。</p>
+</blockquote>
+<p>任何项目的最重要的 CMakeLists.txt 必须从使用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/cmake_minimum_required.html#command:cmake_minimum_required">cmake_minimum_required（）</a> 命令 <strong>指定 CMake 的最低版本</strong>。这将建立策略设置，并确保以下 CMake 函数与 CMake 的兼容版本一起运行。</p>
+<p>要启动一个项目，我们使用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/project.html#command:project">project（）</a> 命令来设置项目名称。这个调用对于每个项目都是必需的，应该在 <code>cmake_minimum_required（）</code> 之后立刻调用。正如我们稍后将看到的，该命令还可以用于指定其他项目级别的信息，如语言或版本号。</p>
+<p>最后，<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_executable.html#command:add_executable">add_executable（）</a> 命令告诉 CMake 使用指定的源代码文件创建一个可执行文件。</p>
+<p>CMakeLists.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># TODO 1: Set the minimum required version of CMake to be 3.10</span><br><span class="line">cmake_minimum_required(VERSION 3.10)</span><br><span class="line"></span><br><span class="line"># TODO 2: Create a project named Tutorial</span><br><span class="line">project(Tutorial)</span><br><span class="line"></span><br><span class="line"># TODO 3: Add an executable called Tutorial to the project</span><br><span class="line">add_executable(Tutorial tutorial.cxx)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>CMakeLists.txt之外的程序就不贴了，在<a target="_blank" rel="noopener" href="https://github.com/Kitware/CMake/blob/master/Help/guide/tutorial/Step1/tutorial.cxx">CMake/Help/guide/tutorial/Step1/tutorial.cxx at master · Kitware/CMake</a> 里能找到，修改也略过了</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> tutorial</span><br><span class="line">mkdir Step1_build</span><br><span class="line"><span class="built_in">cd</span> Step1_build</span><br><span class="line"><span class="comment"># configure the project and generate a native build system:</span></span><br><span class="line"><span class="comment"># 这会告诉 CMake 去项目根目录查找 CMakeLists.txt 文件，并生成构建系统配置（例如 Makefile 或 Visual Studio 项目文件，具体取决于你使用的平台）。</span></span><br><span class="line">cmake ../Step1</span><br><span class="line"><span class="comment"># call that build system to actually compile/link the project</span></span><br><span class="line"><span class="comment"># 一旦 CMake 配置完成，就可以使用 CMake 生成的构建工具来编译项目。编译完成后，你会在 build 目录中看到生成的可执行文件</span></span><br><span class="line">cmake --build .</span><br><span class="line"><span class="built_in">cd</span> Debug</span><br><span class="line">.\Tutorial.exe 10</span><br></pre></td></tr></table></figure>
+
+<h2 id="指定C-标准"><a href="#指定C-标准" class="headerlink" title="指定C++标准"></a>指定C++标准</h2><p>CMake 有一些特殊的变量，这些变量要么是在幕后创建的，要么在项目代码设置后对 CMake 具有意义。许多这些变量以 <code>CMAKE_</code> 开头。在为项目创建变量时，请避免使用此命名约定。这两个特殊的用户可设置变量是 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/variable/CMAKE_CXX_STANDARD.html#variable:CMAKE_CXX_STANDARD">CMAKE_CXX_STANDARD</a> 和 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/variable/CMAKE_CXX_STANDARD_REQUIRED.html#variable:CMAKE_CXX_STANDARD_REQUIRED">CMAKE_CXX_STANDARD_REQUIRED</a>。它们可以一起使用来指定构建项目所需的 C++ 标准。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.10)</span><br><span class="line">project(Tutorial)</span><br><span class="line"></span><br><span class="line"># Set the variable CMAKE_CXX_STANDARD to 11</span><br><span class="line"># and the variable CMAKE_CXX_STANDARD_REQUIRED to True</span><br><span class="line">set(CMAKE_CXX_STANDARD 11)</span><br><span class="line">set(CMAKE_CXX_STANDARD_REQUIRED True)</span><br><span class="line"></span><br><span class="line">add_executable(Tutorial tutorial.cxx)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmake --build .</span><br><span class="line">D:\graduate\C\tutorial\Step1_build\Debug\Tutorial.exe</span><br></pre></td></tr></table></figure>
+
+<h2 id="添加版本号和配置的头文件"><a href="#添加版本号和配置的头文件" class="headerlink" title="添加版本号和配置的头文件"></a>添加版本号和配置的头文件</h2><p>有时将 <code>CMakelists.txt</code> 文件中定义的变量在源代码中也可用会很有用。在这种情况下，我们想打印项目版本。</p>
+<p>实现这一点的一种方法是使用配置的头文件。我们创建一个包含一个或多个变量的输入文件以供替换。这些变量具有特殊语法，看起来像 <code>@VAR@</code>。然后，我们使用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/configure_file.html#command:configure_file">configure_file()</a> 命令将输入文件复制到给定的输出文件，并将这些变量替换为 <code>CMakelists.txt</code> 文件中 <code>VAR</code> 的当前值。</p>
+<p>虽然我们可以直接在源代码中编辑版本，但使用此功能是首选，因为它创建了单一的事实来源并避免了重复。</p>
+<p>当调用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/project.html#command:project">project()</a> 命令时，CMake 会在幕后定义 <code>Tutorial_VERSION_MAJOR</code> 和 <code>Tutorial_VERSION_MINOR</code>。</p>
+<p>然后我们使用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/configure_file.html#command:configure_file">configure_file()</a> 将输入文件复制到指定 CMake 变量替换后的输出文件。</p>
+<p>由于配置后的文件将被写入项目二进制目录，因此我们必须将该目录添加到包含文件搜索路径列表中。</p>
+<p>我们使用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/target_include_directories.html#command:target_include_directories">target_include_directories()</a> 指定可执行目标应该在哪里查找包含文件。</p>
+<p><code>TutorialConfig.h.in</code> 是要配置的输入头文件。当从我们的 <code>CMakeLists.txt</code> 中调用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/configure_file.html#command:configure_file"><code>configure_file()</code></a> 时，<code>@Tutorial_VERSION_MAJOR@</code> 和 <code>@Tutorial_VERSION_MINOR@</code> 的值将被替换为项目中 <code>TutorialConfig.h</code> 中的相应版本号。</p>
+<p>接下来，我们需要修改 <code>tutorial.cxx</code> 以包含配置后的头文件 <code>TutorialConfig.h</code>。</p>
+<p>最后，我们通过更新 <code>tutorial.cxx</code> 如下打印出可执行文件名称和版本号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 3.10)</span><br><span class="line">project(Tutorial)</span><br><span class="line"></span><br><span class="line"># TODO 7: Set the project version number as 1.0 in the above project command</span><br><span class="line">project(Tutorial VERSION 1.0)</span><br><span class="line"></span><br><span class="line">set(CMAKE_CXX_STANDARD 11)</span><br><span class="line">set(CMAKE_CXX_STANDARD_REQUIRED True)</span><br><span class="line"></span><br><span class="line"># TODO 8: Use configure_file to configure and copy TutorialConfig.h.in to TutorialConfig.h</span><br><span class="line">configure_file(TutorialConfig.h.in TutorialConfig.h)</span><br><span class="line"></span><br><span class="line">add_executable(Tutorial tutorial.cxx)</span><br><span class="line"></span><br><span class="line"># TODO 9: Use target_include_directories to include $&#123;PROJECT_BINARY_DIR&#125;</span><br><span class="line">target_include_directories(Tutorial PUBLIC</span><br><span class="line">                           &quot;$&#123;PROJECT_BINARY_DIR&#125;&quot;</span><br><span class="line">                           )</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="创建一个库"><a href="#创建一个库" class="headerlink" title="创建一个库"></a>创建一个库</h2><p>如要在 CMake 中添加一个库，请使用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/add_library.html#command:add_library"><code>add_library()</code></a> 命令，并指定应该构成该库的源文件。</p>
+<p>我们不必将所有源文件都放在一个目录中，而是可以通过一个或多个子目录来组织我们的项目。在这种情况下，我们将专门为我们的库创建一个子目录。我们可以在此处添加一个新的 <code>CMakeLists.txt</code> 文件和一个或多个源文件。在顶层 <code>CMakeLists.txt</code> 文件中，我们将使用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/add_subdirectory.html#command:add_subdirectory"><code>add_subdirectory()</code></a> 命令将该子目录添加到版本中。</p>
+<p>创建库后，使用 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/target_include_directories.html#command:target_include_directories"><code>target_include_directories()</code></a> 和 <a target="_blank" rel="noopener" href="https://cmake.com.cn/cmake/help/latest/command/target_link_libraries.html#command:target_link_libraries"><code>target_link_libraries()</code></a> 将其连接到我们的可执行文件目标。</p>
+<p><strong>添加多个源文件</strong>： 如果项目有多个源文件，可以像下面这样添加它们：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add_executable(HelloCMake main.cpp file1.cpp file2.cpp)</span><br></pre></td></tr></table></figure>
+
+<p><strong>设置包含目录</strong>： 如果你需要包含其他目录的头文件，可以使用 <code>include_directories</code> 来指定：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include_directories(/path/to/headers)</span><br></pre></td></tr></table></figure>
+
+<p><strong>链接库</strong>： 如果你的项目依赖外部库，你可以通过 <code>target_link_libraries</code> 来链接它们：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target_link_libraries(HelloCMake some_library)</span><br></pre></td></tr></table></figure>
+
+<p><strong>定义编译选项</strong>： 你可以为编译器指定额外的选项，比如优化标志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(CMAKE_CXX_FLAGS &quot;$&#123;CMAKE_CXX_FLAGS&#125; -O2&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>安装和打包</strong>： CMake 提供了 <code>install()</code> 和 <code>package()</code> 命令，用于安装和打包项目。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tools/" rel="tag"># tools</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/02/11/%E7%8E%AF%E5%A2%83%20%E5%B7%A5%E5%85%B7/vscode%20cpp%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="next" title="vscode c++环境配置">
+                <i class="fa fa-chevron-left"></i> vscode c++环境配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2025/02/17/%E7%BD%91%E8%AF%BE+%E9%98%85%E8%AF%BB/%E5%A4%A9%E9%B9%85%E4%B9%A6/" rel="prev" title="天鹅书第三版">
+                天鹅书第三版 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">104</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%9F%BA%E6%9C%AC%E7%9A%84-CMake-%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">最基本的 CMake 项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9AC-%E6%A0%87%E5%87%86"><span class="nav-number">2.</span> <span class="nav-text">指定C++标准</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E7%89%88%E6%9C%AC%E5%8F%B7%E5%92%8C%E9%85%8D%E7%BD%AE%E7%9A%84%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">添加版本号和配置的头文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">创建一个库</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
