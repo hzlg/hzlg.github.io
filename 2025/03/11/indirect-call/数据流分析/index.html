@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CFI," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="静态代码分析敏感性概念-云社区-华为云  流敏感考虑程序语句执行的顺序（不同执行顺序的分析可能不同） 路径敏感考虑不同条件分支的状态（不同分支的分析信息可能不同） 上下文敏感考虑函数调用的上下文信息（不同过程调用函数时传的参数可能不同） 字段敏感考虑对象属性、容器等数据类型上成员或者元素上面的分析问题（不同成员的分析可能不同） 流敏感分析，针对的是同一个代码块内部的语句的顺序执行的数据流分析的要求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="field-sensitive，context-sensitive，path-sensitive，flow-sensitive等到底是什么意思？">
+<meta property="og:url" content="https://hzlg.github.ioz/2025/03/11/indirect-call/%E6%95%B0%E6%8D%AE%E6%B5%81%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="hzlg&#39;s blog">
+<meta property="og:description" content="静态代码分析敏感性概念-云社区-华为云  流敏感考虑程序语句执行的顺序（不同执行顺序的分析可能不同） 路径敏感考虑不同条件分支的状态（不同分支的分析信息可能不同） 上下文敏感考虑函数调用的上下文信息（不同过程调用函数时传的参数可能不同） 字段敏感考虑对象属性、容器等数据类型上成员或者元素上面的分析问题（不同成员的分析可能不同） 流敏感分析，针对的是同一个代码块内部的语句的顺序执行的数据流分析的要求">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-03-11T10:17:33.547Z">
+<meta property="article:modified_time" content="2025-03-11T11:04:45.746Z">
+<meta property="article:author" content="hzlg">
+<meta property="article:tag" content="CFI">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://hzlg.github.ioz/2025/03/11/indirect-call/数据流分析/"/>
+
+
+
+
+
+  <title>field-sensitive，context-sensitive，path-sensitive，flow-sensitive等到底是什么意思？ | hzlg's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">hzlg's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">笔记、日常</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://hzlg.github.ioz/2025/03/11/indirect-call/%E6%95%B0%E6%8D%AE%E6%B5%81%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="hzlg's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">field-sensitive，context-sensitive，path-sensitive，flow-sensitive等到底是什么意思？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-03-11T18:17:33+08:00">
+                2025-03-11
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2025-03-11T19:04:45+08:00">
+                2025-03-11
+              </time>
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a target="_blank" rel="noopener" href="https://bbs.huaweicloud.com/blogs/234041">静态代码分析敏感性概念-云社区-华为云</a> </p>
+<p>流敏感考虑程序语句执行的顺序（不同执行顺序的分析可能不同）</p>
+<p>路径敏感考虑不同条件分支的状态（不同分支的分析信息可能不同）</p>
+<p>上下文敏感考虑函数调用的上下文信息（不同过程调用函数时传的参数可能不同）</p>
+<p>字段敏感考虑对象属性、容器等数据类型上成员或者元素上面的分析问题（不同成员的分析可能不同）</p>
+<p>流敏感分析，针对的是同一个代码块内部的语句的顺序执行的数据流分析的要求；</p>
+<p>路径敏感分析，针对的是同一个方法内里面，能够区分不同分支的分析要求（数据流分析是路径不敏感的）；</p>
+<p>上下文敏感分析，是针对跨过程调用的时候的数据流分析要求。</p>
+<p>这三个概念层层递进，都是面向程度执行结构的敏感性要求，是一个静态代码分析工具的基本通用要求，一般的静态代码分析框架，都应该实现这些基本要求。</p>
+<p>域敏感，也叫属性敏感，主要针对面向对象语言（包括C语言中的结构体等）的一种分析技术，目的是提高静态代码的分析精度，贯穿整个分析过程。实际上，域敏感并不是必须完全需要实现，静态代码分析工具可以基于需要，在不同的层次上实现域敏感，同时，也可以<strong>刻意将待分析程序部分内容实现为域不敏感来提高性能（域敏感分析，对分析时间和分析所消耗的内存，都有显著影响）</strong>。</p>
+<span id="more"></span>
+
+<p><strong>流敏感（flow-sensitive）：</strong>指的是考虑程序语句执行的顺序，例如在数据流分析中的指针别名（Pointer Alias）分析中，一个非流敏感指针别名分析可能得出“变量x和y可能会指向同一位置”，而流敏感指针别名分析得出的结论类似于“在执行第20条指令后，变量x和y可能会指向同一位置” 。所以，一个非流敏感指针别名分析不考虑控制流，并认为所发现的别名在程序所有位置均成立。</p>
+<p><strong>上下文敏感（context-sensitive）：</strong>指的是在过程间分析（Interprocedural Analysis）时，考虑函数调用的上下文信息。一个子过程或函数可能会被多个过程调用，那么在不同的过程调用它的时候，对于传给它的实际参数或当时的全局变量有可能会不同，这些被称之为上下文，上下文敏感是考虑了这些不同</p>
+<p><strong>路径敏感（path-sensitive）：</strong>指的是依据条件分支语句的不同谓词，计算不同的分析信息，也就是说，路径敏感将跟踪程序控制流的每一个分支，以记录两个分支路径的不同程序状态。相应的，非路径敏感并不考虑分支之间的区别。简单的路径敏感存在“路径爆炸”（path explosion）或“无穷搜索空间”（infinite search space）的问题。</p>
+<p>本文介绍几种在静态代码分析中的敏感性分析的概念。主要有流敏感（flow-sensitive），路径敏感（path-sensitive），上下文敏感（context-sensitive）和域敏感（field-sensitive）。所有的敏感性分析相对于非敏感性分析，在分析的准确性上，都会有很大的精度提升（如减少漏报和误报等），但是会在时间或者空间上有更大损耗。</p>
+<h2 id="1-流敏感（flow-sensitive）"><a href="#1-流敏感（flow-sensitive）" class="headerlink" title="1.  流敏感（flow-sensitive）"></a>1.  流敏感（flow-sensitive）</h2><p>流敏感分析，是指在分析时，区分程序的执行顺序的分析。如下面的两段代码：</p>
+<p>代码片段一：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String name = <span class="string">&quot;zhangsan&quot;</span>;</span><br><span class="line">name = System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">String sql = <span class="string">&quot;select * from user where name = &quot;</span> + name;</span><br><span class="line">sqlExecute(sql);</span><br></pre></td></tr></table></figure>
+
+<p>代码片段二：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String name = System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">name = <span class="string">&quot;zhangsan&quot;</span>;</span><br><span class="line">String sql = <span class="string">&quot;select * from user where name = &quot;</span> + name;</span><br><span class="line">sqlExecute(sql);</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们设定sqlExecute是执行一条sql命令的方法，则上面的两个代码片段中，System.getProperty()是从环境变量中获取数据，可以认为是污点入口。如果是代码片段一，可能发生sql注入风险，因为name在第2行，被赋给了一个外部传入的数据，第3行将name传递给了sql，在第4行，sql被传入一个污点坑。而代码片段二，则没有可能发生sql注入风险，因为在第2行，name是个常量，第3行sql也没有被污染，是拼接了一个常量zhangsan。</p>
+<p>上面的分析，实际上是一种流敏感的分析，我们分析了name在第1行和第2行指向的内容，从而知道<strong>在代码片段一中，第3行的name指向一个污染数据，代码片段二中，第3行的name指向的是一个常量字符串，从而知道上面代码片段一有sql注入风险，代码片段二没有sql注入风险</strong>。而如果是流不敏感分析，则不管是代码片段一还是代码片段二，都只能得出来的一个结论是：<strong>第3行的name指向的是常量字符串或者是外部传入的污染数据，从而得到的结论是代码片段一和代码片段二都有sql注入的风险</strong>。</p>
+<p>从上面的一个简单的结合指向分析和污点传播的案例，我们可以知道，<strong>流敏感分析可以有效降低分析的误报，提高分析的准确性</strong>。绝大部分的数据流分析，例如常量传播、指向分析等，都需要是流敏感分析，当然，也不是说所有的分析都需要是流敏感的，比如静态类型语言中，分析一个变量的类型，分析到一个位置的某个变量的类型信息后，其他地方的该变量自然就都是该类型的。</p>
+<p>流敏感分析已经是程序分析中，数据流分析的最基本要求，已有的一些成熟的代码分析框架，例如Java中的Soot和Wala，C/C++中的Clang等，都是原始支持流敏感的分析。</p>
+<p>部分源码，在生成SSA形式的三地址码后，<strong>在SSA上的非流敏感分析，在相当程度上，也可以实现类似于普通三地址码的流敏感分析的效果</strong>，因为SSA中每个变量只会有一次赋值，生成SSA形式后，实际上的效果就是每个变量只会有一个指向，例如上面的代码片段，当针对name变量，针对两次赋值区分name1和name2之后，在sql中，都使用name2赋值，不会再有不同指向的问题。</p>
+<h2 id="2-路径敏感（path-sensitive）"><a href="#2-路径敏感（path-sensitive）" class="headerlink" title="2.  路径敏感（path-sensitive）"></a>2.  路径敏感（path-sensitive）</h2><p>路径敏感，就是在进行分析时，同时考虑了分支路径上面的条件信息。如下面的两段代码：</p>
+<p>代码片段一：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">String name;</span><br><span class="line"><span class="keyword">int</span> x = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">if</span> (x &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    name = System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    name = <span class="string">&quot;zhangsan&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">String sql = <span class="string">&quot;select * from user where name = &quot;</span> + name;</span><br><span class="line">sqlExecute(sql);</span><br></pre></td></tr></table></figure>
+
+<p>代码片段二：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">String name;</span><br><span class="line"><span class="keyword">int</span> x = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">if</span> (x &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    name = System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    name = <span class="string">&quot;zhangsan&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">String sql = <span class="string">&quot;select * from user where name = &quot;</span> + name;</span><br><span class="line">sqlExecute(sql);</span><br></pre></td></tr></table></figure>
+
+<p>上面的两段代码除了x的取值外，都相同。那么来分析上面的代码。当x大于0时，name是一个从环境变量里面获取的污点数据，当x小于等于0时，name是一个常量zhangsan，然后执行sql命令的拼接，并执行命令。</p>
+<p>现有的数据流分析，一般都可以识别到分支操作，然后执行到分支完毕时，执行一个merge的操作，然后继续执行。如上，name在分支结束后，内容是 {System.getProperty(“name”)}∨{zhangsan}，如果是考虑污点分析的抽象值，则为{Tainted}∨{NotTainted}={Tainted，NotTainted}，然后sql被污染，最后发生一个sql注入问题（一般静态代码分析，都是sound分析，所以会报一个缺陷）。这种是不考虑路径敏感的场景。</p>
+<p>上面，不考虑分支条件的时候，对代码片段一和代码片段二分析时，都会报出来一个sql注入的问题。当带上分支条件时，对于第二种场景，计算约束constraint({x == -1}∨{x &gt; 0}) 无解，可以知道污点分支走不进去，从而可以知道其实代码片段二是不会发生sql注入的，而只有代码片段一会发生sql注入。</p>
+<p>从上面的分析，<strong>路径敏感分析，可以有效降低静态代码分析中的误报，提高分析的准确性</strong>。这就要求，在获取每一条分支路径分析时，都需要同时保存分支的条件，然后通过<strong>约束求解</strong>方法，获取分支可达性，从而降低误报。另外，如果是基于SSA形式的分析，一般可以通过在构造φ函数时，同时保存分支信息来实现。</p>
+<p>当前，很多静态代码分析框架，例如Java中Soot，原生并没有关于路径分支的可达性的计算支持（即非路径敏感分析，《编译原理》中介绍的数据流分析，就是非路径敏感的），所以如果是基于这些框架开发静态代码分析框架，需要考虑路径敏感性分析的实现（基于分支条件的约束求解），但是也需要注意可能的路径爆炸等问题。</p>
+<h2 id="3-上下文敏感（context-sensitive）"><a href="#3-上下文敏感（context-sensitive）" class="headerlink" title="3.  上下文敏感（context-sensitive）"></a>3.  上下文敏感（context-sensitive）</h2><p>上下文敏感，就是考虑函数调用的上下文信息。一个函数可能会被多个函数调用，那么在不同的函数调用它的时候，在传给它的实际参数或当时的全局变量不同的情况下，可能有不同的行为，如下面的一段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    String name1 = getName(<span class="number">3</span>);  <span class="comment">// Tainted</span></span><br><span class="line">    String sql1 = <span class="string">&quot;select * from user where name = &quot;</span> + name1;</span><br><span class="line">    sqlExecute(sql1);  <span class="comment">// Taint Sink</span></span><br><span class="line">   </span><br><span class="line">    String name2 = getName(-<span class="number">1</span>);  <span class="comment">// Not Tainted</span></span><br><span class="line">    String sql2 = <span class="string">&quot;select * from user where name = &quot;</span> + name2;</span><br><span class="line">    sqlExecute(sql2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getName</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (x &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;zhangsan&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，getName()方法基于入参的不同，会返回不同的结果，如上面的代码，在第2行和第6行，获取到的name1和name2的污点信息不同，当入参为3时，返回的是一个从环境变量中获取的污染的数据，到导致sql注入，而当入参为-1时，返回的是一个常量，不是污染数据，不会有问题。</p>
+<p>所以，在上下文敏感的分析中，在第4行应该报一个sql注入问题，而在第8行则不应该报sql注入问题。而上下文非敏感的分析中，不考虑传入参数的不同，getName()方法，则全部返回一个{System.getProperty(“name”)}∨{zhangsan}，从而导致第4行和第8行都会报一个sql注入的问题。</p>
+<p>如上分析，上下文敏感分析，可以<strong>减少误报，提高分析精度</strong>，同时，也对函数建立摘要提出了挑战。上下文，指在分析函数调用过程中，可能影响函数行为的所有的信息，不仅仅包含传递的实参，还包括全局变量、实参类型等信息，根据我们的分析的目标来确定（静态代码分析，在一定程度上，全都需要进行一定程度的抽象，需要根据分析目标，在上下文和结果上进行合理抽象）。</p>
+<h2 id="4-域敏感（field-sensitive）"><a href="#4-域敏感（field-sensitive）" class="headerlink" title="4.  域敏感（field-sensitive）"></a>4.  域敏感（field-sensitive）</h2><p>域敏感，即针对对象属性、容器等数据类型上成员或者元素上面的分析问题。如下面的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    String name = System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">    Bean bean = <span class="keyword">new</span> Bean();</span><br><span class="line">    bean.setName(name);</span><br><span class="line">    bean.setGender(<span class="string">&quot;male&quot;</span>);</span><br><span class="line"></span><br><span class="line">    String sql1 = <span class="string">&quot;select * from user where name = &quot;</span> + bean.getName();</span><br><span class="line">    sqlExecute(sql1);</span><br><span class="line"></span><br><span class="line">    String sql2 = <span class="string">&quot;select * from user where gender = &quot;</span> + bean.getGender();</span><br><span class="line">    sqlExecute(sql2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Bean</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String gender;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上面的例子，在第2行，name是污染数据，然后在第4行，将bean的name属性设为name，将bean的gender设置为常量male，从而bean的name属性是被污染的，gender属性没有被污染，继续往下分析，在执行sql1的第8行，应该报一个sql注入问题，而在执行sql2的第11行，不应该报sql注入问题。</p>
+<p>如果是域敏感分析，可以将污点打在对象的属性上面，从而能够区分上面的场景，只在第8行报一个sql注入缺陷，而在第11行则不会报缺陷，但是如果是域不敏感分析，则无法报准确将污点打在对象的属性上面，从而导致污点被打在对象上，从而导致第8行和第11行都会报一个缺陷。</p>
+<p>域敏感分析，对于面向对象语言的静态代码分析工具的实现，是一种非常重要的基础要求，如果无法实现域敏感分析，则会导致大量的无关的误报问题。当前，很多开源的分析框架，例如Java中基于Soot的IDEal，就实现了域敏感的分析（可以参考<a target="_blank" rel="noopener" href="http://www.bodden.de/pubs/sab19context.pdf%EF%BC%8CContext-">http://www.bodden.de/pubs/sab19context.pdf，Context-</a>, Flow-, and Field-Sensitive Data-Flow Analysis using Synchronized Pushdown Systems），也有一些静态代码分析工具，将对象的属性延展为普通的变量来实现污点标记。</p>
+<p>上面介绍的这种域敏感分析，是静态代码分析工具的基本要求，下面介绍两种域敏感分析，根据我的使用静态代码分析工具的经验，还很少有工具很好地支持了下面的场景，直接看代码：</p>
+<p>案例一，List场景：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String name = System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">List&lt;String&gt; arg = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">2</span>);</span><br><span class="line">arg.add(name);</span><br><span class="line">arg.add(<span class="string">&quot;male&quot;</span>);</span><br><span class="line"></span><br><span class="line">String sql1 = <span class="string">&quot;select * from user where name = &quot;</span> + arg.get(<span class="number">0</span>);</span><br><span class="line">sqlExecute(sql1);</span><br><span class="line"></span><br><span class="line">String sql2 = <span class="string">&quot;select * from user where gender = &quot;</span> + arg.get(<span class="number">1</span>);</span><br><span class="line">sqlExecute(sql2);</span><br></pre></td></tr></table></figure>
+
+<p>案例二，Map场景：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String name = System.getProperty(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;(<span class="number">2</span>);</span><br><span class="line">map.put(<span class="string">&quot;name&quot;</span>, name);</span><br><span class="line">map.put(<span class="string">&quot;gender&quot;</span>, <span class="string">&quot;male&quot;</span>);</span><br><span class="line"></span><br><span class="line">String sql1 = <span class="string">&quot;select * from user where name = &quot;</span> + map.get(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">sqlExecute(sql1);</span><br><span class="line"></span><br><span class="line">String sql2 = <span class="string">&quot;select * from user where gender = &quot;</span> + map.get(<span class="string">&quot;gender&quot;</span>);</span><br><span class="line">sqlExecute(sql2);</span><br></pre></td></tr></table></figure>
+
+<p>当前，还没有很好的工具，可以对上面的场景进行区分，如果没有误报的话，对于案例一和案例二，都是第7行应该有sql注入缺陷，第10行没有，但是，当前还没有一款很好的工具（也可能是有，但是我不知道），可以很好地对List和Map中的add 和 put 进行准确处理。List 的 add 方法，Map 的put 方法，都会把污点标记给打到整个容器上。</p>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5.  总结"></a>5.  总结</h2><p>流敏感分析，针对的是同一个代码块内部的语句的顺序执行的数据流分析的要求；路径敏感分析，针对的是同一个方法内里面，能够区分不同分支的分析要求（数据流分析是路径不敏感的）；上下文敏感分析，是针对跨过程调用的时候的数据流分析要求。这三个概念层层递进，都是面向程度执行结构的敏感性要求，是一个静态代码分析工具的基本通用要求，一般的静态代码分析框架，都应该实现这些基本要求。</p>
+<p>域敏感，也叫属性敏感，主要针对面向对象语言（包括C语言中的结构体等）的一种分析技术，目的是提高静态代码的分析精度，贯穿整个分析过程。实际上，域敏感并不是必须完全需要实现，静态代码分析工具可以基于需要，在不同的层次上实现域敏感，同时，也可以<strong>刻意将待分析程序部分内容实现为域不敏感来提高性能（域敏感分析，对分析时间和分析所消耗的内存，都有显著影响）</strong>。    </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CFI/" rel="tag"># CFI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/03/06/%E7%94%B5%E5%BD%B1/%E6%96%B0%E4%B8%96%E7%95%8C/" rel="next" title="电影海报图床">
+                <i class="fa fa-chevron-left"></i> 电影海报图床
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">107</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%B5%81%E6%95%8F%E6%84%9F%EF%BC%88flow-sensitive%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">1.  流敏感（flow-sensitive）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%B7%AF%E5%BE%84%E6%95%8F%E6%84%9F%EF%BC%88path-sensitive%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">2.  路径敏感（path-sensitive）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%B8%8A%E4%B8%8B%E6%96%87%E6%95%8F%E6%84%9F%EF%BC%88context-sensitive%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">3.  上下文敏感（context-sensitive）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%9F%9F%E6%95%8F%E6%84%9F%EF%BC%88field-sensitive%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">4.  域敏感（field-sensitive）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">5.  总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">hzlg</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
